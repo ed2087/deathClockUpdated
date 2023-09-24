@@ -1,0 +1,280 @@
+    <!-- head include -->
+    <%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+
+    <div id="healthForm">
+        <!-- Basic Information Section -->
+        <fieldset>
+            <legend>Basic Information: Unearth Your Identity</legend>
+            <!-- Question 1 -->
+            <div>
+                <label for="q1">What is your full name, mortal?</label>
+                <input type="text" id="q1" name="q1" required>
+            </div>
+            <!-- Question 2 -->
+            <div>
+                <label for="q2">What is your date of birth, in this realm?</label>
+                <input type="date" id="q2" name="q2" required>
+            </div>
+            <!-- Question 3 -->
+            <div>
+                <label for="q3">What is your gender, as defined by fate?</label>
+                <select id="q3" name="q3" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </fieldset>
+    
+        <!-- Health History Section -->
+        <fieldset>
+            <legend>Health History: A Chronicle of Suffering</legend>
+            <!-- Question 4 -->
+            <div>
+                <label for="q4">Do you bear any chronic medical curses (e.g., diabetes, heart disease)?</label>
+                <select id="q4" name="q4" required>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <!-- Question 5 -->
+            <div>
+                <label for="q5">Have you ever been cursed with the diagnosis of cancer?</label>
+                <select id="q5" name="q5" required>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </fieldset>
+    
+        <!-- Lifestyle Section -->
+        <fieldset>
+            <legend>Lifestyle: Choices that Bind</legend>
+            <!-- Question 6 -->
+            <div>
+                <label for="q6">Do you inhale the cursed tobacco leaves?</label>
+                <select id="q6" name="q6" required>
+                    <option value="One pack every day">One pack every day</option>
+                    <option value="One pack a week">One pack a week</option>
+                    <option value="One pack a month">One pack a month</option>
+                    <option value="Sometimes">Sometimes</option>
+                    <option value="No, I don't smoke">No, I don't smoke</option>
+                </select>
+            </div>
+            <!-- Question 7 -->
+            <div>
+                <label for="q7">How often do you embrace the agony of exercise?</label>
+                <select id="q7" name="q7" required>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Rarely">Rarely</option>
+                    <option value="Never">Never</option>
+                </select>
+            </div>
+            <!-- Continue unveiling your destiny with more questions -->
+        </fieldset>
+    
+        <!-- Family History Section -->
+        <fieldset>
+            <legend>Family History: The Curse Passed Down</legend>
+            <!-- Question 8 -->
+            <div>
+                <label for="q8">Has anyone in your immediate family been claimed by a stroke or heart attack before the age of 60?</label>
+                <select id="q8" name="q8" required>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <!-- Question 9 -->
+            <div>
+                <label for="q9">Does your lineage bear the weight of hereditary afflictions?</label>
+                <select id="q9" name="q9" required>
+                    <option value="Diabetes">Diabetes</option>
+                    <option value="Hypertension">Hypertension</option>
+                    <option value="Alzheimer's">Alzheimer's</option>
+                    <option value="Cancer">Cancer</option>
+                    <option value="None">None</option>
+                </select>
+            </div>
+            <!-- Continue revealing the dark legacy with more questions -->
+        </fieldset>
+    
+        <!-- Medical Tests Section -->
+        <fieldset>
+            <legend>Medical Tests: Probing the Abyss</legend>
+            <!-- Question 10 -->
+            <div>
+                <label for="q10">When was your last cholesterol test, and what were the results, mortal?</label>
+                <select id="q10" name="q10" required>
+                    <option value="Within the normal range">Healthy: Within the normal range</option>
+                    <option value="High">Elevated: High levels</option>
+                    <option value="No">Not Tested: No recent test</option>
+                </select>
+            </div>
+            <!-- Question 11 -->
+            <div>
+                <label for="q11">Have you submitted to the scrutiny of recent blood pressure measurements?</label>
+                <select id="q11" name="q11" required>
+                    <option value="Within the normal range">Within the normal range</option>
+                    <option value="High">High</option>
+                    <option value="No">Not Tested: No recent test</option>
+                </select>
+            </div>
+            <!-- Continue delving into the unknown with more questions -->
+        </fieldset>
+    
+        <!-- Diet Section -->
+        <fieldset>
+            <legend>Diet: Nourishment or Nourishment?</legend>
+            <!-- Question 12 -->
+            <div>
+                <label for="q12">How often do you consume the offerings of fruits and vegetables?</label>
+                <select id="q12" name="q12" required>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Rarely">Rarely</option>
+                    <option value="Never">Never</option>
+                </select>
+            </div>
+            <!-- Continue unraveling the mysteries with more questions -->
+        </fieldset>
+    
+        <!-- Alcohol Consumption Section -->
+        <fieldset>
+            <legend>Alcohol Consumption: Spirits that Haunt</legend>
+            <!-- Question 13 -->
+            <div>
+                <label for="q13">How often do you commune with the spirits of alcohol?</label>
+                <select id="q13" name="q13" required>
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Rarely">Rarely</option>
+                    <option value="Never">Never</option>
+                </select>
+            </div>
+            <!-- Continue uncovering your fate with more questions -->
+        </fieldset>
+    
+        <!-- Stress Section -->
+        <fieldset>
+            <legend>Stress: A Dance with Madness</legend>
+            <!-- Question 14 -->
+            <div>
+                <label for="q14">How do you typically manage stress, as it tightens its grip?</label>
+                <select id="q14" name="q14" required>
+                    <option value="Exercise">Exercise, a futile struggle</option>
+                    <option value="Meditation">Meditation, a fleeting peace</option>
+                    <option value="Talk to a therapist">Therapy, a fragile solace</option>
+                    <option value="Ignore it">Denial, a doomed strategy</option>
+                    <option value="Other">Other, a desperate distraction</option>
+                </select>
+            </div>
+            <!-- Continue succumbing to the chaos with more questions -->
+        </fieldset>
+    
+        <!-- Occupation Section -->
+        <fieldset>
+            <legend>Occupation: A Pact with Mundanity</legend>
+            <!-- Question 15 -->
+            <div>
+                <label for="q15">Is your occupation a ceaseless torment, mortal?</label>
+                <select id="q15" name="q15" required>
+                    <option value="Yes">Yes, an unending nightmare</option>
+                    <option value="No">No, a brief respite in the darkness</option>
+                </select>
+            </div>
+            <!-- Continue toiling in the abyss with more questions -->
+        </fieldset>
+    
+        <!-- Travel Section -->
+        <fieldset>
+            <legend>Travel: Journeys in the Shadows</legend>
+            <!-- Question 16 -->
+            <div>
+                <label for="q16">How frequently do you embark on journeys, whether for work or leisure?</label>
+                <select id="q16" name="q16" required>
+                    <option value="Frequently">Frequently, a restless soul</option>
+                    <option value="Occasionally">Occasionally, a fleeting escape</option>
+                    <option value="Rarely">Rarely, bound by the chains of routine</option>
+                    <option value="Never">Never, a prisoner of the shadows</option>
+                </select>
+            </div>
+            <!-- Continue navigating the obscure with more questions -->
+        </fieldset>
+    
+        <!-- Sleep Section -->
+        <fieldset>
+            <legend>Sleep: Slumber or Eternal Rest?</legend>
+            <!-- Question 17 -->
+            <div>
+                <label for="q17">How many hours of sleep do you typically get per night, mortal?</label>
+                <select id="q17" name="q17" required>
+                    <option value="Less than 5 hours">Less than 5 hours, haunted by insomnia</option>
+                    <option value="5-7 hours">5-7 hours, restless slumber</option>
+                    <option value="7-9 hours">7-9 hours, a fleeting respite</option>
+                    <option value="More than 9 hours">More than 9 hours, lost in the abyss</option>
+                </select>
+            </div>
+            <!-- Continue wrestling with your nightmares with more questions -->
+        </fieldset>
+
+        <!-- Social Life Section -->
+        <fieldset>
+            <legend>Social Life: Navigating the Abyss of Existence</legend>
+            <!-- Question 18 -->
+            <div>
+                <label for="q18">How often do you engage in social activities or spend time with friends and family, as you cling to the mortal realm?</label>
+                <select id="q18" name="q18" required>
+                    <option value="Daily">Daily, seeking solace in company</option>
+                    <option value="Weekly">Weekly, a fragile connection to humanity</option>
+                    <option value="Monthly">Monthly, distant echoes of laughter</option>
+                    <option value="Rarely">Rarely, a hermit in the shadows</option>
+                    <option value="Never">Never, a solitary specter</option>
+                </select>
+            </div>
+            <!-- Continue your lonely journey with more social life questions -->
+        </fieldset>
+
+        <!-- Sun Exposure Section -->
+        <fieldset>
+            <legend>Sun Exposure: Embracing the Unseen Forces</legend>
+            <!-- Question 19 -->
+            <div>
+                <label for="q19">Do you get regular sun exposure, as you walk the fine line between light and darkness?</label>
+                <select id="q19" name="q19" required>
+                    <option value="Yes">Yes, basking in the uncertain warmth</option>
+                    <option value="No">No, shunning the celestial embrace</option>
+                </select>
+            </div>
+            <!-- Continue your dance with the sun's enigmatic rays with more questions -->
+        </fieldset>
+
+        <!-- Supplements Section -->
+        <fieldset>
+            <legend>Supplements: Augmenting Your Fate</legend>
+            <!-- Question 20 -->
+            <div>
+                <label for="q20">Do you take any dietary supplements or vitamins regularly, as you seek to defy destiny?</label>
+                <select id="q20" name="q20" required>
+                    <option value="Yes">Yes, clinging to hope in the form of pills</option>
+                    <option value="No">No, embracing your fate with empty hands</option>
+                </select>
+            </div>
+            <!-- You have completed all 20 questions, yet the mysteries persist -->
+        </fieldset>
+
+        <button id="submit_btn">Im Ready</button>
+    </div>
+
+
+    <!-- script -->
+    <script src="../JS/master.js"></script>
+    <script src="../JS/deathClock_questions.js"></script>   
+</body>
+</html>
