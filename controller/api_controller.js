@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
-
+//add model
+import Question from "../model/user.js";
 
 
 
@@ -33,9 +34,31 @@ export const questionsAPI = async (req, res, next) => {
 //resive json from deathClock_questions.js
 export const getApiJson = async (req, res, next) => {
 
-      //get body
-      const body = req.body;
+      try {
 
-      console.log(body);
+            const jsonData = req.body;
+
+            const user = {
+
+                  name: jsonData[0].user.userAnswer,
+                  birthdate: jsonData[1].user.userAnswer,
+                  jsonFile: JSON.stringify(jsonData),
+                  allowed : jsonData[jsonData.length - 1].userPermision
+
+            };
+
+            //save data db
+
+            const newUser = new Question(user);
+            const saved = await newUser.save();
+
+            console.log(saved);
+            //we will be directed to the results page
+            //temporary redirect to /
+            res.redirect('/');
+            
+      } catch (error) {            
+            console.log(error);
+      }      
 
 };

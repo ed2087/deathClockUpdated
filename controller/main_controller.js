@@ -1,6 +1,9 @@
 //get jsonfiles
 import {readFileAPI} from "../utils/readFiles.js";
 
+//add model
+import Question from "../model/user.js";
+
 
 export const index = async (req, res, next) => {
 
@@ -9,7 +12,9 @@ export const index = async (req, res, next) => {
 
         res.status(200).render("index",{
             path: "/",
-            title: "home page"
+            title: "home page",
+            // get token from locals.
+            csrfToken: res.locals.csrfToken
         })
 
 };
@@ -21,7 +26,8 @@ export const deathclockQuestions = async (req, res, next) => {
 
     res.status(200).render("deathclockQuestions",{
         path: "/deathclockQuestions",
-        title: "The Time Ticker: How Long Have You Go"
+        title: "The Time Ticker: How Long Have You Go",
+        csrfToken: res.locals.csrfToken
     })
 
 };
