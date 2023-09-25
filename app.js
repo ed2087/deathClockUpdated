@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import ejs from 'ejs';
 import { fileURLToPath } from 'url';
 import csrf from 'csrf';
+//import cors from 'cors';
 //mongoose
 import mongoose from "mongoose";
 
@@ -23,6 +24,8 @@ dotenv.config();
 
 // Create Express app
 const app = express();
+
+//app.use(cors());
 
 // Connect to MongoDB
 const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.x2mifua.mongodb.net/terrorHub`;
@@ -60,6 +63,7 @@ app.use((req, res, next) => {
   next();
   
 });
+
 
 // Routes
 app.use(ApiRoutes);
@@ -108,3 +112,7 @@ app.listen(PORT, () => {
   db_connect(); 
 
 });
+
+
+
+//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

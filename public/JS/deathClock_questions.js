@@ -40,8 +40,6 @@ const checkAll = async () => {
     //if all values are filled
     let json = await getQuestions_json();
 
-    console.log(json);
-
     //add name and birthdate to json.user and add points, userAnswer points will be 0  and answer will be the users answer
 
         json[0].user = {
@@ -98,7 +96,16 @@ const checkAll = async () => {
     //send json to /questionsAPI
     const data = await sendJson('/questionsAPI', 'POST', json);
 
-    console.log(data);
+    //check if data is defined
+    if(data) {
+
+        //get userShortId from data
+        const userShortId = data.userShortId;
+        //redirect to /deathclock
+        window.location.href = '/deathclockResults/' + userShortId;
+    } else {
+        console.log('error sending json');
+    }
 
 };
 

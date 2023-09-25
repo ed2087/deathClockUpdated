@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 // Define the User Schema
 const userSchema = new mongoose.Schema({
+  shortId: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,

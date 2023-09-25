@@ -1,0 +1,28 @@
+<!-- head include -->
+<%- include('./includes/head.ejs') %>
+<style>
+    canvas {
+        border: 1px solid black;
+    }
+</style>
+</head>
+<body>
+
+    
+
+
+    <h1>results</h1>
+    <p>You have lived for: <span id="timeLived"></span></p>
+    <p>You have approximately: <span id="remainingTime"></span></p>
+    <p id="predictionStory"></p>
+
+    
+
+    <!-- script -->
+    <script>
+        var user = <%- JSON.stringify(user) %>;
+    </script>
+    <script src="../JS/master.js"></script>
+    <script src="../JS/deathClock_app.js"></script>   
+</body>
+</html>
