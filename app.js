@@ -16,6 +16,7 @@ import mongoose from "mongoose";
 // Local modules
 import MainRoute from './routes/main_routes.js';
 import ApiRoutes from './routes/api_routes.js';
+import DethClockRoutes from './routes/deathclock_routes.js';
 
 // Load environment variables
 import dotenv from 'dotenv';
@@ -34,9 +35,9 @@ const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clus
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-// Set EJS as the view engine and specify the views directory
+//ejs
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", "views");
 
 // Built-in middleware
 app.use(express.urlencoded({ extended: true }));
@@ -68,7 +69,9 @@ app.use(rateLimit({
 
 // Routes
 app.use(ApiRoutes);
+app.use("/deathClock", DethClockRoutes);
 app.use(MainRoute);
+
 
 // Central error handling
 app.use((err, req, res, next) => {
