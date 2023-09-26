@@ -42,7 +42,8 @@ app.set("views", "views");
 // Built-in middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Security best practices 
 app.use(rateLimit({
@@ -51,20 +52,20 @@ app.use(rateLimit({
 }));
 
 // Create a new token generation/verification instance
-//const tokens = new csrf();
+const tokens = new csrf();
 
-// CSRF middleware
-// app.use((req, res, next) => {
+//CSRF middleware
+app.use((req, res, next) => {
 
-//   // Create token
-//   const token = tokens.create(process.env.SESSION_SECRET);  
+  // Create token
+  const token = tokens.create(process.env.SESSION_SECRET);  
 
-//   // Set on res.locals
-//   res.locals.csrfToken = token;
+  // Set on res.locals
+  res.locals.csrfToken = token;
 
-//   next();
+  next();
   
-// });
+});
 
 
 // Routes
