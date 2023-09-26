@@ -33,6 +33,11 @@ const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clus
 // Get the directory name of the current module
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+
+//ejs
+app.set("view engine", "ejs");
+app.set("views", "views");
+
 // Built-in middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -43,10 +48,6 @@ app.use(rateLimit({
   windowMs: 15 * 60 * 1000, 
   max: 100
 }));
-
-// EJS setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
 
 // Create a new token generation/verification instance
 //const tokens = new csrf();
