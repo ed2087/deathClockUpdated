@@ -9,10 +9,8 @@ import {index,deathclockQuestions,deathclockResults} from "../controller/main_co
 router.get("/", index);
 
 //deathclockQuestions
-router.get("/deathclockQuestions", deathclockQuestions);
-
-//deathclockResults
-router.get("/deathclockResults/:id", deathclockResults);
+router.get("/dark-omens", deathclockQuestions);
+router.get("/grim-fate/:id", deathclockResults);
 
 
 
