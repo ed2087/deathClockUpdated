@@ -102,7 +102,7 @@ const checkAll = async () => {
         //get userShortId from data
         const userShortId = data.userShortId;
         //redirect to /deathclock
-        window.location.href = '/deathclockResults/' + userShortId;
+        window.location.href = '/dark-omens/' + userShortId;
     } else {
         console.log('error sending json');
     }
