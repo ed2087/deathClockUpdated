@@ -31,7 +31,7 @@ const app = express();
 const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.x2mifua.mongodb.net/terrorHub`;
 
 // Get the directory name of the current module
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+//const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
 // Set EJS as the view engine and specify the views directory
