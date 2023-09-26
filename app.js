@@ -34,9 +34,9 @@ const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clus
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 
-//ejs
+// Set EJS as the view engine and specify the views directory
 app.set("view engine", "ejs");
-app.set("views", "views");
+app.set("views", path.join(__dirname, "views"));
 
 // Built-in middleware
 app.use(express.urlencoded({ extended: true }));
