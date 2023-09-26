@@ -14,7 +14,7 @@ export const index = async (req, res, next) => {
             path: "/",
             title: "home page",
             // get token from locals.
-            csrfToken: res.locals.csrfToken
+            //csrfToken: res.locals.csrfToken
         })
 
 };
@@ -26,7 +26,7 @@ export const deathclockQuestions = async (req, res, next) => {
     res.status(200).render("deathclockQuestions",{
         path: "/deathclockQuestions",
         title: "The Time Ticker: How Long Have You Go",
-        csrfToken: res.locals.csrfToken
+        //csrfToken: res.locals.csrfToken
     })
 
 };
@@ -45,10 +45,10 @@ export const deathclockResults = async (req, res, next) => {
 
         if(user){
             //render deathclockResults
-            res.status(200).render("deathclockResults",{
+            res.status(200).render("deathClockResults",{
                 path: "/deathclockResults",
                 title: "The Time Ticker: How Long Have You Go",
-                csrfToken: res.locals.csrfToken,
+                //csrfToken: res.locals.csrfToken,
                 user: user
             })
         }else{

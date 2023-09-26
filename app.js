@@ -49,20 +49,20 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Create a new token generation/verification instance
-const tokens = new csrf();
+//const tokens = new csrf();
 
 // CSRF middleware
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
 
-  // Create token
-  const token = tokens.create(process.env.SESSION_SECRET);  
+//   // Create token
+//   const token = tokens.create(process.env.SESSION_SECRET);  
 
-  // Set on res.locals
-  res.locals.csrfToken = token;
+//   // Set on res.locals
+//   res.locals.csrfToken = token;
 
-  next();
+//   next();
   
-});
+// });
 
 
 // Routes
@@ -76,7 +76,7 @@ app.use((err, req, res, next) => {
 
   // Determine the status code and error message
   let statusCode = 500;
-  let errorMessage = 'Internal Server Error';
+  let errorMessage = 'Internal Server Error'+ err;
 
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     // Handle JSON parse error
