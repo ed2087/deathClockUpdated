@@ -23,7 +23,7 @@ export const index = async (req, res, next) => {
 //deathclockQuestions
 export const deathclockQuestions = async (req, res, next) => {
 
-    res.status(200).render("deathclockQuestions.ejs",{
+    res.status(200).render("deathclockQuestions",{
         path: "/deathclockQuestions",
         title: "The Time Ticker: How Long Have You Go",
         //csrfToken: res.locals.csrfToken
