@@ -27,6 +27,22 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0,
       },
+      monthsLeft: {
+        type: Number,
+        default: 0,
+      },
+      weeksLeft: {
+        type: Number,
+        default: 0,
+      },
+      daysLeft: {
+        type: Number,
+        default: 0,
+      },
+      hoursLeft: {
+        type: Number,
+        default: 0,
+      },
       secondsLeft: {
         type: Number,
         default: 0,

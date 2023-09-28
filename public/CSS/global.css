@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+:root{
+    --main_background: rgb(25 25 25);
+    --link-color: rgb(255, 255, 255);
+    --btn-calltoaction-color: rgb(0 119 182);
+    --hover-link-color: rgb(167 214 0);
+}
+
+body{
+    background-color: #ffffff;
+    font-size: 1em;
+    /* font-family: 'Raleway', sans-serif; */
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    line-height: 1.5;
+}
+
+li{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+    color: #000000;
+}
+
+button{
+    border: none;
+    background-color: transparent;
+}
+
+.global_shadow {
+    box-shadow: -1px 7px 20px 5px rgb(33 33 33 / 75%);
+}
+
+/* image */
+img{
+    width: 100%;
+    height: auto;
+    display: block;
+}
