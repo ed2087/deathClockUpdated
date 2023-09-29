@@ -1,479 +1,539 @@
 {
-    "questions": [
-      {
-        "id": 1,
-        "category": "Basic Information",
-        "question": "What is your full name?",
-        "answer_options": [],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 2,
-        "category": "Basic Information",
-        "question": "What is your date of birth?",
-        "answer_options": [],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 3,
-        "category": "Basic Information",
-        "question": "What is your gender?",
-        "answer_options": [
-          {
-            "option": "Male",
-            "scores": [5]
-          },
-          {
-            "option": "Female",
-            "scores": [10]
-          },
-          {
-            "option": "Other",
-            "scores": [0]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 4,
-        "category": "Health History",
-        "question": "Do you have any chronic medical conditions (e.g., diabetes, heart disease)?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [-10]
-          },
-          {
-            "option": "No",
-            "scores": [5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 5,
-        "category": "Health History",
-        "question": "Have you ever been diagnosed with cancer?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [-20]
-          },
-          {
-            "option": "No",
-            "scores": [10]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 6,
-        "category": "Lifestyle",
-        "question": "Do you smoke tobacco products?",
-        "answer_options": [
-          {
-            "option": "One pack every day",
-            "scores": [-15]
-          },
-          {
-            "option": "One pack a week",
-            "scores": [-5]
-          },
-          {
-            "option": "One pack a month",
-            "scores": [-2]
-          },
-          {
-            "option": "Sometimes",
-            "scores": [-3]
-          },
-          {
-            "option": "No, I don't smoke",
-            "scores": [5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 7,
-        "category": "Lifestyle",
-        "question": "How often do you exercise?",
-        "answer_options": [
-          {
-            "option": "Daily",
-            "scores": [10]
-          },
-          {
-            "option": "Weekly",
-            "scores": [7]
-          },
-          {
-            "option": "Monthly",
-            "scores": [5]
-          },
-          {
-            "option": "Rarely",
-            "scores": [2]
-          },
-          {
-            "option": "Never",
-            "scores": [-5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 8,
-        "category": "Family History",
-        "question": "Has anyone in your immediate family had a stroke or heart attack before the age of 60?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [-10]
-          },
-          {
-            "option": "No",
-            "scores": [5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 9,
-        "category": "Family History",
-        "question": "Do you have a family history of certain hereditary diseases?",
-        "answer_options": [
-          {
-            "option": "Diabetes",
-            "scores": [-5]
-          },
-          {
-            "option": "Hypertension",
-            "scores": [-7]
-          },
-          {
-            "option": "Alzheimer's",
-            "scores": [-8]
-          },
-          {
-            "option": "Cancer",
-            "scores": [-15]
-          },
-          {
-            "option": "None",
-            "scores": [5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 10,
-        "category": "Medical Tests",
-        "question": "When was your last cholesterol test, and what were the results?",
-        "answer_options": [
-          {
-            "option": "Healthy: Within the normal range",
-            "scores": [5]
-          },
-          {
-            "option": "Elevated: High levels",
-            "scores": [-5]
-          },
-          {
-            "option": "Not Tested: No recent test",
-            "scores": [0]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 11,
-        "category": "Medical Tests",
-        "question": "Have you had a recent blood pressure measurement?",
-        "answer_options": [
-          {
-            "option": "Within the normal range",
-            "scores": [5]
-          },
-          {
-            "option": "High",
-            "scores": [-10]
-          },
-          {
-            "option": "Not Tested: No recent test",
-            "scores": [0]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 12,
-        "category": "Diet",
-        "question": "How often do you consume fruits and vegetables?",
-        "answer_options": [
-          {
-            "option": "Daily",
-            "scores": [7]
-          },
-          {
-            "option": "Weekly",
-            "scores": [5]
-          },
-          {
-            "option": "Monthly",
-            "scores": [2]
-          },
-          {
-            "option": "Rarely",
-            "scores": [0]
-          },
-          {
-            "option": "Never",
-            "scores": [-5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 13,
-        "category": "Alcohol Consumption",
-        "question": "How often do you consume alcohol?",
-        "answer_options": [
-          {
-            "option": "Daily",
-            "scores": [-10]
-          },
-          {
-            "option": "Weekly",
-            "scores": [-5]
-          },
-          {
-            "option": "Monthly",
-            "scores": [-2]
-          },
-          {
-            "option": "Rarely",
-            "scores": [2]
-          },
-          {
-            "option": "Never",
-            "scores": [5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 14,
-        "category": "Stress",
-        "question": "How do you typically manage stress?",
-        "answer_options": [
-          {
-            "option": "Exercise",
-            "scores": [5]
-          },
-          {
-            "option": "Meditation",
-            "scores": [7]
-          },
-          {
-            "option": "Talk to a therapist",
-            "scores": [8]
-          },
-          {
-            "option": "Ignore it",
-            "scores": [-5]
-          },
-          {
-            "option": "Other",
-            "scores": [0]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 15,
-        "category": "Occupation",
-        "question": "Is your occupation physically demanding?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [5]
-          },
-          {
-            "option": "No",
-            "scores": [-5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 16,
-        "category": "Travel",
-        "question": "How frequently do you travel for work or leisure?",
-        "answer_options": [
-          {
-            "option": "Frequently",
-            "scores": [-5]
-          },
-          {
-            "option": "Occasionally",
-            "scores": [2]
-          },
-          {
-            "option": "Rarely",
-            "scores": [5]
-          },
-          {
-            "option": "Never",
-            "scores": [10]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 17,
-        "category": "Sleep",
-        "question": "How many hours of sleep do you typically get per night?",
-        "answer_options": [
-          {
-            "option": "Less than 5 hours",
-            "scores": [-10]
-          },
-          {
-            "option": "5-7 hours",
-            "scores": [5]
-          },
-          {
-            "option": "7-9 hours",
-            "scores": [10]
-          },
-          {
-            "option": "More than 9 hours",
-            "scores": [0]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 18,
-        "category": "Social Life",
-        "question": "How often do you engage in social activities or spend time with friends and family?",
-        "answer_options": [
-          {
-            "option": "Daily",
-            "scores": [10]
-          },
-          {
-            "option": "Weekly",
-            "scores": [5]
-          },
-          {
-            "option": "Monthly",
-            "scores": [2]
-          },
-          {
-            "option": "Rarely",
-            "scores": [-5]
-          },
-          {
-            "option": "Never",
-            "scores": [-10]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 19,
-        "category": "Sun Exposure",
-        "question": "Do you get regular sun exposure?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [5]
-          },
-          {
-            "option": "No",
-            "scores": [-5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
-      },
-      {
-        "id": 20,
-        "category": "Supplements",
-        "question": "Do you take any dietary supplements or vitamins regularly?",
-        "answer_options": [
-          {
-            "option": "Yes",
-            "scores": [5]
-          },
-          {
-            "option": "No",
-            "scores": [-5]
-          }
-        ],
-        "user":{
-            "points": "",
-            "userAnswer":""
-        }
+  "questions": [
+    {
+      "id": 1,
+      "category": "Basic Information",
+      "question": "What is your full name?",
+      "answer_options": [],
+      "user":{
+          "points": "",
+          "userAnswer":""
       }
-    ]
-  }
-  
+    },
+    {
+      "id": 2,
+      "category": "Basic Information",
+      "question": "What is your date of birth?",
+      "answer_options": [],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 3,
+      "category": "Basic Information",
+      "question": "What is your gender?",
+      "answer_options": [
+        {
+          "option": "Male",
+          "scores": [5]
+        },
+        {
+          "option": "Female",
+          "scores": [10]
+        },
+        {
+          "option": "Other",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 8,
+      "category": "Basic Information",
+      "question": "What is your highest level of education completed?",
+      "answer_options": [
+        {
+          "option": "Less than high school",
+          "scores": [-5]
+        },
+        {
+          "option": "High school graduate",
+          "scores": [5]
+        },
+        {
+          "option": "Some college or vocational training",
+          "scores": [10]
+        },
+        {
+          "option": "Bachelor's degree",
+          "scores": [15]
+        },
+        {
+          "option": "Postgraduate degree (e.g., Master's, Ph.D.)",
+          "scores": [20]
+        }
+      ],
+      "user": {
+        "points": "",
+        "userAnswer": ""
+      }
+    },{
+      "id": 9,
+      "category": "Lifestyle",
+      "question": "How much time do you spend sitting per day (in hours)?",
+      "answer_options": [
+        {
+          "option": "Less than 1 hour",
+          "scores": [10]
+        },
+        {
+          "option": "1-2 hours",
+          "scores": [5]
+        },
+        {
+          "option": "2-4 hours",
+          "scores": [0]
+        },
+        {
+          "option": "4-6 hours",
+          "scores": [-5]
+        },
+        {
+          "option": "More than 6 hours",
+          "scores": [-10]
+        }
+      ],
+      "user": {
+        "points": "",
+        "userAnswer": ""
+      }
+    },
+    {
+      "id": 4,
+      "category": "Health History",
+      "question": "Do you have any chronic medical conditions (e.g., diabetes, heart disease)?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [-10]
+        },
+        {
+          "option": "No",
+          "scores": [5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 5,
+      "category": "Health History",
+      "question": "Have you ever been diagnosed with cancer?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [-20]
+        },
+        {
+          "option": "No",
+          "scores": [10]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 6,
+      "category": "Lifestyle",
+      "question": "Do you smoke tobacco products?",
+      "answer_options": [
+        {
+          "option": "One pack every day",
+          "scores": [-15]
+        },
+        {
+          "option": "One pack a week",
+          "scores": [-5]
+        },
+        {
+          "option": "One pack a month",
+          "scores": [-2]
+        },
+        {
+          "option": "Sometimes",
+          "scores": [-3]
+        },
+        {
+          "option": "No, I don't smoke",
+          "scores": [5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 7,
+      "category": "Lifestyle",
+      "question": "How often do you exercise?",
+      "answer_options": [
+        {
+          "option": "Daily",
+          "scores": [10]
+        },
+        {
+          "option": "Weekly",
+          "scores": [7]
+        },
+        {
+          "option": "Monthly",
+          "scores": [5]
+        },
+        {
+          "option": "Rarely",
+          "scores": [2]
+        },
+        {
+          "option": "Never",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 8,
+      "category": "Family History",
+      "question": "Has anyone in your immediate family had a stroke or heart attack before the age of 60?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [-10]
+        },
+        {
+          "option": "No",
+          "scores": [5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 9,
+      "category": "Family History",
+      "question": "Do you have a family history of certain hereditary diseases?",
+      "answer_options": [
+        {
+          "option": "Diabetes",
+          "scores": [-5]
+        },
+        {
+          "option": "Hypertension",
+          "scores": [-7]
+        },
+        {
+          "option": "Alzheimer's",
+          "scores": [-8]
+        },
+        {
+          "option": "Cancer",
+          "scores": [-15]
+        },
+        {
+          "option": "None",
+          "scores": [5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 10,
+      "category": "Medical Tests",
+      "question": "When was your last cholesterol test, and what were the results?",
+      "answer_options": [
+        {
+          "option": "Within the normal range",
+          "scores": [5]
+        },
+        {
+          "option": "High",
+          "scores": [-5]
+        },
+        {
+          "option": "No",
+          "scores": [0]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 11,
+      "category": "Medical Tests",
+      "question": "Have you had a recent blood pressure measurement?",
+      "answer_options": [
+        {
+          "option": "Within the normal range",
+          "scores": [5]
+        },
+        {
+          "option": "High",
+          "scores": [-10]
+        },
+        {
+          "option": "No",
+          "scores": [0]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 12,
+      "category": "Diet",
+      "question": "How often do you consume fruits and vegetables?",
+      "answer_options": [
+        {
+          "option": "Daily",
+          "scores": [7]
+        },
+        {
+          "option": "Weekly",
+          "scores": [5]
+        },
+        {
+          "option": "Monthly",
+          "scores": [2]
+        },
+        {
+          "option": "Rarely",
+          "scores": [0]
+        },
+        {
+          "option": "Never",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 13,
+      "category": "Alcohol Consumption",
+      "question": "How often do you consume alcohol?",
+      "answer_options": [
+        {
+          "option": "Daily",
+          "scores": [-10]
+        },
+        {
+          "option": "Weekly",
+          "scores": [-5]
+        },
+        {
+          "option": "Monthly",
+          "scores": [-2]
+        },
+        {
+          "option": "Rarely",
+          "scores": [2]
+        },
+        {
+          "option": "Never",
+          "scores": [5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 14,
+      "category": "Stress",
+      "question": "How do you typically manage stress?",
+      "answer_options": [
+        {
+          "option": "Exercise",
+          "scores": [5]
+        },
+        {
+          "option": "Meditation",
+          "scores": [7]
+        },
+        {
+          "option": "Talk to a therapist",
+          "scores": [8]
+        },
+        {
+          "option": "Ignore it",
+          "scores": [-5]
+        },
+        {
+          "option": "Other",
+          "scores": [0]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 15,
+      "category": "Occupation",
+      "question": "Is your occupation physically demanding?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [5]
+        },
+        {
+          "option": "No",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 16,
+      "category": "Travel",
+      "question": "How frequently do you travel for work or leisure?",
+      "answer_options": [
+        {
+          "option": "Frequently",
+          "scores": [-5]
+        },
+        {
+          "option": "Occasionally",
+          "scores": [2]
+        },
+        {
+          "option": "Rarely",
+          "scores": [5]
+        },
+        {
+          "option": "Never",
+          "scores": [10]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 17,
+      "category": "Sleep",
+      "question": "How many hours of sleep do you typically get per night?",
+      "answer_options": [
+        {
+          "option": "Less than 5 hours",
+          "scores": [-10]
+        },
+        {
+          "option": "5-7 hours",
+          "scores": [5]
+        },
+        {
+          "option": "7-9 hours",
+          "scores": [10]
+        },
+        {
+          "option": "More than 9 hours",
+          "scores": [0]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 18,
+      "category": "Social Life",
+      "question": "How often do you engage in social activities or spend time with friends and family?",
+      "answer_options": [
+        {
+          "option": "Daily",
+          "scores": [10]
+        },
+        {
+          "option": "Weekly",
+          "scores": [5]
+        },
+        {
+          "option": "Monthly",
+          "scores": [2]
+        },
+        {
+          "option": "Rarely",
+          "scores": [-5]
+        },
+        {
+          "option": "Never",
+          "scores": [-10]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 19,
+      "category": "Sun Exposure",
+      "question": "Do you get regular sun exposure?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [5]
+        },
+        {
+          "option": "No",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": 20,
+      "category": "Supplements",
+      "question": "Do you take any dietary supplements or vitamins regularly?",
+      "answer_options": [
+        {
+          "option": "Yes",
+          "scores": [5]
+        },
+        {
+          "option": "No",
+          "scores": [-5]
+        }
+      ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    }
+  ]
+}

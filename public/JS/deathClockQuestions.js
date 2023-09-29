@@ -11,7 +11,10 @@ const getQuestions_json = async () => {
 
 
 //cheak all inputs/select options and radio for value on submit
-const checkAll = async () => {
+const checkAll = async (e) => {    
+
+    //prevent default
+    //e.preventDefault();
 
     console.log('checkAll()');
 
@@ -19,13 +22,16 @@ const checkAll = async () => {
     const inputs = queryAll_('input');
     const selects = queryAll_('select');
     const radios = queryAll_('input[type="radio"]');
-    const textareas = queryAll_('textarea');
+    const textareas = queryAll_('textarea');    
 
-    //get all values
-    const values = [...inputs, ...selects, ...radios, ...textareas];
+    const inputs_ = [...inputs];
+
+    const selects_ = [...selects];
+
+
 
     //check if all values are filled
-    const checkValues = values.every((value) => value.value !== "");
+    const checkValues = inputs_.every((input) => input.value !== '') && selects_.every((select) => select.value !== '');
 
 
     //if all values are filled
@@ -33,56 +39,63 @@ const checkAll = async () => {
         alert('Please fill out all fields');
         return;
     }
+    
 
-    //get all values in an array
-    const valuesArr = values.map((value) => value.value);
-
+    //get all inputs_,selects_ in an array
+    const selectValuesArr = selects_.map((value) => value.value);
+    const inputValuesArr = inputs_.map((value) => value.value);
+    console.log({
+        selectValuesArr,
+        inputValuesArr
+    });
+    
+   
     //if all values are filled
     let json = await getQuestions_json();
 
     //add name and birthdate to json.user and add points, userAnswer points will be 0  and answer will be the users answer
 
         json[0].user = {
-            userAnswer: valuesArr[0],
+            userAnswer: inputValuesArr[0],
             points: 0
         };
 
         json[1].user = {
-            userAnswer: valuesArr[1],
+            userAnswer: inputValuesArr[1],
             points: 0
         };
 
     //check json answer_options array object for correct answer if valuesArr[i] === answer_options[i].option
     let addPoints = 0;
-    for(let i = 0; i < valuesArr.length - 1; i++) {
-        
-       //loop true json[i].answer_options[i].option and check if valuesArr[i] === json[i].answer_options[i].option
-         for(let j = 0; j < json[i].answer_options.length; j++) {
-            
-            
-            if(valuesArr[i] === json[i].answer_options[j].option) {
+    for (let i = 0; i < selectValuesArr.length + 1; i++) {
+        for (let j = 0; j < json[i].answer_options.length; j++) {
+            const userAnswer = selectValuesArr[i - 2].trim().toLowerCase();
+            const option = json[i].answer_options[j].option.trim().toLowerCase();            
+    
+            if (userAnswer === option) {
 
-                //check what the scores is for each answer skip the first 2 questions and add userAnswer and points to json.user
+                //add points to addPoints
+                addPoints += json[i].answer_options[j].scores[0];
+
+                //add userAnswer to json
+                json[i].user = {
+                    userAnswer: selectValuesArr[i - 3],
+                    points: json[i].answer_options[j].scores[0]
+                };
                 
-                if(i > 1) {
-                    json[i].user = {
-                        userAnswer: valuesArr[i],
-                        points: json[i].answer_options[j].scores[0]
-                    };
-
-                    //add points to addPoints
-                    addPoints += json[i].answer_options[j].scores[0];
-                }
-
             }
-
         }
-
-    }
+    };
 
     //create a new object for user permision to be added to graveyard
     const userPermision = {
-        userPermision: valuesArr[valuesArr.length - 1]
+        //last one inn selectValuesArr
+        userPermision: selectValuesArr[selectValuesArr.length - 1]
+    };
+
+    //users email 
+    const userEmail = {
+        userEmail: inputValuesArr[2]
     };
 
     //create a new ocject called totalPoints and add it to json
@@ -90,8 +103,9 @@ const checkAll = async () => {
         totalPoints: addPoints
     };
 
-    json.push(totalPoints, userPermision);
+    json.push(totalPoints, userPermision, userEmail);
 
+    console.log(json);
 
     //send json to /questionsAPI
     const data = await sendJson('/questionsAPI', 'POST', json);
@@ -110,6 +124,13 @@ const checkAll = async () => {
 };
 
 
-//check when user clicks submit_btn
-id_('submit_btn').addEventListener('click', () => checkAll());
+//check when form is submitted #healthForm
+const healthForm = id_('submit_btn');
+if(healthForm) {
+    healthForm.addEventListener('click', checkAll);
+}
+
+
+
+
 

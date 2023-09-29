@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email:{
+    type: String,
+    required: true
+  },
   allowed: {
     type: Boolean,
     default: false, // Set the default value to false
