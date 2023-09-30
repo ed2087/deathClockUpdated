@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email:{
+    type: String,
+    required: true,
+    unique: false
+  },
   allowed: {
     type: Boolean,
     default: false, // Set the default value to false
@@ -17,13 +22,29 @@ const userSchema = new mongoose.Schema({
   birthdate: {
     type: Date,
     required: true,
-  },
+  },  
   clock:{
       predictedDeathYear: {
         type: Number,
         default: 0, 
       },
       yearsLeft: {
+        type: Number,
+        default: 0,
+      },
+      monthsLeft: {
+        type: Number,
+        default: 0,
+      },
+      weeksLeft: {
+        type: Number,
+        default: 0,
+      },
+      daysLeft: {
+        type: Number,
+        default: 0,
+      },
+      hoursLeft: {
         type: Number,
         default: 0,
       },

@@ -38,7 +38,7 @@ export const getApiJson = async (req, res, next) => {
 
       try {
 
-            const jsonData = req.body;
+            const jsonData = req.body;        
 
             //add user id make it short
             const shortId = uuidv4().slice(0, 8);
@@ -49,7 +49,8 @@ export const getApiJson = async (req, res, next) => {
                   name: jsonData[0].user.userAnswer,
                   birthdate: jsonData[1].user.userAnswer,
                   jsonFile: JSON.stringify(jsonData),
-                  allowed : jsonData[jsonData.length - 1].userPermision
+                  email: jsonData[jsonData.length - 1].userEmail,
+                  allowed : jsonData[jsonData.length - 2].userPermision
 
             };            
 
@@ -70,6 +71,8 @@ export const getApiJson = async (req, res, next) => {
 
                   //send error message
                   console.log('error saving user');
+
+                  rest.status(500).json({ error: 'Internal Server Error' });
 
             }
             

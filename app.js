@@ -46,10 +46,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Security best practices 
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100
-}));
+// app.use(rateLimit({
+//   windowMs: 15 * 60 * 1000, 
+//   max: 100
+// }));
 
 // Create a new token generation/verification instance
 const tokens = new csrf();

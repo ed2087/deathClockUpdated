@@ -1,0 +1,53 @@
+    <!-- head include -->
+    <%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+
+    <h1>User Data</h1>
+    <a href="/deathClock/questions">questions</a>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>User Name</th>                
+                <th>Days Left</th>
+                <th>Hours Left</th>
+                <th>Months Left</th>
+                <th>Predicted Death Year</th>
+                <th>Seconds Left</th>
+                <th>Weeks Left</th>
+                <th>Years Left</th>
+                <th>link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(function(user) { %>
+                <tr>
+                    <td><%= user.userName %></td>                    
+                    <td><%= user.clock.daysLeft %></td>
+                    <td><%= user.clock.hoursLeft %></td>
+                    <td><%= user.clock.monthsLeft %></td>
+                    <td><%= user.clock.predictedDeathYear %></td>
+                    <td><%= user.clock.secondsLeft %></td>
+                    <td><%= user.clock.weeksLeft %></td>
+                    <td><%= user.clock.yearsLeft %></td>
+                    <!-- atag link -->
+                    <td>
+                        <a href="/deathClock/results/<%= user.userShortId %>">More...</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+
+    <!-- script -->
+    <script>
+        var users = <%- JSON.stringify(users) %>;
+    </script>
+    <script src="../JS/master.js"></script> 
+    <script src="../JS/graveyardApp.js"></script> 
+</body>
+</html>
