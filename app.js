@@ -7,11 +7,8 @@ import session from 'express-session';
 import rateLimit from 'express-rate-limit';
 import ejs from 'ejs';
 import { fileURLToPath } from 'url';
-import csrf from 'csrf';
-//import cors from 'cors';
-//mongoose
+import csrf from 'csrf'; // Import the csrf module
 import mongoose from "mongoose";
-
 
 // Local modules
 import MainRoute from './routes/main_routes.js';
@@ -20,20 +17,16 @@ import DethClockRoutes from './routes/deathclock_routes.js';
 
 // Load environment variables
 import dotenv from 'dotenv';
-import { CONNREFUSED } from 'dns';
 dotenv.config();
 
 // Create Express app
 const app = express();
-
-//app.use(cors());
 
 // Connect to MongoDB
 const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.x2mifua.mongodb.net/terrorHub`;
 
 // Get the directory name of the current module
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 
 //ejs
 app.set("view engine", "ejs");
@@ -44,7 +37,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // Security best practices 
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, 
@@ -54,25 +46,19 @@ app.use(rateLimit({
 // Create a new token generation/verification instance
 const tokens = new csrf();
 
-//CSRF middleware
+// CSRF middleware
 app.use((req, res, next) => {
-
   // Create token
   const token = tokens.create(process.env.SESSION_SECRET);  
-
   // Set on res.locals
   res.locals.csrfToken = token;
-
   next();
-  
 });
-
 
 // Routes
 app.use(ApiRoutes);
 app.use("/deathClock", DethClockRoutes);
 app.use(MainRoute);
-
 
 // Central error handling
 app.use((err, req, res, next) => {
@@ -81,7 +67,7 @@ app.use((err, req, res, next) => {
 
   // Determine the status code and error message
   let statusCode = 500;
-  let errorMessage = 'Internal Server Error'+ err;
+  let errorMessage = 'Internal Server Error' + err;
 
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     // Handle JSON parse error
@@ -96,28 +82,19 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 
-
 const db_connect = async () => {
   try {
     await mongoose.connect(DB, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-
   } catch (error) {
     console.log(error);
   }
 };
 
-
 // Start server and connect to MongoDB
 app.listen(PORT, () => {
-
   console.log(`Server is listening on port ${PORT}`);  
   db_connect(); 
-
 });
-
-
-
-//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

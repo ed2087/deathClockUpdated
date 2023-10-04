@@ -2,6 +2,8 @@ import express from 'express';
 
 const router = express.Router();
 
+import {checkCsrf} from "../utils/csrf.js";
+
 // constroller
 import {questionsAPI, getApiJson, getUserData, openai} from "../controller/api_controller.js";
 
