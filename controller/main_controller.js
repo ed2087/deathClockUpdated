@@ -13,8 +13,7 @@ export const index = async (req, res, next) => {
         res.status(200).render("index",{
             path: "/",
             title: "home page",
-            // get token from locals.
-            //csrfToken: res.locals.csrfToken
+            csrfToken: res.locals.csrfToken
         })
 
 };

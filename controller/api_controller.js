@@ -3,6 +3,8 @@ import fs from 'fs/promises';
 import Question from "../model/user.js";
 //generate short id for user
 import { v4 as uuidv4 } from 'uuid';
+import {checkCsrf} from "../utils/csrf.js";
+
 
 
 
@@ -34,11 +36,19 @@ export const questionsAPI = async (req, res, next) => {
 
 
 //resive json from deathClock_questions.js
-export const getApiJson = async (req, res, next) => {
+export const getApiJson = async (req, res, next) => {      
 
       try {
 
-            const jsonData = req.body;
+            const jsonData = req.body;    
+            
+            
+            const userPermision = jsonData[jsonData.length - 3].userPermision;
+            const userEmail = jsonData[jsonData.length - 2].userEmail;
+            const csrf = jsonData[jsonData.length - 1]._csrf;
+
+            //check csrf
+            checkCsrf(req, res, next, csrf);
 
             //add user id make it short
             const shortId = uuidv4().slice(0, 8);
@@ -49,7 +59,10 @@ export const getApiJson = async (req, res, next) => {
                   name: jsonData[0].user.userAnswer,
                   birthdate: jsonData[1].user.userAnswer,
                   jsonFile: JSON.stringify(jsonData),
-                  allowed : jsonData[jsonData.length - 1].userPermision
+                  email: userEmail,
+                  allowed : userPermision,
+                  //createdAt
+                  createdAt: Date.now()
 
             };            
 
@@ -70,6 +83,8 @@ export const getApiJson = async (req, res, next) => {
 
                   //send error message
                   console.log('error saving user');
+
+                  rest.status(500).json({ error: 'Internal Server Error' });
 
             }
             
