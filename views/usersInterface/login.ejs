@@ -1,0 +1,26 @@
+    <!-- head include -->
+    <%- include('../includes/head.ejs') %>
+</head>
+<body>
+
+    <% if(message) {%>
+        <div class="message"><%= message %></div>
+    <% } %>
+
+
+    <!-- log in form -->
+    <form action="/user/login" method="POST">        
+        <!-- email -->
+        <input type="email" name="email" placeholder="email" required>
+        <input type="password" name="password" placeholder="password" required>
+        <button type="submit">Log In</button>
+    </form>
+
+    <a href="/user/register">Register</a>
+    
+
+
+    <!-- script -->
+    <script src="../JS/master.js"></script> 
+</body>
+</html>

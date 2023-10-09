@@ -9,63 +9,127 @@ const userDetails_ = {
     userName : userData.name,
     userBirthdate : userData.birthdate,
     userShortId : userData.shortId,
-    lifeExpectancy : jsonData[20].totalPoints
 };
 
+console.log({
+    userData,
+    jsonData,
+})
 
-console.log(jsonData);
+//find jsonData jsonData[i].totalPoints key and return the value
+let lifeExpectancy_negativeYears = jsonData.find((element) => {
+    return element.totalPoints;
+}).totalPoints; 
+
+
+
+//  send predicted death date and time data  /deathClock//updateUserClock use fetch
+const updateUserClock = async (userDetails_) => {
+    //use sendJson function
+   let data = await sendJson("/deathClock/updateUserClock", "POST", userDetails_);   
+   data = data.data;
+
+   data =[        
+        data.usersMin[0].min,
+        data.usersAvg[0].avg,
+        data.usersMax[0].max
+   ]
+
+   startChart(data);
+};
 
 function calculateTime(userBirthdate) {
-    const currentDate = new Date();
-    const dob = new Date(userBirthdate);
-    const averageLifeExpectancy = 70; // Average life expectancy in years
 
-    if (isNaN(dob.getTime())) {
-        return "Please enter a valid date of birth.";
-    }
+  const averageLifeExpectancy = 70; // Replace with the average life expectancy in years
+  const currentDate = new Date();
+  const dob = new Date(userBirthdate);
 
-    const timeLivedMilliseconds = currentDate.getTime() - dob.getTime();
-    const remainingMilliseconds = dob.getTime() + (averageLifeExpectancy * 365 * 24 * 60 * 60 * 1000) - currentDate.getTime();
+  if (isNaN(dob.getTime())) {
+      return "Please enter a valid date of birth.";
+  }
 
-    if (timeLivedMilliseconds <= 0) {
-        return "Congratulations, you've already surpassed the average life expectancy!";
-    }
+  const timeLivedMilliseconds = currentDate.getTime() - dob.getTime();
 
-    const timeLivedSeconds = Math.floor(timeLivedMilliseconds / 1000);
-    const timeLivedMinutes = Math.floor(timeLivedSeconds / 60);
-    const timeLivedHours = Math.floor(timeLivedMinutes / 60);
-    const timeLivedDays = Math.floor(timeLivedHours / 24);
-    const timeLivedWeeks = Math.floor(timeLivedDays / 7);
-    const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
-    const timeLivedYears = Math.floor(timeLivedMonths / 12);
+  if (timeLivedMilliseconds <= 0) {
+      return "Congratulations, you've already surpassed the average life expectancy!";
+  }
 
-    const remainingSeconds = Math.floor(remainingMilliseconds / 1000);
-    const remainingMinutes = Math.floor(remainingSeconds / 60);
-    const remainingHours = Math.floor(remainingMinutes / 60);
-    const remainingDays = Math.floor(remainingHours / 24);
-    const remainingMonths = Math.floor(remainingDays / 30.44); // Average month length
-    const remainingYears = Math.floor(remainingMonths / 12);
+  const timeLivedSeconds = Math.floor(timeLivedMilliseconds / 1000);
+  const timeLivedMinutes = Math.floor(timeLivedSeconds / 60);
+  const timeLivedHours = Math.floor(timeLivedMinutes / 60);
+  const timeLivedDays = Math.floor(timeLivedHours / 24);
+  const timeLivedWeeks = Math.floor(timeLivedDays / 7);
+  const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
+  const timeLivedYears = Math.floor(timeLivedMonths / 12);
 
-    return {
-        timeLived: {
-            years: timeLivedYears,
-            months: timeLivedMonths % 12,
-            weeks: timeLivedWeeks,
-            days: timeLivedDays % 30,
-            hours: timeLivedHours % 24,
-            minutes: timeLivedMinutes % 60,
-            seconds: timeLivedSeconds % 60,
-        },
-        remainingTime: {
-            years: remainingYears,
-            months: remainingMonths % 12,
-            days: remainingDays % 30,
-            hours: remainingHours % 24,
-            minutes: remainingMinutes % 60,
-            seconds: remainingSeconds % 60,
-        },
-    };
+  let totalLifeExpectancy = averageLifeExpectancy + lifeExpectancy_negativeYears;
+
+  if (timeLivedYears > averageLifeExpectancy || (timeLivedMonths / 12) > 60) {
+      // If the user has already surpassed the average life expectancy, add extra years to the total life expectancy
+      totalLifeExpectancy = (timeLivedMonths / 12) + (timeLivedMonths / 12) / 8;
+  }
+
+  const remainingYears = Math.floor(totalLifeExpectancy - (timeLivedMonths / 12));
+  const remainingMonths = Math.floor((totalLifeExpectancy * 12) - timeLivedMonths);
+  const remainingWeeks = Math.floor((totalLifeExpectancy * 52) - timeLivedWeeks);
+  const remainingDays = Math.floor((totalLifeExpectancy * 365) - timeLivedDays);
+  const remainingHours = Math.floor((totalLifeExpectancy * 365 * 24) - timeLivedHours);
+  const remainingMinutes = Math.floor((totalLifeExpectancy * 365 * 24 * 60) - timeLivedMinutes);
+  const remainingSeconds = Math.floor((totalLifeExpectancy * 365 * 24 * 60 * 60) - timeLivedSeconds);
+
+  // Calculate the future date when the user is expected to reach their remaining life expectancy
+  
+  let yearDeath = currentDate.getFullYear() + remainingYears;
+  let monthDeath = currentDate.getMonth() + remainingMonths;
+  let dayDeath = currentDate.getDate() + remainingDays
+      monthDeath = monthDeath % 12;
+      dayDeath = dayDeath % 30;
+      
+  // Adjust month and year if dayDeath exceeds the days in the current month
+  const daysInMonth = new Date(yearDeath, monthDeath, 0).getDate();
+  if (dayDeath > daysInMonth) {
+      dayDeath -= daysInMonth;
+      monthDeath++;
+      if (monthDeath > 11) {
+          monthDeath = 0;
+          yearDeath++;
+      }
+  }
+
+  const expectedFutureDate = {
+      year: yearDeath,
+      month: monthDeath + 1, // Add 1 to month since it's zero-based
+      day: dayDeath,
+  };
+
+
+  return {
+      timeLived: {
+          years: timeLivedYears,
+          months: timeLivedMonths,
+          weeks: timeLivedWeeks,
+          days: timeLivedDays,
+          hours: timeLivedHours,
+          minutes: timeLivedMinutes,
+          seconds: timeLivedSeconds,
+      },
+      remainingTime: {
+          years: remainingYears,
+          months: remainingMonths,
+          weeks: remainingWeeks,
+          days: remainingDays,
+          hours: remainingHours,
+          minutes: remainingMinutes,
+          seconds: remainingSeconds,
+      },
+      expectedFutureDate: {
+          year: expectedFutureDate.year,
+          month: expectedFutureDate.month, // Add 1 to month since it's zero-based
+          day: expectedFutureDate.day,
+      },
+  };
 }
+
 
 
 // Function to update and display the time every second
@@ -77,12 +141,35 @@ function updateTime() {
     };
     
     const result = calculateTime(userDetails.userBirthdate, userDetails.lifeExpectancy);    
+    const expectedFutureDate = result.expectedFutureDate;
 
+    //build a package to send to the server
+    const userClock = {
+        shortId: userDetails_.userShortId,
+        predictedDeathYear: result.remainingTime.years,
+        yearsLeft: result.remainingTime.years,
+        monthsLeft: result.remainingTime.months,
+        weeksLeft: result.remainingTime.weeks,
+        daysLeft: result.remainingTime.days,
+        hoursLeft: result.remainingTime.hours,  
+        minutesLeft: result.remainingTime.minutes,
+        secondsLeft: result.remainingTime.seconds,
+        expectedFutureDate: expectedFutureDate,
+        //
+    };
+   
     
+
+    //send the package to the server
+    if(!lock){
+        updateUserClock(userClock);
+        lock = true;
+    }
+
     // Update HTML elements
-    document.getElementById("timeLived").textContent = `${result.timeLived.years} years, ${result.timeLived.months} months, ${result.timeLived.weeks} weeks, ${result.timeLived.days} days, ${result.timeLived.hours} hours, ${result.timeLived.minutes} minutes, ${result.timeLived.seconds} seconds`;
-    document.getElementById("remainingTime").textContent = `${result.remainingTime.years} years, ${result.remainingTime.months} months, ${result.remainingTime.days} days, ${result.remainingTime.hours} hours, ${result.remainingTime.minutes} minutes, ${result.remainingTime.seconds} seconds left`;
-    
+    document.getElementById("timeLived").textContent = `${result.timeLived.years} years, ${result.timeLived.months.toLocaleString()} months, ${result.timeLived.weeks.toLocaleString()} weeks, ${result.timeLived.days.toLocaleString()} days, ${result.timeLived.hours.toLocaleString()} hours, ${result.timeLived.minutes.toLocaleString()} minutes, ${result.timeLived.seconds.toLocaleString()} seconds`;
+    document.getElementById("remainingTime").textContent = `${result.remainingTime.years} years, ${result.remainingTime.months.toLocaleString()} months, ${result.remainingTime.days.toLocaleString()} days, ${result.remainingTime.hours.toLocaleString()} hours, ${result.remainingTime.minutes.toLocaleString()} minutes, ${result.remainingTime.seconds.toLocaleString()} seconds left`;
+    document.getElementById("expectedFutureDate").textContent = `${expectedFutureDate.year}-${expectedFutureDate.month}-${expectedFutureDate.day}`;
 }
 
 // Call the updateTime function every second
@@ -95,134 +182,52 @@ updateTime();
 
 
 
-// Get the canvas element
-const canvas = document.getElementById("canvas");
+// chart.js
 
-// Create a context object
-const ctx = canvas.getContext("2d");
-
-// Function to resize the canvas based on screen size
-function resizeCanvas() {
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-  canvas.width = screenWidth;
-  canvas.height = screenHeight;
-
-  // Call your drawing function here
-  draw();
-}
-
-// Call the resizeCanvas function when the window is resized
-window.addEventListener("resize", resizeCanvas);
-
-// Initial canvas sizing
-resizeCanvas();
-
-// Function to scroll the canvas to keep the latest image in view
-function scrollCanvas() {
-  const scrollX = 0; // Adjust as needed
-  const scrollY = canvas.height; // Scroll to show the latest content
-  window.scrollTo(scrollX, scrollY);
-}
-
-// Your drawing code here
-
-// Example: Draw a rectangle on the canvas
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-  // Calculate the dimensions of the rectangle based on the canvas size
-  const rectWidth = canvas.width * 0.2; // Example: 20% of the canvas width
-  const rectHeight = canvas.height * 0.2; // Example: 20% of the canvas height
-  const rectX = (canvas.width - rectWidth) / 2; // Center horizontally
-  const rectY = (canvas.height - rectHeight) / 2; // Center vertically
-
-  ctx.fillStyle = "blue";
-  ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
-}
-
-// Create an image object for the birth image
-const birthImage = new Image();
-birthImage.src = "../../IMAGES/utils/baby.png";
-
-// Create an image object for the death image
-const deathImage = new Image();
-deathImage.src = "../../IMAGES/utils/cross.png";
-
-// Define birth and death objects with initial positions
-const births = [];
-const deaths = [];
-
-// Set spacing between images and rows
-const spacing = 5; // Adjust as needed
-const rowHeight = Math.max(birthImage.height, deathImage.height) + spacing; // Height of each row
-
-// Initialize a variable to track the current row
-let currentRow = 0;
-let currentX = 0;
-
-// Update the canvas every second
-function update() {
-  // Get the current number of births and deaths per second
-  const birthsPerSecond = 4.3; // Adjust as needed
-  const deathsPerSecond = 1.8; // Adjust as needed
-
-  // Clear the canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Calculate the maximum number of births and deaths in a row
-  const maxBirthsInRow = Math.floor((canvas.width - currentX) / (birthImage.width + spacing));
-  const maxDeathsInRow = Math.floor((canvas.width - currentX) / (deathImage.width + spacing));
-
-  // Update birth positions and draw
-  for (let i = 0; i < births.length; i++) {
-    const birth = births[i];
-    ctx.drawImage(birthImage, birth.x, birth.y);
+function startChart(data) {
+    const ctx = document.getElementById("chart").getContext("2d");
+  
+    // Define custom colors for the dark theme
+    const darkColors = ["#4CAF50", "#FF9800", "#2196F3"];
+  
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Min Average Age", "Average Age", "Max Average Age"],
+        datasets: [
+          {
+            label: "Users Death Clock Predictions",
+            data: data,
+            borderColor: darkColors,
+            backgroundColor: darkColors.map(color => color + "40"), // Add transparency to the background color
+            pointBackgroundColor: darkColors,
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: "Users Death Clock Predictions",
+          fontColor: "#FFF", // Title text color
+        },
+        legend: {
+          labels: {
+            fontColor: "#FFF", // Legend text color
+          },
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontColor: "#FFF", // X-axis label color
+            },
+          }],
+          yAxes: [{
+            ticks: {
+              fontColor: "#FFF", // Y-axis label color
+            },
+          }],
+        },
+      },
+    });
   }
-
-  // Update death positions and draw
-  for (let i = 0; i < deaths.length; i++) {
-    const death = deaths[i];
-    ctx.drawImage(deathImage, death.x, death.y);
-  }
-
-  // Add new births and deaths with proper spacing and alignment
-  for (let i = 0; i < birthsPerSecond; i++) {
-    if (currentX + birthImage.width <= canvas.width) {
-      const newBirth = {
-        x: currentX,
-        y: currentRow * rowHeight,
-      };
-      births.push(newBirth);
-      currentX += birthImage.width + spacing;
-    } else {
-      // Start a new row
-      currentRow++;
-      currentX = 0;
-    }
-  }
-
-  for (let i = 0; i < deathsPerSecond; i++) {
-    if (currentX + deathImage.width <= canvas.width) {
-      const newDeath = {
-        x: currentX,
-        y: currentRow * rowHeight,
-      };
-      deaths.push(newDeath);
-      currentX += deathImage.width + spacing;
-    } else {
-      // Start a new row
-      currentRow++;
-      currentX = 0;
-    }
-  }
-
-  // Scroll the canvas to show the latest content
-  scrollCanvas();
-
-  // Request the next update
-  requestAnimationFrame(update);
-}
-
-// Start the update loop
-//update();
+  

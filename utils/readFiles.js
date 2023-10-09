@@ -1,6 +1,6 @@
-import fs from 'fs/promises';
+const fs = require('fs').promises;
 
-export const readFileAPI = async (apiName) => {
+module.exports.readFileAPI = async function (apiName) {
   // Define the path to the file based on the given API name
   const filePath = `./utils/api/${apiName}`; // Adjust the path as needed
 

@@ -1,16 +1,19 @@
-import express from 'express';
-
+const express = require('express');
 const router = express.Router();
 
-// constroller
-import {deathclockQuestions,deathclockResults} from "../controller/deathclock_controller.js";
+// Controller
+const deathclockController = require("../controller/deathclock_controller.js");
 
+// DeathclockQuestions
+router.get("/questions", deathclockController.deathclockQuestions);
 
-//deathclockQuestions
-router.get("/questions", deathclockQuestions);
+// DeathclockResults
+router.get("/results/:id", deathclockController.deathclockResults);
 
-//deathclockResults
-router.get("/results/:id", deathclockResults);
+// Graveyard
+router.get("/graveyard", deathclockController.graveyard);
 
+// UpdateUserClock
+router.post("/updateUserClock", deathclockController.updateUserClock);
 
-export default router;
+module.exports = router;

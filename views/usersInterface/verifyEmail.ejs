@@ -1,0 +1,23 @@
+    <!-- head include -->
+    <%- include('../includes/head.ejs') %>
+</head>
+<body>
+
+    <!-- verify email -->
+    <h1>verify</h1>  
+
+    
+    <h2>We sent a verification link to your email</h2>
+
+    <!-- dint get email -->
+    <a href="/user/verificationLink/<% id %>">Didn't get the email?</a>
+
+
+
+    <!-- log in -->
+    <a href="/user/login">Log In</a>
+
+    <!-- script -->
+    <script src="../JS/master.js"></script> 
+</body>
+</html>

@@ -1,23 +1,18 @@
-import express from 'express';
-
+const express = require('express');
 const router = express.Router();
+const csrfModule = require("../utils/csrf.js");
 
-// constroller
-import {questionsAPI, getApiJson, getUserData, openai} from "../controller/api_controller.js";
+// Controller
+const apiController = require("../controller/api_controller.js");
 
-//send json
-router.get("/questionsAPI", questionsAPI);
+// Send JSON
+router.get("/questionsAPI", apiController.questionsAPI);
 
-//resive json
-router.post("/questionsAPI", getApiJson);
+// Receive JSON
+router.post("/questionsAPI", apiController.getApiJson);
 
-//get user data from db
-router.get("/getUserData/:id", getUserData);
-
-//openai
-router.get("/openai", openai);
+// Get user data from DB
+router.get("/getUserData/:id", apiController.getUserData);
 
 
-
-
-export default router;
+module.exports = router;

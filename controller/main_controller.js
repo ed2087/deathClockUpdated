@@ -1,22 +1,24 @@
-//get jsonfiles
-import {readFileAPI} from "../utils/readFiles.js";
+const { readFileAPI } = require("../utils/readFiles.js");
+const Question = require("../model/user.js");
 
-//add model
-import Question from "../model/user.js";
+exports.index = async function (req, res, next) {
+
+  //get user info from session
+  let user = req.session.user;
 
 
-export const index = async (req, res, next) => {
+  if (user === undefined) {
+    user = { username: "guest" };
+  }
+  
 
+  const file = await readFileAPI("questions_api.json");
 
-        const file = await readFileAPI("questions_api.json");
-
-        res.status(200).render("index",{
-            path: "/",
-            title: "home page",
-            // get token from locals.
-            //csrfToken: res.locals.csrfToken
-        })
-
+  res.status(200).render("index", {
+    path: "/",
+    title: "home page",
+    csrfToken: res.locals.csrfToken,
+    userName: user.username,
+    userActive:  req.session.user ? true : false,
+  });
 };
-
-
