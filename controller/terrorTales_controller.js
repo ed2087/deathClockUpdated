@@ -1,7 +1,12 @@
 // Submission model
 const Submission = require("../model/submission.js");
-// User model
 const User = require("../model/user.js");
+
+//other
+const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
+const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
+
+//packages
 const { checkCsrf } = require("../utils/csrf.js");
 const uuidv4 = require('uuid').v4;
 // Hash password
@@ -23,6 +28,10 @@ exports.submission = function (req, res) {
 
 // Submission post (add checkCsrf)
 exports.submissionPost = async function (req, res, next) {
+
+    //we no longuer need email
+    //send email to user and admin that a new submission has been submitted
+
     try {
         // Check csrf
         const csrf = checkCsrf(req, res, next, req.body._csrf);
@@ -88,9 +97,9 @@ exports.submissionPost = async function (req, res, next) {
 
         // Get tags, categories, and extraTags as strings and convert them to arrays if they are not empty
         let tagsArray = tags.split(",");
-        let categoriesArray = categories.split(",");
+        //let categoriesArray = categories.split(",");
         let extraTagsArray = extraTags.split(",");
-        let socialMediaArray = socialMedia.split(",");
+        //let socialMediaArray = socialMedia.split(",");
 
         if (tags && tagsArray.length > 0) {
             tags = tagsArray.map((tag) => tag.trim());
@@ -98,11 +107,11 @@ exports.submissionPost = async function (req, res, next) {
             tags = tags.filter((tag) => tag !== "");
         }
 
-        if (categories && categoriesArray.length > 0) {
-            categories = categoriesArray.map((category) => category.trim());
-            // Remove empty strings
-            categories = categories.filter((category) => category !== "");
-        }
+        // if (categories && categoriesArray.length > 0) {
+        //     categories = categoriesArray.map((category) => category.trim());
+        //     // Remove empty strings
+        //     categories = categories.filter((category) => category !== "");
+        // }
 
         if (extraTags && extraTagsArray.length > 0) {
             extraTags = extraTagsArray.map((extraTag) => extraTag.trim());
@@ -110,11 +119,11 @@ exports.submissionPost = async function (req, res, next) {
             extraTags = extraTags.filter((extraTag) => extraTag !== "");
         }
 
-        if (socialMedia && socialMediaArray.length > 0) {
-            socialMedia = socialMediaArray.map((socialMedia) => socialMedia.trim());
-            // Remove empty strings
-            socialMedia = socialMedia.filter((socialMedia) => socialMedia !== "");
-        }
+        // if (socialMedia && socialMediaArray.length > 0) {
+        //     socialMedia = socialMediaArray.map((socialMedia) => socialMedia.trim());
+        //     // Remove empty strings
+        //     socialMedia = socialMedia.filter((socialMedia) => socialMedia !== "");
+        // }
 
         // Save data to the database
         const submission = await Submission.create({
@@ -133,50 +142,28 @@ exports.submissionPost = async function (req, res, next) {
             acceptedTerms,
             termsAndConditions
         });
+        
+        // Create user if not exist
+        let userId = req.session.userId;
+        const user = await User.findById(userId);
 
-        // // Create user if not exist
-        // const user = await User.findOne({ email });
-        // let user_ = undefined;
+        if (!user) {
 
-        // if (!user) {
-        //     const generatePassword = uuidv4();
+            //send to error page  req, res, statusCode, message
+            return globalErrorHandler(req, res, 500, "You do not have permission to access this page.");
+            
+        } else {
+            // Update user
+            user.contributions.stories.push(submission._id);
+            user.contributions.storiesCount = user.contributions.storiesCount + 1;
+            user_ = await user.save();
 
-        //     // Hash password
-        //     const salt = await bcrypt.genSalt(10);
-        //     const hashPassword = await bcrypt.hash(generatePassword, salt);
+            // Error updating user
+            if (!user_) {
+                return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+            }
 
-        //     // Create user
-        //     user_ = await User.create({
-        //         name: legalName,
-        //         email,
-        //         password: hashPassword,
-        //         contributions: {
-        //             stories: submission._id,
-        //             storiesCount: 1
-        //         }
-        //     });
-
-        //     // Error creating user
-        //     if (!user_) {
-        //         return res.status(500).json({
-        //             status: 500,
-        //             message: "user not created"
-        //         });
-        //     }
-        // } else {
-        //     // Update user
-        //     user.contributions.stories.push(submission._id);
-        //     user.contributions.storiesCount = user.contributions.storiesCount + 1;
-        //     user_ = await user.save();
-
-        //     // Error updating user
-        //     if (!user_) {
-        //         return res.status(500).json({
-        //             status: 500,
-        //             message: "user not updated"
-        //         });
-        //     }
-        // }
+        }
 
         if (submission) {
             // Send response

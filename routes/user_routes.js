@@ -6,7 +6,7 @@ const { check, body } = require("express-validator");
 //utils\auth.js
 const { isAuthenticated } = require("../utils/auth.js");
 // Controller
-const {loginPage,registerPage,postLogin,postRegister,activateAccount,logout} = require("../controller/user_controller.js");
+const {loginPage,registerPage,postLogin,postRegister,activateAccount,verificationPage,resendVerification,logout} = require("../controller/user_controller.js");
 
 
 // Login page
@@ -72,8 +72,11 @@ router.post("/register", [
 //logout
 router.get("/logout", logout);
 
+//verification page
+router.get("/verificationPage", verificationPage);
+
 // Resend verification link
-//router.get("/verificationLink/:id", resendVerification);
+router.get("/resenverificationLink/:id", resendVerification);
 
 // Activate account
 router.get("/activate/:token", activateAccount);

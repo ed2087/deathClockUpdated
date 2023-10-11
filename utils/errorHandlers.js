@@ -20,6 +20,23 @@ const registerValidation =  (req) => {
 }
 
 
+const globalErrorHandler = (req, res, statusCode, message) => {
+
+    console.log(err);
+
+    res.status(statusCode).render("errorHandler", {
+
+        title: "Error",
+        path: "/errorHandler",
+        statusCode: statusCode,
+        message: message,
+
+    });
+
+};
+
+
 module.exports = {
     registerValidation,
+    globalErrorHandler,
 };

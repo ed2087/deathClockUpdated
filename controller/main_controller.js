@@ -6,7 +6,6 @@ exports.index = async function (req, res, next) {
   //get user info from session
   let user = req.session.user;
 
-
   if (user === undefined) {
     user = { username: "guest" };
   }
@@ -21,4 +20,5 @@ exports.index = async function (req, res, next) {
     userName: user.username,
     userActive:  req.session.user ? true : false,
   });
+
 };
