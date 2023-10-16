@@ -1,15 +1,25 @@
     <!-- head include -->
-    <%- include('./includes/head.ejs') %>
+    <%- include('../includes/head.ejs') %>
 </head>
 <body>
 
-    <!-- logout if there is a user -->
+    <!-- verify email -->
+    <h1>verify</h1>  
 
-    <% if(userActive) {%>
-        <a href="/user/logout">Log Out</a>
-    <% } %>
+    
+    <h2>We sent a verification link to your email</h2>
+    <br>
+    <br>
+    <!-- dint get email -->
+    <a href="/user/resenverificationLink/<%=id%>">Didn't get the email?</a>
 
-    <h1>Hello <%= userName  %></h1>
+    <br>
+    <br>
+
+    <!-- log in -->
+    <!-- home -->
+    <a href="/">home</a>
+
     <a href="/deathClock/questions">questions</a>
 
     <!-- /graveyard -->
@@ -17,12 +27,8 @@
 
     <!-- /terrorTales/home -->
     <a href="/terrorTales">terrorTales</a>
-
-    <!-- log in -->
+    
     <a href="/user/login">Log In</a>
-    <!-- register -->
-    <a href="/user/register">Register</a>
-
 
     <!-- script -->
     <script src="../JS/master.js"></script> 

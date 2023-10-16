@@ -4,13 +4,10 @@
 <body>
 
     <!-- logout if there is a user -->
-
-    <% if(userActive) {%>
-        <a href="/user/logout">Log Out</a>
-    <% } %>
-
-    <h1>Hello <%= userName  %></h1>
+    
     <a href="/deathClock/questions">questions</a>
+    <!-- add this id: 32adc7bf -->
+    <a href="/deathClock/results">results</a>
 
     <!-- /graveyard -->
     <a href="/deathClock/graveyard">graveyard</a>
@@ -22,6 +19,16 @@
     <a href="/user/login">Log In</a>
     <!-- register -->
     <a href="/user/register">Register</a>
+
+
+
+        <div id="errorContainer">
+            <h1><%= statusCode %></h1>
+            <h2><%= message %></h2>
+            <br>
+            <br>
+            <a href="/">Home</a>
+        </div>
 
 
     <!-- script -->

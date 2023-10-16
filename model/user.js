@@ -1,44 +1,67 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 // Define the User Schema
 const userSchema = new mongoose.Schema({
-  shortId: {
+  username: {
     type: String,
     required: true,
   },
-  name: {
+  email:{
     type: String,
-    required: true,
+    required: true
   },
-  allowed: {
+  password:{
+    type: String,
+    required: true
+  },
+  userOnline: {
+    type : Boolean,
+    default : false
+  },
+  userVerified:{
     type: Boolean,
-    default: false, // Set the default value to false
+    default: false
   },
+  activateToken : String,
+  passwordResetToken: String,
   birthdate: {
     type: Date,
-    required: true,
+    required: false,
   },
-  clock:{
-      predictedDeathYear: {
-        type: Number,
-        default: 0, 
-      },
-      yearsLeft: {
+  role: {
+    type: String,
+    enum: ["user", "admin", "superadmin", "moderator", "writter"],
+    default: "user",
+  },
+  contributions: {
+     stories:[
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Story"
+        }
+     ],
+      //number of issues
+      storiesCount: {
         type: Number,
         default: 0,
       },
-      secondsLeft: {
-        type: Number,
-        default: 0,
-      },
   },
-  jsonFile: {
-    type: String, // Assuming the JSON file content will be stored as a string
+  deathclock: {
+    //get deathclock id
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "DeathClock"
+ },
+  createdAt: {
+    type: Date,
+    default: Date.now, // Set the default value to the current date/time
   },
-  
+  updatedAt: {
+    type: Date,
+    default: Date.now, // Set the default value to the current date/time
+  }
 });
 
 // Create the User model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('user', userSchema);
 
-export default User;
+module.exports = User;
