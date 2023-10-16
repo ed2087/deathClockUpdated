@@ -4,16 +4,19 @@
 <body>
 
     <% if(message) {%>
-        <div class="message"><%= message %></div>
+        <div class="message"><%= message %></div>        
     <% } %>
 
-
+        
     <!-- log in form -->
     <form action="/user/login" method="POST">        
         <!-- email -->
-        <input type="email" name="email" placeholder="email" required>
-        <input type="password" name="password" placeholder="password" required>
+        <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : '' %>">
+        <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : '' %>">
+        <!-- csrf -->
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button type="submit">Log In</button>
+
     </form>
 
 

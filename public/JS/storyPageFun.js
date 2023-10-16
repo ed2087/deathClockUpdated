@@ -12,6 +12,12 @@ let timer;
 /////////////////////////////////////////////////
 
 const CommonStoryTemplates = (data) => {
+
+    //convert data.createdAt to date display format
+    const date = new Date(data.createdAt);
+    const createdAt = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+
+
     return `
         <div class="story">
             <h1 class="storyTitle">${data.storyTitle}</h1>
@@ -21,7 +27,7 @@ const CommonStoryTemplates = (data) => {
             <div class="categories">${data.categories}</div>
             <div class="legalName">${data.legalName}</div>
             <div class="upvoteCount">${data.upvoteCount}</div>
-            <div class="createdAt">${data.createdAt}</div>
+            <div class="createdAt">${createdAt}</div>
             <a href="#">Not Avalable</a>
         </div>
     `;
@@ -30,6 +36,9 @@ const CommonStoryTemplates = (data) => {
 /////////////////////////////////////////////////
 // Fetch Data from Server
 /////////////////////////////////////////////////
+
+
+let allowOnce = true;
 
 const query_fetch = async () => {
     const searchInput = id_("search").value;
@@ -49,13 +58,30 @@ const query_fetch = async () => {
     const url = `/terrorTales/query?${urlParams.toString()}`;
 
     const data = await fetch_(url, 'GET', null);
+    console.log(data);
 
     if (data.status === 200) {
 
+
+        //allowOnce
+        if (allowOnce) {
+
+            id_('language').innerHTML = '<option value="English">English</option>';
+            //add languagesArray to language select
+            data.languagesArray.forEach((language) => {
+                //if language is english then dont add it to language select
+                if (language === 'English') return;
+                id_('language').innerHTML += `<option value="${language}">${language}</option>`;
+            });
+            
+            allowOnce = false;
+
+        }
         
 
         if (page === 1) {
-            id_('storyListWrap').innerHTML = '';
+            id_('storyListWrap').innerHTML = '';           
+
         }
 
         const storyListWrap = id_('storyListWrap');

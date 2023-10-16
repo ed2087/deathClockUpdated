@@ -74,10 +74,16 @@ const tokens = new csrf();
 
 // CSRF middleware
 app.use((req, res, next) => {
-  // Create token
-  const token = tokens.create(process.env.SESSION_SECRET);  
-  // Set on res.locals
+  // Generate a new CSRF token
+  const token = tokens.create(process.env.SESSION_SECRET);
+
+  // Set the CSRF token on the response header
+  res.setHeader('X-CSRF-Token', token);
+
+  // Store the CSRF token in res.locals for easy access in views
   res.locals.csrfToken = token;
+
+  // Continue with the request
   next();
 });
 

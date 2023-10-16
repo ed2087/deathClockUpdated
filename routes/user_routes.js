@@ -5,12 +5,14 @@ const { check, body } = require("express-validator");
 
 //utils\auth.js
 const { isAuthenticated } = require("../utils/auth.js");
+//csrf
+const { checkCsrf, checkCsrfToken } = require("../utils/csrf.js");
 // Controller
 const {loginPage,registerPage,postLogin,postRegister,activateAccount,verificationPage,resendVerification,logout} = require("../controller/user_controller.js");
 
 
 // Login page
-router.get("/login", loginPage);
+router.get("/login", isAuthenticated, loginPage);
 
 // Login post
 router.post("/login",[
@@ -28,10 +30,10 @@ router.post("/login",[
     ) 
         .trim(),
 
-], postLogin);
+],checkCsrfToken, postLogin);
 
 // Register page
-router.get("/register", registerPage);
+router.get("/register", isAuthenticated, registerPage);
 
 // Register post
 router.post("/register", [
@@ -66,7 +68,7 @@ router.post("/register", [
             }
             return true;
         })
-], postRegister);
+], checkCsrfToken, postRegister);
 
 
 //logout

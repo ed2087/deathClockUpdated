@@ -174,7 +174,9 @@ exports.queryStories = async function (req, res, next) {
             return res.status(200).json({
                 status: 200,
                 stories: stories.stories,
-                totalStories: stories.totalStories
+                totalStories: stories.totalStories,
+                top5Stories: stories.top5Stories,
+                languagesArray: stories.languagesArray
             });
         } else {
             return res.status(500).json({
@@ -278,6 +280,25 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
             }
         ]);
 
+
+
+        //get languages abalable
+        const languages = await Story.aggregate([
+            {
+                $group: {
+                    _id: "$language"
+                }
+            }
+        ]);
+
+        //add values to array
+        let languagesArray = [];
+        languages.forEach((language_) => {
+            languagesArray.push(language_._id);
+        });
+
+
+
         // Define the aggregation pipeline for fetching paginated stories
         const pipeline = [
             ...countPipeline, // Reuse the count pipeline
@@ -287,6 +308,13 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
             {
                 $limit: limit_,
             },
+            //get most newes to oldest
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            },
+
             {
                 $project: {
                     // Include fields you want to retrieve
@@ -311,7 +339,8 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
         return {
             stories,
             totalStories: totalCount[0] ? totalCount[0].totalStories : 0,
-            top5Stories
+            top5Stories,
+            languagesArray
         };
 
     } catch (error) {

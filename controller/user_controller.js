@@ -13,6 +13,7 @@ const bcrypt = require("bcryptjs");
 const _nodemailer = require("nodemailer");
 const _sendgridtransport = require("nodemailer-sendgrid-transport");
 
+//csrf token from session
 
 
 const transporter = _nodemailer.createTransport(_sendgridtransport({
@@ -33,6 +34,8 @@ exports.loginPage = (req, res) => {
         title: "Login",
         message: null,
         field: null,
+        body: null,
+        csrfToken: res.locals.csrfToken
     });
 };
 
@@ -42,6 +45,8 @@ exports.registerPage = (req, res) => {
         title: "Register",
         message: null,
         field: null,
+        body: null,
+        csrfToken: res.locals.csrfToken
     });
 };
 
@@ -56,26 +61,26 @@ exports.postLogin = async (req, res) => {
             //validate
             const validate_ = registerValidation(req);
 
-            if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field)
+            if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field, req.body)
 
             //check if user exist
             const user = await User.findOne({email: email});
             
             if(!user){
                 //there is no user with that email
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email");
+                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email", req.body);
             }
 
             //check if user is verified
             if(!user.userVerified){
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Please activate your account", "email");
+                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Please activate your account", "email", req.body);
             }
 
             //check password
             const validPassword = await bcrypt.compare(password, user.password);
 
             if(!validPassword){
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password");
+                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password", req.body);
             }
 
             //create session
@@ -87,11 +92,18 @@ exports.postLogin = async (req, res) => {
                 username: user.username,
                 id: user._id,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                userVerified: user.userVerified,
+                userOnline: true
             };
 
             //set session
             req.session.user = userSession;
+
+            //save session
+            req.session.save((err) => {
+                if(err) console.log(err);
+            });
 
             //redirect to home page
             res.redirect("/");
@@ -113,7 +125,7 @@ exports.postRegister = async (req, res) => {
         //validate
         const validate_ = registerValidation(req);
 
-        if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field)
+        if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field, req.body)
 
         
         //incript password
@@ -123,7 +135,7 @@ exports.postRegister = async (req, res) => {
         //check if user exist
         const userExist = await User.findOne({email: email});
 
-        if(userExist) return handlingFlashError(res, "../views/usersInterface/register", "Register", "Email already exist", "email");
+        if(userExist) return handlingFlashError(res, "../views/usersInterface/register", "Register", "Email already exist", "email", req.body);
         
 
         //create user
@@ -318,12 +330,18 @@ exports.logout = async (req, res) => {
 
 
 
-function handlingFlashError (res, urlPath, title, msg, path) {
+function handlingFlashError (res, urlPath, title, msg, path, body) {
+    console.log(body);
+    //if body is undefined
+    if(body === undefined){
+        body = null;
+    }
 
     res.render(urlPath, {
         title: title,
         message: msg,
-        field: path
+        field: path,
+        body: body
     });
 
 }
