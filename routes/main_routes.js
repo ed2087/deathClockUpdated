@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const mainController = require("../controller/main_controller.js");
+const {index} = require("../controller/main_controller.js");
 
 // Landing page
-router.get("/", mainController.index);
+router.get("/", index);
 
 module.exports = router;

@@ -34,6 +34,4 @@ router.get("/query", queryStories);
 // Landing page
 router.get("*", terrorTalesPage);
 
-
-
 module.exports = router;

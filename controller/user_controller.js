@@ -110,7 +110,8 @@ exports.postLogin = async (req, res) => {
     
    } catch (error) {
 
-            console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
    
    }
 };
@@ -190,7 +191,8 @@ exports.postRegister = async (req, res) => {
 
     } catch (error) {
 
-        console.log(error);        
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);        
         
     }
 
@@ -222,7 +224,8 @@ exports.activateAccount = async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
     }
 
 };
@@ -246,7 +249,8 @@ exports.verificationPage = (req, res) => {
 
             
         } catch (error) {
-            console.log(error);
+            //send to globalErrorHandler        
+            globalErrorHandler(req, res, 500, "Internal Server Error", error); 
         }
 
 
@@ -306,7 +310,8 @@ exports.resendVerification = async (req, res) => {
 
 
         } catch (error) {
-            console.log(error);
+            //send to globalErrorHandler        
+            globalErrorHandler(req, res, 500, "Internal Server Error", error); 
         }
 
 };
@@ -314,7 +319,21 @@ exports.resendVerification = async (req, res) => {
 
 // Logout
 exports.logout = async (req, res) => {
-    try {     
+    try {             
+
+        //save user
+        const userSaved = await User.updateOne({_id: req.session.user.id}, {userOnline: false});
+
+
+        if(!userSaved) return globalErrorHandler(req, res, 404, "Oops something went wrong!");
+
+        //set user online to false
+        req.session.user.userOnline = false;
+
+        //save session
+        req.session.save((err) => {
+            if(err) console.log(err);
+        });
 
         // Destroy the session
         req.session.destroy();
@@ -323,7 +342,8 @@ exports.logout = async (req, res) => {
         res.redirect("/user/login");
 
     } catch (error) {
-        console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
     }
 
 };

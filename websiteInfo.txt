@@ -1,0 +1,55 @@
+terrorhub.website@gmail.com
+2087E1987Ar$(Terrohub)$
+
+
+
+
+// Start building your aggregation pipeline
+        let pipeline = [];
+            
+        // Match by date if it exists
+        // if (date) {
+        //     pipeline.push({
+        //         $match: { createdAt: date }
+        //     });
+        // }
+
+        // Text search by title, author, tags, and categories if they exist
+        let searchTerms = [];
+        if (title) searchTerms.push(title);
+        if (author) searchTerms.push(author);
+        if (tags) searchTerms.push(tags);
+        if (categories) searchTerms.push(categories);
+        
+        if (searchTerms.length > 0) {
+            pipeline.push({
+                $match: {
+                    $text: {
+                        $search: searchTerms.join(" "),
+                        $caseSensitive: false,
+                        $diacriticSensitive: false
+                    }
+                }
+            });
+        }
+
+        // Match by language if it exists
+        if (language) {
+            pipeline.push({
+                $match: { language: language }
+            });
+        }
+
+        // Sort by ranking if it exists
+        if (ranking) {
+            pipeline.push({
+                $sort: { createdAt: ranking }
+            });
+        }
+
+        
+        //check if pipeline is empty
+        if (pipeline.length === 0) return [];
+
+        // Execute the aggregation pipeline
+        return await Story.aggregate(pipeline);

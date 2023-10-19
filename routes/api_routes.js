@@ -14,5 +14,4 @@ router.post("/questionsAPI", apiController.getApiJson);
 // Get user data from DB
 router.get("/getUserData/:id", apiController.getUserData);
 
-
 module.exports = router;

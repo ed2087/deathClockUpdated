@@ -5,16 +5,19 @@ console.log("deathclock_app.js loaded");
 let userData = user;
 let jsonData = JSON.parse(userData.jsonFile);
 
+// get totalPoints from the json file and return value
+
+// get totalPoints from the json file and return value
+let questionsPoints = jsonData
+    .filter(element => element.totalPoints)
+    .map(element => element.totalPoints);
+
 const userDetails_ = {
     userName : userData.name,
     userBirthdate : userData.birthdate,
-    userShortId : userData.shortId,
+    userShortId : userData.shortId    
 };
 
-console.log({
-    userData,
-    jsonData,
-})
 
 //find jsonData jsonData[i].totalPoints key and return the value
 let lifeExpectancy_negativeYears = jsonData.find((element) => {
@@ -40,7 +43,8 @@ const updateUserClock = async (userDetails_) => {
 
 function calculateTime(userBirthdate) {
 
-  const averageLifeExpectancy = 70; // Replace with the average life expectancy in years
+  const averageLifeExpectancy = 70;
+  const removeOraddYears = questionsPoints[0];
   const currentDate = new Date();
   const dob = new Date(userBirthdate);
 
@@ -62,10 +66,9 @@ function calculateTime(userBirthdate) {
   const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
   const timeLivedYears = Math.floor(timeLivedMonths / 12);
 
-  let totalLifeExpectancy = averageLifeExpectancy + lifeExpectancy_negativeYears;
-
-  if (timeLivedYears > averageLifeExpectancy || (timeLivedMonths / 12) > 60) {
-      // If the user has already surpassed the average life expectancy, add extra years to the total life expectancy
+  let totalLifeExpectancy = (averageLifeExpectancy + removeOraddYears) - timeLivedYears;
+ 
+  if (timeLivedYears > averageLifeExpectancy || (timeLivedMonths / 12) > totalLifeExpectancy) {
       totalLifeExpectancy = (timeLivedMonths / 12) + (timeLivedMonths / 12) / 8;
   }
 

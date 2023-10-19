@@ -17,6 +17,10 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
 
+//utils modules
+const {registerValidation,globalErrorHandler} = require("./utils/errorHandlers.js");
+
+
 // Local modules
 const MainRoute = require('./routes/main_routes.js');
 const ApiRoutes = require('./routes/api_routes.js');
@@ -87,6 +91,8 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
 // Routes
 app.use("/user", UserRoutes);
 app.use(ApiRoutes);
@@ -94,24 +100,17 @@ app.use("/deathClock", DethClockRoutes);
 app.use("/terrorTales", terrorTalesRoutes);
 app.use(MainRoute);
 
-// Central error handling
-app.use((err, req, res, next) => {
-  // Handle the error
-  console.error(err);
+//error handler
+app.use("*", (req,res,next)=>{
+  
+  const error = new Error("Page not found");
+  error.status = 404;
 
-  // Determine the status code and error message
-  let statusCode = 500;
-  let errorMessage = 'Internal Server Error' + err;
+  globalErrorHandler(req,res,error.status,error.message,error);
 
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    // Handle JSON parse error
-    statusCode = 400;
-    errorMessage = 'Bad Request';
-  }
-
-  // Set the response status code and send an error response
-  res.status(statusCode).json({ error: errorMessage });
+  
 });
+
 
 // Start server
 const PORT = process.env.PORT || 3000;
@@ -133,3 +132,7 @@ app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);  
   db_connect(); 
 });
+
+
+
+

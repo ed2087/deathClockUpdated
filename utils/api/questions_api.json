@@ -62,15 +62,15 @@
         },
         {
           "option": "Some college or vocational training",
-          "scores": [10]
+          "scores": [7]
         },
         {
           "option": "Bachelor's degree",
-          "scores": [15]
+          "scores": [8]
         },
         {
           "option": "Postgraduate degree (e.g., Master's, Ph.D.)",
-          "scores": [20]
+          "scores": [10]
         }
       ],
       "user": {
@@ -85,7 +85,7 @@
       "answer_options": [
         {
           "option": "Less than 1 hour",
-          "scores": [10]
+          "scores": [8]
         },
         {
           "option": "1-2 hours",
@@ -101,7 +101,7 @@
         },
         {
           "option": "More than 6 hours",
-          "scores": [-10]
+          "scores": [-8]
         }
       ],
       "user": {
@@ -189,19 +189,19 @@
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [10]
+          "scores": [6]
         },
         {
           "option": "Weekly",
-          "scores": [7]
-        },
-        {
-          "option": "Monthly",
           "scores": [5]
         },
         {
+          "option": "Monthly",
+          "scores": [3]
+        },
+        {
           "option": "Rarely",
-          "scores": [2]
+          "scores": [1]
         },
         {
           "option": "Never",
@@ -325,11 +325,11 @@
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [7]
+          "scores": [5]
         },
         {
           "option": "Weekly",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "Monthly",
@@ -393,11 +393,11 @@
         },
         {
           "option": "Meditation",
-          "scores": [7]
+          "scores": [5]
         },
         {
           "option": "Talk to a therapist",
-          "scores": [8]
+          "scores": [5]
         },
         {
           "option": "Ignore it",
@@ -432,28 +432,28 @@
           "points": "",
           "userAnswer":""
       }
-    },
+    },    
     {
       "id": 18,
       "eleName": "travel",
-      "category": "Travel",
-      "question": "How frequently do you travel for work or leisure?",
+      "category": "Travel",      
+      "question": "How frequently do you travel?",
       "answer_options": [
         {
           "option": "Frequently",
-          "scores": [-5]
+          "scores": [8]
         },
         {
           "option": "Occasionally",
-          "scores": [2]
-        },
-        {
-          "option": "Rarely",
           "scores": [5]
         },
         {
+          "option": "Rarely",
+          "scores": [2]
+        },
+        {
           "option": "Never",
-          "scores": [10]
+          "scores": [0]
         }
       ],
       "user":{
@@ -469,19 +469,19 @@
       "answer_options": [
         {
           "option": "Less than 5 hours",
-          "scores": [-10]
+          "scores": [-6]
         },
         {
           "option": "5-7 hours",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "7-9 hours",
-          "scores": [10]
+          "scores": [5]
         },
         {
           "option": "More than 9 hours",
-          "scores": [0]
+          "scores": [2]
         }
       ],
       "user":{
@@ -497,11 +497,11 @@
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [10]
+          "scores": [6]
         },
         {
           "option": "Weekly",
-          "scores": [5]
+          "scores": [4]
         },
         {
           "option": "Monthly",
