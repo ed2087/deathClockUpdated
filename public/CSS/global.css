@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Griffy&display=swap');
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #040d12;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    line-height: 1.5;
+    height: 5000px;
+}
+
+li{
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+button{
+    border: none;
+    background-color: transparent;
+}
+
+/* image */
+img{
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Creepster', cursive;
+    font-weight: 400;
+}
+
+
+
+
+/* root css tyles */
+
+:root{
+    --darker-bg-color: #031a1f;
+    --global-bg-color: #040d12;
+    --global-yellow: #ffd600;
+    --global-red: #8c0000;
+    --globlal-brightRed: #ff0000;
+    --global-darkOrange: darkorange;
+    --yellow_gradient: linear-gradient(to bottom, #ffd600, #ffba00, #fb9e00, #f58200, #eb6612);
+    --black_trasparent: rgb(0 0 0 / 85%);
+}
+
+
+
+/* global call to action styles */
+.call_to_action_yellow{
+    background-color: var(--global-yellow);
+    padding: 10px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    border: 2px solid var(--global-yellow);
+    font-family: 'Griffy', cursive;
+    font-weight: 300;
+    font-size: 1.1rem;
+}
+
+    /* hover */
+    .call_to_action_yellow:hover{
+        background: none;
+        border: 2px solid var(--global-yellow);
+        color: rgb(255, 255, 255);
+    }
+
+
+.call_to_action_red{
+    background-color: var(--global-red);
+    padding: 10px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    border: 2px solid var(--global-red);
+    font-family: 'Griffy', cursive;
+    font-weight: 300;
+    font-size: 1.1rem;
+}
+    
+        /* hover */
+        .call_to_action_red:hover{
+            background: none;
+            border: 2px solid var(--global-red);
+            color: rgb(255, 255, 255);
+        }
+
+/* global special text */
+.special_yellow_text{
+    font-family: 'Griffy', cursive;
+    color: var(--global-yellow);
+    font-weight: bolder;
+}
