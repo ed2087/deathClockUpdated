@@ -1,0 +1,111 @@
+
+
+<!-- large screens nav -->
+<nav id="navLargeScreens">
+
+    <ul id="nav_inner_ulWrap">
+
+        <% if(!userActive) {%>
+            <li><a id="signUp" href="/user/register">Sign Up</a></li>
+        <% }else{ %>
+            <li id="userAvatartWrap">
+                <a id="userAvatar" href="#">
+                    <!-- get first letter of users name -->
+                    <p id="nav_user_avatar"><%= userName.charAt(0).toUpperCase() %></p>
+                    <!-- <img src="../../IMAGES/Icons/user.webp" alt="user" id="nav_user_avatar"> -->
+                </a>
+            </li>
+        <% } %> %>
+
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/deathClock/questions">Death Clock</a></li>
+
+        <!-- logo circle middle -->
+        <li id="largerNav_img_wrap">
+            <a href="/">
+                <picture>
+                    <source srcset="../IMAGES/logos/logo1.webp" type="image/webp"> 
+                    <source srcset="../IMAGES/logos/logo1.png" type="image/png">
+                    <img src="../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo">
+                </picture>
+            </a>
+        </li>
+
+        <li><a href="/deathClock/graveyard">Grave Yard</a></li>
+        <li><a href="/terrorTales">Terror Tales</a></li>
+        <li><a href="/">Other</a></li>
+
+        <% if(!userActive) {%>
+            <li><a id="logIn" href="/user/login">Login</a></li>
+        <% }else{ %>
+            <li><a id="logOut" href="/user/logout">Log Out</a></li>
+        <% } %>
+
+        <!-- only avalable in small devices -->
+        <li id="userInterFace_wrap">
+
+            <% if(!userActive) {%>
+                <a id="signUp_small" href="/user/register">Sign Up </a>
+                <a id="logIn_small" href="/user/login">Login</a>
+            <% }else{ %>
+                <a id="logOut_small" href="/user/logout">Log Out</a>
+            <% } %>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- small screens nav -->
+<nav id="navSmallScreens">
+
+    <ul id="navSmall_inner_ulWrap">
+
+        <!-- burger button, logo in middle, other -->
+        <li class="nav_small_liWrap">
+            <button id="nav_small_burgerButton">
+                <div class="icon nav-icon-1">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+            </button>
+        </li>
+
+        <li class="nav_small_liWrap" id="smallNav_image_wrap">            
+            <a href="/">
+                <picture>
+                    <source srcset="../IMAGES/logos/logo1.webp" type="image/webp"> 
+                    <source srcset="../IMAGES/logos/logo1.png" type="image/png">
+                    <img src="../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo2">
+                </picture>
+            </a>
+        </li>
+
+        <% if(!userActive) {%>
+            <li><a id="signUp_small" href="/user/register">Sign Up</a></li>
+        <% }else{ %>
+            <li>
+                <a id="userAvatar" href="#">
+                    <!-- get first letter of users name -->
+                    <p id="nav_user_avatar_small"><%= userName.charAt(0).toUpperCase() %></p>
+                    <!-- <img src="../../IMAGES/Icons/user.webp" alt="user" id="nav_user_avatar"> -->
+                </a>
+            </li>
+        <% } %> %>
+
+    </ul>
+
+</nav>
+
+
+

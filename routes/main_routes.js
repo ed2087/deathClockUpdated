@@ -1,12 +1,10 @@
-import express from 'express';
-
+const express = require('express');
 const router = express.Router();
 
-// constroller
-import {index} from "../controller/main_controller.js";
+// Controller
+const {index} = require("../controller/main_controller.js");
 
-//landing page
+// Landing page
 router.get("/", index);
 
-
-export default router;
+module.exports = router;

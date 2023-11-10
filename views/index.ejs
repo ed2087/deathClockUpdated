@@ -4,14 +4,31 @@
 <body>
 
 
-    <h1>index</h1>
-    <a href="/deathClock/questions">questions</a>
-    <!-- add this id: 32adc7bf -->
-    <a href="/deathClock/results">results</a>
+    <!-- nav include -->
+    <%- include('./includes/nav.ejs') %>
+
+    <!-- header include -->
+    <%- include('./includes/header.ejs') %>
+
+    <!-- main -->
+    <main>
+
+        <!-- about include -->
+        <%- include('./includes/homePage/about.ejs') %>
+
+        <!-- howItWorks -->
+        <%- include('./includes/homePage/howItWorks.ejs') %>
+
+        <!-- Lates Stories -->
+        <%- include('./includes/homePage/LatestStories.ejs') %>
+
+        <!-- graveyard0 -->
+        <%- include('./includes/homePage/exploreGraveyard.ejs') %>
+
+    </main>
 
 
     <!-- script -->
-    <script src="../JS/master.js"></script>
-    <script src="../JS/deathClock_questions.js"></script>   
+    <script src="../JS/master.js"></script> 
 </body>
 </html>

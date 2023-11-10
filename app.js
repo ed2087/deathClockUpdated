@@ -1,43 +1,65 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 // Built-in modules
-import path from 'path';
+const path = require('path');
 
 // Third-party modules  
-import express from 'express';
-import session from 'express-session'; 
-import rateLimit from 'express-rate-limit';
-import ejs from 'ejs';
-import { fileURLToPath } from 'url';
-import csrf from 'csrf';
-//import cors from 'cors';
-//mongoose
-import mongoose from "mongoose";
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const ejs = require('ejs');
+const { fileURLToPath } = require('url');
+const csrf = require('csrf'); // Import the csrf module
+const mongoose = require("mongoose");
+//flash
+const flash = require("connect-flash");
+const session = require("express-session");
+const mongoDBstore = require("connect-mongodb-session")(session);
+
+//utils modules
+const {registerValidation,globalErrorHandler} = require("./utils/errorHandlers.js");
 
 
 // Local modules
-import MainRoute from './routes/main_routes.js';
-import ApiRoutes from './routes/api_routes.js';
-import DethClockRoutes from './routes/deathclock_routes.js';
+const MainRoute = require('./routes/main_routes.js');
+const ApiRoutes = require('./routes/api_routes.js');
+const DethClockRoutes = require('./routes/deathclock_routes.js');
+const terrorTalesRoutes = require('./routes/terrortales_routes.js');
+const UserRoutes = require("./routes/user_routes.js");
 
-// Load environment variables
-import dotenv from 'dotenv';
-import { CONNREFUSED } from 'dns';
-dotenv.config();
 
 // Create Express app
 const app = express();
 
-//app.use(cors());
-
 // Connect to MongoDB
-const DB = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.x2mifua.mongodb.net/terrorHub`;
-
-// Get the directory name of the current module
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+const DB = process.env.DB_URL;
 
 //ejs
 app.set("view engine", "ejs");
-app.set("views", "views");
+app.set("views", __dirname + "/views");
+
+
+app.use(flash());
+
+const store = new mongoDBstore({
+  uri: DB,
+  collection: "sessions",
+  expires: 3 * 24 * 60 * 60 * 1000, // 3 days in milliseconds
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+      maxAge: 3 * 24 * 60 * 60 * 1000, // Same value as expires for the cookie
+    },
+  })
+);
+
 
 // Built-in middleware
 app.use(express.urlencoded({ extended: true }));
@@ -54,48 +76,44 @@ app.use(rateLimit({
 // Create a new token generation/verification instance
 const tokens = new csrf();
 
-//CSRF middleware
+// CSRF middleware
 app.use((req, res, next) => {
+  // Generate a new CSRF token
+  const token = tokens.create(process.env.SESSION_SECRET);
 
-  // Create token
-  const token = tokens.create(process.env.SESSION_SECRET);  
+  // Set the CSRF token on the response header
+  res.setHeader('X-CSRF-Token', token);
 
-  // Set on res.locals
+  // Store the CSRF token in res.locals for easy access in views
   res.locals.csrfToken = token;
 
+  // Continue with the request
   next();
+});
+
+
+
+// Routes
+app.use("/user", UserRoutes);
+app.use(ApiRoutes);
+app.use("/deathClock", DethClockRoutes);
+app.use("/terrorTales", terrorTalesRoutes);
+app.use(MainRoute);
+
+//error handler
+app.use("*", (req,res,next)=>{
+  
+  const error = new Error("Page not found");
+  error.status = 404;
+
+  globalErrorHandler(req,res,error.status,error.message,error);
+
   
 });
 
 
-// Routes
-app.use(ApiRoutes);
-app.use("/deathClock", DethClockRoutes);
-app.use(MainRoute);
-
-
-// Central error handling
-app.use((err, req, res, next) => {
-  // Handle the error
-  console.error(err);
-
-  // Determine the status code and error message
-  let statusCode = 500;
-  let errorMessage = 'Internal Server Error'+ err;
-
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    // Handle JSON parse error
-    statusCode = 400;
-    errorMessage = 'Bad Request';
-  }
-
-  // Set the response status code and send an error response
-  res.status(statusCode).json({ error: errorMessage });
-});
-
 // Start server
 const PORT = process.env.PORT || 3000;
-
 
 const db_connect = async () => {
   try {
@@ -103,7 +121,6 @@ const db_connect = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-
   } catch (error) {
     console.log(error);
   }
@@ -112,12 +129,10 @@ const db_connect = async () => {
 
 // Start server and connect to MongoDB
 app.listen(PORT, () => {
-
   console.log(`Server is listening on port ${PORT}`);  
   db_connect(); 
-
 });
 
 
 
-//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
+
