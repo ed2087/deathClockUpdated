@@ -102,7 +102,7 @@ app.use(MainRoute);
 
 //error handler
 app.use("*", (req,res,next)=>{
-  
+  console.log("404 page not found");
   const error = new Error("Page not found");
   error.status = 404;
 

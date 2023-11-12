@@ -6,10 +6,11 @@
     <ul id="nav_inner_ulWrap">
 
         <% if(!userActive) {%>
-            <li><a id="signUp" href="/user/register">Sign Up</a></li>
+            <li><a class="navLinks_" id="signUp" href="/user/register">Sign Up</a></li>
         <% }else{ %>
             <li id="userAvatartWrap">
-                <a id="userAvatar" href="#">
+                <!-- modify user link to profile once profile is avable -->
+                <a class="navLinks_" id="userAvatar" href="/">
                     <!-- get first letter of users name -->
                     <p id="nav_user_avatar"><%= userName.charAt(0).toUpperCase() %></p>
                     <!-- <img src="../../IMAGES/Icons/user.webp" alt="user" id="nav_user_avatar"> -->
@@ -17,13 +18,13 @@
             </li>
         <% } %> %>
 
-        <li><a href="/">Home</a></li>
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/deathClock/questions">Death Clock</a></li>
+        <li><a class="navLinks_" href="/">Home</a></li>
+        <li><a class="navLinks_" href="/#about">About Us</a></li>
+        <li><a class="navLinks_" href="/deathClock/questions">Death Clock</a></li>
 
         <!-- logo circle middle -->
         <li id="largerNav_img_wrap">
-            <a href="/">
+            <a class="navLinks_" href="/">
                 <picture>
                     <source srcset="../IMAGES/logos/logo1.webp" type="image/webp"> 
                     <source srcset="../IMAGES/logos/logo1.png" type="image/png">
@@ -32,24 +33,24 @@
             </a>
         </li>
 
-        <li><a href="/deathClock/graveyard">Grave Yard</a></li>
-        <li><a href="/terrorTales">Terror Tales</a></li>
-        <li><a href="/">Other</a></li>
+        <li><a class="navLinks_" href="/deathClock/graveyard">Grave Yard</a></li>
+        <li><a class="navLinks_" href="/terrorTales">Creepy Pastas</a></li>
+        <li><a class="navLinks_" href="/">Other</a></li>
 
         <% if(!userActive) {%>
-            <li><a id="logIn" href="/user/login">Login</a></li>
+            <li><a class="navLinks_" id="logIn" href="/user/login">Login</a></li>
         <% }else{ %>
-            <li><a id="logOut" href="/user/logout">Log Out</a></li>
+            <li><a class="navLinks_" id="logOut" href="/user/logout">Log Out</a></li>
         <% } %>
 
         <!-- only avalable in small devices -->
         <li id="userInterFace_wrap">
 
             <% if(!userActive) {%>
-                <a id="signUp_small" href="/user/register">Sign Up </a>
-                <a id="logIn_small" href="/user/login">Login</a>
+                <a class="navLinks_" id="signUp_small" href="/user/register">Sign Up </a>
+                <a class="navLinks_" id="logIn_small" href="/user/login">Login</a>
             <% }else{ %>
-                <a id="logOut_small" href="/user/logout">Log Out</a>
+                <a class="navLinks_" id="logOut_small" href="/user/logout">Log Out</a>
             <% } %>
 
         </li>
