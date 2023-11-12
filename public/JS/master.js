@@ -40,53 +40,53 @@ const sendJson = async (url, method, body) => {
 
 //////////////////// nav burger function /////////////////////////
 
-//true = open menu / false = close menu
-let menuOpen = false; 
+// Initial menu state
+let menuOpen = false;
 
-//animation styles
+// Animation styles
 const slideRight = 'slide-right';
 const slideLeft = 'slide-left';
 
+// DOM elements
+const nav = id_('navLargeScreens');
+const burgerButton = id_('nav_small_burgerButton');
+const icons = queryAll_('.icon');
+const navLinks = queryAll_('.navLinks_');
 
-// Toggle menu
 const toggleMenu = () => {
+  nav.classList.toggle(slideRight, !menuOpen);
+  nav.classList.toggle(slideLeft, menuOpen);
+  menuOpen = !menuOpen;
+ };
+ 
+ burgerButton.addEventListener('click', toggleMenu);
 
-  const nav = document.getElementById('navLargeScreens');
-
-  if (menuOpen) {
-    nav.classList.remove(slideRight); 
-    nav.classList.add(slideLeft);
-    menuOpen = false;
-  } else {
-    nav.classList.remove(slideLeft);
-    nav.classList.add(slideRight);
-    menuOpen = true;
-  }
-
-}
-
-// Close menu if scroll when open
-window.addEventListener('scroll', () => {
-  if (menuOpen) {
-    toggleMenu();
-  }
-});
-
-// Toggle menu on burger click
-document.getElementById('nav_small_burgerButton').addEventListener('click', toggleMenu);
-
-// if screen is bigger than 768px, remove animation classes
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 1300) {
-        nav.classList.remove(slideRight);
-        nav.classList.remove(slideLeft);
+//  close menu when click on navLinks
+navLinks.forEach(navLink => {
+  navLink.addEventListener('click', () => {
+    if (menuOpen) {
+      toggleMenu();
     }
+  });
 });
-
-
-const icons = document.querySelectorAll('.icon');
-icons.forEach (icon => {  
-    icon.addEventListener('click', (event) => {
-        icon.classList.toggle("open");        
-    });
-});
+ 
+ window.addEventListener('resize', () => {
+  if (window.innerWidth > 1300) {
+     nav.classList.remove(slideRight, slideLeft);
+  }
+ });
+ 
+ icons.forEach(icon => {
+  icon.addEventListener('click', () => {
+     icon.classList.toggle('open');
+  });
+ });
+ 
+ window.addEventListener('scroll', () => {
+  if (menuOpen) {
+     toggleMenu();
+     icons.forEach(icon => {
+       icon.classList.remove('open');
+     });
+  }
+ });

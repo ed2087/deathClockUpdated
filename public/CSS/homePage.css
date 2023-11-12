@@ -1,0 +1,227 @@
+/* ////////////////////////////////////////// */
+/* ABOUT SECTION */
+/* ////////////////////////////////////////// */
+
+
+    #deathClockAbout{
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+        .about_article_wrap{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 2em;
+        }
+
+            .deathARC_inner{
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+                .about_title{
+                    font-size: 1.4rem;
+                    color: white;
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .about_ptag{
+                    font-size: 1.1rem;
+                    color: white;
+                    text-align: left;
+                    margin-bottom: 5px;
+                    padding: 10px;
+                    margin: 0 auto;
+                }
+                .deathARC_link_wrap{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: 2em;
+                }
+                .deathARC_inner img{
+                    max-width: 500px;
+                    margin: 0 auto;
+                    position: relative;
+                }
+
+                #deathClockImg, #creepyPastaImg{
+                    position: relative;
+                    z-index: 2;
+                }
+                        /* create a circle over lay like a shadow to hide corners */
+                        #deathClockImg::before, #creepyPastaImg::before{
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;
+                            background-color: rgba(0, 0, 0, 0.3);
+                            z-index: 1;
+                        }
+
+@media only screen and (min-width:400px){
+
+    .about_title{
+        font-size: 1.6rem;
+    }
+    .about_ptag{
+        font-size: 1.1rem;
+    }
+
+}
+
+@media only screen and (min-width:800px){
+
+    .about_title{
+        font-size: 2rem;
+    }
+    .about_ptag{
+        font-size: 1.1rem;
+        width: 80%;
+        margin: 0 auto;
+    }
+
+}
+
+
+@media only screen and (min-width:1200px){
+    
+    .about_article_wrap{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row !important;
+        margin-bottom: 20px;
+    }   
+
+        .about_title{
+            font-size: 2.5rem;
+        }
+
+        .deathARC_inner{
+            margin: 10px;
+            width: calc(100% / 2 - 20px);
+        }   
+        
+        #deathClockAbout{
+            margin-bottom: 1em;
+        }
+
+        .innserSectionWrap{
+            width: 90%;
+        }
+
+}
+
+
+
+@media only screen and (min-width:1500px){
+    
+    .innserSectionWrap{
+        width: 80%;
+    }
+
+}
+
+
+
+
+/* ////////////////////////////////////////// */
+/* HOW IT WORKS SECTION */
+/* ////////////////////////////////////////// */
+
+#howItWorks{
+    display: flex;
+    flex-direction: column;
+}
+
+    #howItWorksCards_wrap{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5em;
+        margin-top: 2em;
+    }
+        .howItWorksCards{
+            margin: 10px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: solid 2px white;
+            height: 305px;
+        }
+            .innercards_iconWrap{
+                margin-bottom: 20px;
+                background: url("../../IMAGES/Shapes/redStrpes.webp") no-repeat center/cover;
+                width: 150px;
+                text-align: center;
+                padding: 10px;
+            }
+                .innercards_iconWrap img{
+                    margin: 0 auto;
+                }
+
+            .innercardsTitles{
+                font-size: 1.5rem;
+            }
+            .innerCardPtag{
+                font-size: 1.1rem;
+            }
+
+
+@media only screen and (min-width:800px){
+    
+    .howItWorksCards{
+        margin: 10px;
+        /* give wrap size that will allow 3 when able */
+        max-width: calc(100% / 3 - 20px);
+    }
+
+    .innercardsTitles{
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+    }
+
+}
+
+
+@media only screen and (min-width:1024px){
+    #howItWorksCards_wrap{
+        width: 90%;
+    }
+
+    .innercardsTitles{
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+    }
+
+}
+
+
+@media only screen and (min-width:1500px){
+    #howItWorksCards_wrap{
+        width: 80%;
+    }
+    
+    .howItWorksCards{
+        margin: 20px;
+        /* give wrap size that will allow 3 when able */
+        max-width: calc(100% / 3 - 40px);
+    }
+    .innercardsTitles{
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
+    .innerCardPtag{
+        font-size: 1.2rem;
+    }
+
+}

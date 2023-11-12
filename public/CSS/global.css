@@ -8,7 +8,7 @@
 }
 
 body{
-    background-color: #040d12;
+    background-color: #000;
     font-size: 1em;
     font-family: 'Roboto', sans-serif;
     color: #ffffff;
@@ -31,7 +31,7 @@ button{
 
 /* image */
 img{
-    width: 100%;
+    max-width: 100%;
     height: auto;
     display: block;
 }
@@ -51,6 +51,8 @@ h1,h2,h3,h4,h5,h6{
     --global-bg-color: #040d12;
     --global-yellow: #ffd600;
     --global-red: #8c0000;
+    /* creepy green */
+    --global-green: #00ff00;
     --globlal-brightRed: #ff0000;
     --global-darkOrange: darkorange;
     --yellow_gradient: linear-gradient(to bottom, #ffd600, #ffba00, #fb9e00, #f58200, #eb6612);
@@ -61,10 +63,10 @@ h1,h2,h3,h4,h5,h6{
 
 /* global call to action styles */
 .call_to_action_yellow{
-    background-color: var(--global-yellow);
+    background: none;    
     padding: 10px;
     text-align: center;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     border: 2px solid var(--global-yellow);
     font-family: 'Griffy', cursive;
     font-weight: 300;
@@ -73,14 +75,15 @@ h1,h2,h3,h4,h5,h6{
 
     /* hover */
     .call_to_action_yellow:hover{
-        background: none;
+        color: black !important;
+        background-color: var(--global-yellow);
         border: 2px solid var(--global-yellow);
         color: rgb(255, 255, 255);
     }
 
 
-.call_to_action_red{
-    background-color: var(--global-red);
+.call_to_action_red{ 
+    background: none;   
     padding: 10px;
     text-align: center;
     color: rgb(255, 255, 255);
@@ -91,15 +94,36 @@ h1,h2,h3,h4,h5,h6{
 }
     
         /* hover */
-        .call_to_action_red:hover{
-            background: none;
+        .call_to_action_red:hover{            
+            background-color: var(--global-red);
             border: 2px solid var(--global-red);
             color: rgb(255, 255, 255);
         }
+
+@media only screen and (min-width:800px){
+    .call_to_action_yellow, .call_to_action_red{
+        font-size: 1.3rem;
+        width: 250px;
+    }
+}
+
+
 
 /* global special text */
 .special_yellow_text{
     font-family: 'Griffy', cursive;
     color: var(--global-yellow);
     font-weight: bolder;
+}
+
+
+
+/* INDEX PAGE GLOBAL STYLES */
+.sections{
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2em;
 }
