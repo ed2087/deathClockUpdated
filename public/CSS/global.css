@@ -13,7 +13,8 @@ body{
     font-family: 'Roboto', sans-serif;
     color: #ffffff;
     line-height: 1.5;
-    height: 5000px;
+    /* letter spacing */
+    letter-spacing: 0.3px;
 }
 
 li{
@@ -49,17 +50,17 @@ h1,h2,h3,h4,h5,h6{
 :root{
     --darker-bg-color: #031a1f;
     --global-bg-color: #040d12;
-    --global-yellow: #ffd600;
+    --global-yellow: #fac536;
     --global-red: #8c0000;
     /* creepy green */
     --global-green: #00ff00;
     --globlal-brightRed: #ff0000;
+    --global-darkred: #480607;
     --global-darkOrange: darkorange;
     --yellow_gradient: linear-gradient(to bottom, #ffd600, #ffba00, #fb9e00, #f58200, #eb6612);
     --black_trasparent: rgb(0 0 0 / 85%);
+    --darkImage_background: linear-gradient(to right bottom, #000000, #0b0b0b, #141414, #1a1a1a, #202020, #202020, #202020, #202020, #1a1a1a, #141414, #0b0b0b, #000000);
 }
-
-
 
 /* global call to action styles */
 .call_to_action_yellow{
@@ -71,6 +72,8 @@ h1,h2,h3,h4,h5,h6{
     font-family: 'Griffy', cursive;
     font-weight: 300;
     font-size: 1.1rem;
+    min-width: 150px;
+    cursor: pointer;
 }
 
     /* hover */
@@ -91,6 +94,7 @@ h1,h2,h3,h4,h5,h6{
     font-family: 'Griffy', cursive;
     font-weight: 300;
     font-size: 1.1rem;
+    min-width: 150px;
 }
     
         /* hover */
@@ -99,6 +103,18 @@ h1,h2,h3,h4,h5,h6{
             border: 2px solid var(--global-red);
             color: rgb(255, 255, 255);
         }
+
+
+
+    /* hover */
+    .submitButtonStyles:hover{
+        color: black !important;
+        background-color: var(--global-yellow);
+        border: 2px solid var(--global-yellow);
+        color: rgb(255, 255, 255);
+    
+}
+
 
 @media only screen and (min-width:800px){
     .call_to_action_yellow, .call_to_action_red{
@@ -117,6 +133,12 @@ h1,h2,h3,h4,h5,h6{
 }
 
 
+/* global special text red */
+.special_red_text{
+    color: var(--globlal-brightRed);
+    font-weight: bolder;
+}
+
 
 /* INDEX PAGE GLOBAL STYLES */
 .sections{
@@ -127,3 +149,15 @@ h1,h2,h3,h4,h5,h6{
     align-items: center;
     margin-bottom: 2em;
 }
+
+
+/* link styles */
+.link_styles{
+    color: #1E90FF;
+    font-size: 1.1rem;
+}
+
+    /* hover */
+    .link_styles:hover{
+        color: #1387fc;
+    }

@@ -1,0 +1,84 @@
+#main_wrap{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 90px;
+}
+
+    #form_wrap{
+        padding: 20px;
+        max-width: 600px;
+    }
+
+        .message{
+            color: red;
+            font-size: 0.8rem;
+            /* font-family: 'Griffy', cursive; */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: solid 2px #fd0000;
+        }
+        #form_wrap form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+            #form_wrap form input{
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: solid 2px rgb(255, 255, 255);
+                background: none;
+                color: white;
+            }
+                /* place holder */
+                #form_wrap form input::placeholder{
+                    color: white;
+                }
+                /* on ctive */
+                #form_wrap form input:focus{
+                    outline: none;
+                    border: solid 2px white;
+                }
+
+                #display_password_wrap {
+                    display: flex;
+                    align-items: center;
+                    justify-content: start;
+                    width: 100%;
+                    margin-bottom: 20px;
+                  }
+                  
+                  #display_password_wrap label {
+                    margin-right: 5px;
+                    display: inline-block;
+                    width: auto;
+                  }
+
+                  #display_password_wrap #showPassword {
+                        width: auto;
+                        padding: 0;
+                        margin-bottom: 0px;
+                        border: solid 2px rgb(255, 255, 255);
+                        background: none;
+                        color: white;
+                  }
+
+                  #captcha_title{
+                        color: white;
+                        font-size: 1.5rem;
+                        margin-bottom: 10px;
+                        width: 100%;
+                        text-align: center;
+                  }
+
+                  #captcha_label{
+                        color: var(--global-yellow);
+                        font-size: 1rem;
+                        margin-bottom: 10px;
+                        width: 100%;
+                  }

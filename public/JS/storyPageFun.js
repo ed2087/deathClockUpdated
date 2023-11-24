@@ -12,26 +12,77 @@ let timer;
 /////////////////////////////////////////////////
 
 const CommonStoryTemplates = (data) => {
+    const { createdAt, comments, extraTags, categories } = data;
+    const date = new Date(createdAt);
+    const formattedDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+    const commentsCount = comments.length;
 
-    //convert data.createdAt to date display format
-    const date = new Date(data.createdAt);
-    const createdAt = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
-
+    const renderStoryTag = (tag) => `<span class="storyTag"><span class="story_hashtag">#</span>${tag}</span>`;
+    const extraTags_categories = [...extraTags, ...categories].map(renderStoryTag).join('');
 
     return `
-        <div class="story">
-            <h1 class="storyTitle">${data.storyTitle}</h1>
-            <h3 class="storySummary">${data.storySummary}</h3>
-            <div class="tags">${data.tags}</div>
-            <div class="extraTags">${data.extraTags}</div>
-            <div class="categories">${data.categories}</div>
-            <div class="legalName">${data.legalName}</div>
-            <div class="upvoteCount">${data.upvoteCount}</div>
-            <div class="createdAt">${createdAt}</div>
-            <a href="#">Not Avalable</a>
+
+            <div class="story_wrap">
+
+                <div class="story_inner_wrap story_innerTitle_wrap">
+                    <h2 class="storyTitle">${data.storyTitle}</h2>
+                </div>
+
+                <div class="story_inner_wrap story_innerInfo_wrap">
+
+                    <div class="story_info_wrap">
+
+                        <div class="info_wrap_first">
+                            <div class="readingTime">
+                                <img src="../../IMAGES/Icons/clock.webp" alt="pen" />
+                                ${data.readingTime} min read
+                            </div>
+                            <div class="legalName">
+                                <img src="../../IMAGES/Icons/signature.webp" alt="pen" />
+                                Written By &nbsp; <span class="userName_Sign">@</span>${data.creditingName}
+                            </div>
+                        </div>
+
+                        <div class="info_wrap_second">
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
+                                ${data.upvoteCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/view.webp" alt="pen" />
+                                ${data.readCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
+                                ${commentsCount}
+                            </div> 
+                        </div>
+                        
+                    </div>
+
+                    <h3 class="storySummary">${data.storySummary}</h3>
+
+                    <div class="storyTags_wrap">
+                        ${extraTags_categories}
+                    </div>
+                    
+                    <a class="read_story_button" href="#">Read Story</a>
+
+                </div>
+
         </div>
+
     `;
 };
+
+
+
+// top 5 ranking stories mold
+
+
 
 /////////////////////////////////////////////////
 // Fetch Data from Server
@@ -43,12 +94,10 @@ let allowOnce = true;
 const query_fetch = async () => {
     const searchInput = id_("search").value;
     const languageSelect = id_("language").value;
-    const rankingSelect = id_("rankingWrap").value;
 
     const queryObject = {
         query: searchInput || '',
         language: languageSelect || language,
-        ranking: rankingSelect || '',
         page,
         limit,
     };
@@ -136,7 +185,7 @@ queryAll_('.selectQueryData').forEach((query) => {
 
 const loadMoreStories = async () => {
     page++;
-    query_fetch(query, language, ranking, page, limit);
+    query_fetch(query, language, page, limit);
 };
 
 id_('loadMore').addEventListener('click', loadMoreStories);

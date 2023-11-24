@@ -90,3 +90,12 @@ navLinks.forEach(navLink => {
      });
   }
  });
+
+
+////////////////////// DISPLAY PASSWORD /////////////////////////
+
+function showPassword_() {
+  var x = document.getElementsByName("password")[0];
+  x.type = x.type === "password" ? "text" : "password";
+};
+
