@@ -5,6 +5,9 @@ const User = require("../model/user.js");
 //other
 const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
+ //check if user is logged in
+ const {someUserInfo} = require("../utils/utils_fun.js");
+
 
 // packages
 const { checkCsrf } = require("../utils/csrf.js");
@@ -29,31 +32,45 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 
 
 //log in page
-exports.loginPage = (req, res) => {
+exports.loginPage = async (req, res, next) => {
+
+
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
     res.render("../views/usersInterface/login",{
         title: "Login",
         message: null,
         field: null,
         body: null,
-        csrfToken: res.locals.csrfToken
+        csrfToken: res.locals.csrfToken,
+        userActive,
+        userName,
     });
 };
 
 //register page
-exports.registerPage = (req, res) => {
+exports.registerPage = async (req, res, next) => {
+
+
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
     res.render("../views/usersInterface/register",{
         title: "Register",
         message: null,
         field: null,
         body: null,
-        csrfToken: res.locals.csrfToken
+        csrfToken: res.locals.csrfToken,
+        userActive,
+        userName,
     });
+
+
 };
 
 
 //post login
 
-exports.postLogin = async (req, res) => {
+exports.postLogin = async (req, res, next) => {
    try {
 
             const {email, password} = req.body;
@@ -118,7 +135,7 @@ exports.postLogin = async (req, res) => {
 
 //post register
 
-exports.postRegister = async (req, res) => {
+exports.postRegister = async (req, res, next) => {
 
     try {
         const {username,email,password} = req.body;
@@ -200,7 +217,7 @@ exports.postRegister = async (req, res) => {
 
 
 //activate account
-exports.activateAccount = async (req, res) => {
+exports.activateAccount = async (req, res, next) => {
     try {
 
         const token = req.params.token;
@@ -232,7 +249,7 @@ exports.activateAccount = async (req, res) => {
 
 //verification Page
 
-exports.verificationPage = (req, res) => {
+exports.verificationPage = async (req, res, next) => {
 
         //get id query
         const {id,activateToken} = req.query;
@@ -257,7 +274,7 @@ exports.verificationPage = (req, res) => {
 };
 
 //resent activation link post
-exports.resendVerification = async (req, res) => {
+exports.resendVerification = async (req, res, next) => {
         try {
             const {id} = req.params;
             
@@ -318,7 +335,7 @@ exports.resendVerification = async (req, res) => {
 
 
 // Logout
-exports.logout = async (req, res) => {
+exports.logout = async (req, res, next) => {
     try {             
 
         //save user

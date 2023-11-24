@@ -1,70 +1,87 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
-
-    <style>
-        .story{
-            margin: 10px;
-            border: solid 4px black;
-            padding: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../CSS/landingStoryPage.css">
 </head>
 <body>
 
 
-    <h1>terrorTales</h1>
-    <!-- /terrorTales/home -->
-    
-    <!-- home -->
-    <a href="/">home</a>
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
 
-    <a href="/deathClock/questions">questions</a>
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
 
-    <!-- /graveyard -->
-    <a href="/deathClock/graveyard">graveyard</a>
-
-    <a href="/terrorTales/submission">submission</a>
-    
     <!-- do not allow to refresh -->
-    <form id="search_stories">
 
-        
-        <!-- global search input -->
-        <div class="inputWrap" id="searchWrap">
-            <label for="search">Search:</label><br>
-            <input class="queryData" type="text" id="search" name="search" placeholder="Title,Author,tags,Catagories...."><br>
-        </div>
-
-        <div class="inputWrap" id="languageWrap">
-            <label for="language">Language:</label><br>
-            <select class="selectQueryData" id="language" name="language">
-                <option value="English">English</option>
-                <!-- Add as many languages as you need -->
-            </select><br>
-        </div>
-
-        <div class="inputWrap" id="rankingWrap">
-            <label for="ranking">Top Ranking:</label><br>
-            <input class="selectQueryData" type="number" id="ranking" name="ranking" min="1"><br>
-        </div>
-
-        <!-- csrf -->
-        <input id="csrf" type="hidden" name="_csrf" value="<%= csrfToken %>">
-
-    </form>
+    <main id="master_wrap">
 
 
-    <!-- story list -->
-    <div id="storyList">
-        <h2>Story List</h2>
-        <div id="storyListWrap">
-            <!-- story list goes here -->
-        </div>
+        <section id="leftSide" class="storie_sections">
 
-    </div>
 
-    <!-- pagination button -->
-    <button id="loadMore">Load More</button>
+            <div id="formWrap_">
+
+                <% if(userActive && path == "/terrorTales") {%>
+
+                    <nav id="innerStory_nav">
+
+                        <a class="innerStory_navLinks" href="/terrorTales/submission">Create Story</a>
+    
+                    </nav>
+
+                <% }%>
+
+                <form id="search_stories">
+
+                    <!-- global search input -->
+                    <div class="inputWrap" id="searchWrap">
+                        <!-- <label for="search">Search:</label><br> -->
+                        <input class="queryData" type="text" id="search" name="search" placeholder="Title, Author, tags, Catagories...."><br>
+                    </div>
+            
+                    <div class="inputWrap" id="languageWrap">
+                        <!-- <label for="language">Language:</label><br> -->
+                        <select class="selectQueryData" id="language" name="language">
+                            <option value="English">English</option>
+                            <!-- Add as many languages as you need -->
+                        </select><br>
+                    </div>
+            
+                    <!-- csrf -->
+                    <input id="csrf" type="hidden" name="_csrf" value="<%= csrfToken %>">
+            
+                </form>         
+
+            </div>
+
+            <!-- Top ranked stories -->
+            <!-- <div id="topRanked">
+                <h2>Top Ranked</h2>
+                <div id="topRankedWrap">
+                    
+                </div>
+            </div> -->
+
+            <!-- story list -->
+            <div id="storyList">
+                <h2>Story List</h2>
+                <div id="storyListWrap">
+                    <!-- story list goes here -->
+                </div>
+            </div>
+
+            <!-- pagination button -->
+            <div id="loadMOreBUtton_wrap">
+                 <button id="loadMore">Load More</button>
+            </div>
+
+        </section>
+
+        <!-- <section id="rightSide" class="storie_sections">
+
+        </section> -->
+
+    </main>  
 
     <!-- script -->
     <script src="../../JS/master.js"></script>  

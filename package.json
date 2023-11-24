@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@conversationai/perspectiveapi-js-client": "^1.0.1",
+    "@google-cloud/language": "^6.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
@@ -29,7 +31,9 @@
     "express-session": "^1.17.3",
     "express-session-sequelize": "^2.3.0",
     "express-validator": "^7.0.1",
+    "googletrans": "^1.0.4",
     "helmet": "^7.0.0",
+    "json-autotranslate": "^1.12.2",
     "method-override": "^3.0.0",
     "mongoose": "^7.5.2",
     "morgan": "^1.10.0",
@@ -39,6 +43,8 @@
     "nodemailer-smtp-transport": "^2.4.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "perspective-api-client": "^3.1.0",
+    "translate": "^2.0.2",
     "uuid": "^9.0.1"
   }
 }

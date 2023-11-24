@@ -1,37 +1,120 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
+    <!-- css  -->
+    <link rel="stylesheet" href="../../CSS/userInterface.css">
 </head>
 <body>
 
-    <% if(message) {%>
-        <div class="message"><%= message %></div>
-    <% } %>
-    <!-- register form -->
-    <form action="/user/register" method="POST">
-        <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
-        <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
-        <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
-        <input type="password" name="confirmPassword" placeholder="confirm password" required value="<%= body != null ? body.confirmPassword : ''  %>">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit">Register</button>
-    </form>
 
-    <!-- home -->
-    <a href="/">home</a>
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
 
-    <a href="/deathClock/questions">questions</a>
 
-    <!-- /graveyard -->
-    <a href="/deathClock/graveyard">graveyard</a>
 
-    <!-- /terrorTales/home -->
-    <a href="/terrorTales">terrorTales</a>
-    
-    <a href="/user/login">Log In</a>
-    
+    <div id="main_wrap">
 
+
+        <div id="form_wrap">   
+
+            <% if(message) {%>
+                <div class="message"><%= message %></div>
+            <% } %>
+
+            <!-- register form -->
+            <form action="/user/register" method="POST">
+
+                <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
+                <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
+                <input type="date" name="age" placeholder="age" required value="<%= body != null ? body.age : ''  %>">
+                <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
+                <input type="password" name="confirmPassword" placeholder="confirm password" required value="<%= body != null ? body.confirmPassword : ''  %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                <!-- allow to see password -->
+                <div id="display_password_wrap">
+                    <label for="showPassword">Show Password</label>
+                    <input id="showPassword" type="checkbox" onclick="showPassword_()">
+                </div>
+
+                <!-- User input for the answer -->
+                <h2 id="captcha_title">
+                    Only the worthy can register
+                </h2>
+                <label id="captcha_label" for="captcha_input"></label>
+                <input type="text" id="captcha_input" placeholder="Your Answer" required>
+
+                <button class="call_to_action_yellow" type="submit"  onclick="allowRegestry(event)">Register</button>
+
+            </form>
+
+        </div>
+
+    </div>  
+
+
+    <script>            
+
+            ////////////////////// CAPTCHA /////////////////////////
+            function refreshCaptcha() {
+
+                const darkRiddles = [
+                    "What has to be broken before you can use it?",
+                    "I am always coming, but never arrive. What am I?",
+                    "What has no beginning, end, or middle?",
+                    "I am always hungry, but never eat. What am I?",
+                    "What has one eye, but cannot see?",
+                    "What has no voice, but can still speak to you?",
+                    "What has no legs, but can still travel the world?",
+                    "What has no wings, but can still fly?",
+                    "What has no life, but can still grow?",
+                    "What has no teeth, but can still bite you?"
+                ];
+
+                const randomDarkRiddle = darkRiddles[Math.floor(Math.random() * darkRiddles.length)];
+                const label = document.getElementById('captcha_label');
+                label.innerHTML = randomDarkRiddle;
+            }
+
+            refreshCaptcha();
+
+         // Function to refresh the riddle
+            function allowRegestry (e) {
+
+                    // Prevent the form from submitting
+                    e.preventDefault();
+
+                    const riddlesAnswers = [
+                        "An egg",
+                        "Tomorrow",
+                        "A doughnut",
+                        "Fire",
+                        "A needle",
+                        "A book",
+                        "A stamp",
+                        "Time",
+                        "A beard",
+                        "The cold"
+                    ];
+
+                    const input = document.getElementById('captcha_input').value;
+                    
+                    // Check if the answer is correct
+                    if (riddlesAnswers.includes(input.toLowerCase())) {
+                        document.querySelector('form').submit();
+                    } else {
+                        alert('Wrong answer, try again');
+                        //clear the input
+                        document.getElementById('captcha_input').value = '';
+                        //focus on the input
+                        document.getElementById('captcha_input').focus();
+                        refreshCaptcha();
+                    }
+
+            }
+    </script>
 
     <!-- script -->
-    <script src="../JS/master.js"></script> 
+    <script src="../../JS/master.js"></script> 
+    
 </body>
 </html>

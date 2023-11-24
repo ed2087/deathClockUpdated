@@ -5,6 +5,8 @@ const User = require("../model/user.js");
 //other
 const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
+const {isToxic} = require("../utils/toxicity_tensorflow.js");
+const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
 
 //packages
 const { checkCsrf } = require("../utils/csrf.js");
@@ -13,18 +15,47 @@ const uuidv4 = require('uuid').v4;
 const bcrypt = require("bcryptjs");
 const { validationResult } = require('express-validator');
 
+
 // Home page
-exports.terrorTalesPage = function (req, res) {
-    res.render("../views/storypages/terrorTales", {
-        title: "Terror Tales"
-    });
+exports.terrorTalesPage = async (req, res, next) => {
+
+    try {
+
+      const { userName, userActive } = await someUserInfo(req, res, next);
+        console.log("userActive:", userActive);
+
+      res.status(200).render("../views/storypages/terrorTales", {
+        title: "Terror Tales",
+        path: "/terrorTales",
+        headerTitle: "TERROR TALES",
+        userActive,
+        userName,
+      });
+
+    } catch (error) {
+        console.error("Error in terrorTalesPage:", error);
+        globalErrorHandler(req, res, 500, "Something went wrong");
+    }
+
 };
 
 // Submission page
-exports.submission = function (req, res) {
+exports.submission = async  (req, res, next) => {
+  try {
+    const { userName, userActive } = await someUserInfo(req, res, next);
+
     res.render("../views/storypages/submission", {
-        title: "Submission"
+      title: "Submission",
+      path: "/submission",
+      headerTitle: "SUBMIT YOUR STORY",
+      userActive,
+      userName,
     });
+  } catch (error) {
+        console.error("Error in submission:", error);
+        globalErrorHandler(req, res, 500, "Something went wrong");
+  }
+
 };
 
 //create users submission
@@ -49,8 +80,9 @@ exports.submissionPost = async function (req, res, next) {
             ageVerification,
             acceptedTerms,
             termsAndConditions,
-        } = req.body;
+        } = req.body;        
 
+        
         // Check for required fields
         const requiredFields = [legalName, storyTitle, storySummary, storyText, ageVerification, acceptedTerms, creditingName, categories, tags];
         if (requiredFields.some(field => !field)) {
@@ -78,7 +110,9 @@ exports.submissionPost = async function (req, res, next) {
 
         if (!user) return globalErrorHandler(req, res, 500, "You do not have permission to access this page.");
 
-            
+        
+        //get time book will take to read
+        const readingTime = calculateReadingTime(storyText);
 
         // Save data to the database
         const submission = await Story.create({
@@ -94,6 +128,7 @@ exports.submissionPost = async function (req, res, next) {
             ageVerification,
             acceptedTerms,
             termsAndConditions,
+            readingTime,
             owner: req.session.userId
         });  
 
@@ -255,6 +290,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                                 $options: "i",
                             },
                         },
+
                     ],
                 },
             });
@@ -329,6 +365,9 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                     extraTags: 1,
                     upvoteCount: 1,
                     createdAt: 1,
+                    readingTime: 1,
+                    comments: 1,
+                    readCount: 1,
                 },
             },
         ];
@@ -348,4 +387,23 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
         throw new Error("An error occurred while fetching stories with pagination.");
     }
 }
+
+
+
+// create a one time function to add reading time to all stories if not exist
+const addReadingTime = async () => {
+    try {
+        const stories = await Story.find({});
+
+        stories.forEach(async (story) => {
+            const readingTime = calculateReadingTime(story.storyText);
+            story.readingTime = readingTime;
+            await story.save();
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//addReadingTime();
 

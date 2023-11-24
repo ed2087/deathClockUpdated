@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  // get users age by date of birth
+  age: {
+    type: Date,
+    required: true,
+  },
   password:{
     type: String,
     required: true
@@ -58,7 +63,24 @@ const userSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now, // Set the default value to the current date/time
-  }
+  },
+  // user gets achivement in form of badges images the images are stored in the public folder
+  badges: [
+    {
+      // we will need image path + badge name
+      badgeName: {
+        type: String
+      },
+      badgeImage: {
+        type: String
+      },
+      badgeDescription: {
+        type: String
+      },
+      
+    }
+  ],
+
 });
 
 // Create the User model

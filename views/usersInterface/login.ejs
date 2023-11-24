@@ -1,41 +1,48 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
+    <!-- css  -->
+    <link rel="stylesheet" href="../../CSS/userInterface.css">
 </head>
 <body>
 
-    <% if(message) {%>
-        <div class="message"><%= message %></div>        
-    <% } %>
 
-        
-    <!-- log in form -->
-    <form action="/user/login" method="POST">        
-        <!-- email -->
-        <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : '' %>">
-        <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : '' %>">
-        <!-- csrf -->
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit">Log In</button>
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
 
-    </form>
+    <div id="main_wrap">
 
 
-    <!-- home -->
-    <a href="/">home</a>
+        <div id="form_wrap">
 
-    <a href="/deathClock/questions">questions</a>
+            <% if(message) {%>
+                <div class="message"><%= message %>TEST</div>        
+            <% } %>
+                
+            <!-- log in form -->
+            <form action="/user/login" method="POST">        
+                <!-- email -->
+                <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : '' %>">
+                <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : '' %>">
+                <!-- csrf -->
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-    <!-- /graveyard -->
-    <a href="/deathClock/graveyard">graveyard</a>
+                <!-- allow to see password -->
+                <div id="display_password_wrap">
+                    <label for="showPassword">Show Password</label>
+                    <input id="showPassword" type="checkbox" onclick="showPassword_()">
+                </div>
+                
+                <button class="call_to_action_yellow" type="submit">Log In</button>                
 
-    <!-- /terrorTales/home -->
-    <a href="/terrorTales">terrorTales</a>
+            </form>  
+
+        </div> 
     
-    <a href="/user/register">Register</a>
-    
+    </div>   
 
 
     <!-- script -->
     <script src="../JS/master.js"></script> 
+
 </body>
 </html>

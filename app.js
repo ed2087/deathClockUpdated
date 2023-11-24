@@ -113,7 +113,7 @@ app.use("*", (req,res,next)=>{
 
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const db_connect = async () => {
   try {

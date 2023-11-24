@@ -1,15 +1,23 @@
 const { readFileAPI } = require("../utils/readFiles.js");
+const {someUserInfo} = require("../utils/utils_fun.js");
 // Add model
 const DeathClockModel = require("../model/deathclock.js");
 const e = require("connect-flash");
 
 // deathclockQuestions
 exports.deathclockQuestions = async function (req, res, next) {
+
+  //check if user is logged in
+  let {userName, userActive} = await someUserInfo(req, res, next);
+
   res.status(200).render("../views/deathclock/mortality_questions", {
     path: "/deathclockQuestions",
     title: "The Time Ticker: How Long Have You Go",
     csrfToken: res.locals.csrfToken,
+    userActive,
+    userName,
   });
+
 };
 
 // deathclockResults
@@ -22,13 +30,20 @@ exports.deathclockResults = async function (req, res, next) {
     // get all users' death
 
     if (user) {
+
+      //check if user is logged in
+      let {userName, userActive} = await someUserInfo(req, res, next);
+
       // render deathclockResults
       res.status(200).render("../views/deathclock/mortality_results", {
         path: "/mortality_results",
         title: "The Time Ticker: How Long Have You Go",
         csrfToken: res.locals.csrfToken,
         user: user,
+        userActive,
+        userName,
       });
+      
     } else {
       console.log("user not found");
       res.redirect("/");
@@ -58,14 +73,20 @@ exports.graveyard = async function (req, res, next) {
         clock: user.clock,
       };
     });
-
+    
     if (users) {
+
+      //check if user is logged in
+      let {userName, userActive} = await someUserInfo(req, res, next);
+
       // render deathclockResults
       res.status(200).render("../views/deathclock/graveyard", {
         path: "/graveyard",
         title: "The Time Ticker: How Long Have You Go",
         csrfToken: res.locals.csrfToken,
         users: package_,
+        userActive,
+        userName,
       });
     } else {
       console.log("user not found");

@@ -1,6 +1,6 @@
 //flashes error messages
 const { check, validationResult } = require("express-validator");
-
+const {someUserInfo} = require("../utils/utils_fun.js");
 
 const registerValidation =  (req) => {
 
@@ -61,13 +61,17 @@ const globalErrorHandler = (req, res, statusCode, message, error) => {
 
 const displayError = (req, res, statusCode, message) => {
 
+    const {userName, userActive} = req.session;
+
     res.status(statusCode).render("errorHandler", {
 
         title: "Error",
         path: "/errorHandler",
         statusCode: statusCode,
         message: message,
-
+        userActive,
+        userName,
+        
     });
 
 };

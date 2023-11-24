@@ -2,7 +2,9 @@
 
 // Middleware to check if the user is authenticated
 function isAuthenticated(req, res, next) {
+
     if (req.session.userId) {
+        
         console.log("User is authenticated");
 
         if (req.session.user.userVerified) {

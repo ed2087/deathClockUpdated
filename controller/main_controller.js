@@ -1,14 +1,16 @@
 const { readFileAPI } = require("../utils/readFiles.js");
 const Question = require("../model/user.js");
 
+// utils
+const {someUserInfo} = require("../utils/utils_fun.js");
+
+
+
 exports.index = async function (req, res, next) {
 
-  //get user info from session
-  let user = req.session.user;
-
-  if (user === undefined) {
-    user = { username: "guest" };
-  }
+  
+  //check if user is logged in
+  let {userName, userActive} = await someUserInfo(req, res, next);
   
 
   const file = await readFileAPI("questions_api.json");
@@ -17,8 +19,8 @@ exports.index = async function (req, res, next) {
     path: "/",
     title: "home page",
     csrfToken: res.locals.csrfToken,
-    userName: user.username,
-    userActive:  req.session.user ? true : false,
+    userActive,
+    userName,
   });
 
 };

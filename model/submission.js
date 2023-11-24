@@ -49,6 +49,11 @@ const storySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // how many times the story has been read
+  readCount: {
+    type: Number,
+    default: 0,
+  },
   upvotes: [
     {
       userId: {
@@ -80,6 +85,10 @@ const storySchema = new mongoose.Schema({
       },      
     },
   ],
+  readingTime: {
+    type: Number,
+    required: true,
+  },
   // Reporting system
   reports: [
     {

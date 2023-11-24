@@ -1,0 +1,167 @@
+{
+    "PioneerBadgeSeries": [
+      {
+        "badgeId": 1,
+        "badgeName": "First Ever Writer",
+        "badgeDescription": "Pioneer Badge for the First Ever Writer",
+        "badgeImagePath": "/images/first-ever-writer-badge.png"
+      },
+      {
+        "badgeId": 2,
+        "badgeName": "Second Ever Writer",
+        "badgeDescription": "Pioneer Badge for the Second Ever Writer",
+        "badgeImagePath": "/images/second-ever-writer-badge.png"
+      },
+      {
+        "badgeId": 3,
+        "badgeName": "Third Ever Writer",
+        "badgeDescription": "Pioneer Badge for the Third Ever Writer",
+        "badgeImagePath": "/images/third-ever-writer-badge.png"
+      }
+    ],
+    "EngagementBadges": [
+      {
+        "badgeId": 4,
+        "badgeName": "First 10 Upvotes",
+        "badgeDescription": "Badge for achieving the First 10 Upvotes",
+        "badgeImagePath": "/images/first-10-upvotes-badge.png"
+      },
+      {
+        "badgeId": 5,
+        "badgeName": "100 Upvotes",
+        "badgeDescription": "Badge for achieving 100 Upvotes",
+        "badgeImagePath": "/images/100-upvotes-badge.png"
+      },
+      {
+        "badgeId": 6,
+        "badgeName": "1,000 Upvotes",
+        "badgeDescription": "Badge for achieving 1,000 Upvotes",
+        "badgeImagePath": "/images/1000-upvotes-badge.png"
+      },
+      {
+        "badgeId": 7,
+        "badgeName": "10,000 Upvotes",
+        "badgeDescription": "Badge for achieving 10,000 Upvotes",
+        "badgeImagePath": "/images/10000-upvotes-badge.png"
+      }
+    ],
+    "ConsistencyBadges": [
+      {
+        "badgeId": 8,
+        "badgeName": "Daily Contributor",
+        "badgeDescription": "Badge for being a Daily Contributor",
+        "badgeImagePath": "/images/daily-contributor-badge.png"
+      },
+      {
+        "badgeId": 9,
+        "badgeName": "Weekly Contributor",
+        "badgeDescription": "Badge for being a Weekly Contributor",
+        "badgeImagePath": "/images/weekly-contributor-badge.png"
+      }
+    ],
+    "PopularStoriesBadges": [
+      {
+        "badgeId": 10,
+        "badgeName": "Viral Story",
+        "badgeDescription": "Badge for creating a Viral Story",
+        "badgeImagePath": "/images/viral-story-badge.png"
+      },
+      {
+        "badgeId": 11,
+        "badgeName": "Trending Author",
+        "badgeDescription": "Badge for being a Trending Author",
+        "badgeImagePath": "/images/trending-author-badge.png"
+      }
+    ],
+    "LengthOfServiceBadges": [
+      {
+        "badgeId": 12,
+        "badgeName": "6 Months on TerrorHub",
+        "badgeDescription": "Badge for being on TerrorHub for 6 months",
+        "badgeImagePath": "/images/6-months-service-badge.png"
+      },
+      {
+        "badgeId": 13,
+        "badgeName": "1 Year on TerrorHub",
+        "badgeDescription": "Badge for being on TerrorHub for 1 year",
+        "badgeImagePath": "/images/1-year-service-badge.png"
+      },
+      {
+        "badgeId": 14,
+        "badgeName": "2 Years on TerrorHub",
+        "badgeDescription": "Badge for being on TerrorHub for 2 years",
+        "badgeImagePath": "/images/2-years-service-badge.png"
+      }
+    ],
+    "CommunityEngagementBadges": [
+      {
+        "badgeId": 15,
+        "badgeName": "Active Participant",
+        "badgeDescription": "Badge for being an Active Participant in forum discussions",
+        "badgeImagePath": "/images/active-participant-badge.png"
+      },
+      {
+        "badgeId": 16,
+        "badgeName": "Helpful Contributor",
+        "badgeDescription": "Badge for being a Helpful Contributor with comments or feedback",
+        "badgeImagePath": "/images/helpful-contributor-badge.png"
+      }
+    ],
+    "GenreSpecialistBadges": [
+      {
+        "badgeId": 17,
+        "badgeName": "Master of Horror",
+        "badgeDescription": "Badge for being a Master of Horror",
+        "badgeImagePath": "/images/master-of-horror-badge.png"
+      },
+      {
+        "badgeId": 18,
+        "badgeName": "King of Mystery",
+        "badgeDescription": "Badge for being a King of Mystery",
+        "badgeImagePath": "/images/king-of-mystery-badge.png"
+      },
+      {
+        "badgeId": 19,
+        "badgeName": "Sultan of Suspense",
+        "badgeDescription": "Badge for being a Sultan of Suspense",
+        "badgeImagePath": "/images/sultan-of-suspense-badge.png"
+      }
+    ],
+    "MultilingualAuthorBadges": [
+      {
+        "badgeId": 20,
+        "badgeName": "Polyglot Penman",
+        "badgeDescription": "Badge for being a Multilingual Author",
+        "badgeImagePath": "/images/polyglot-penman-badge.png"
+      }
+    ],
+    "EventParticipationBadges": [
+      {
+        "badgeId": 21,
+        "badgeName": "Halloween Special Contributor",
+        "badgeDescription": "Badge for being a Halloween Special Contributor",
+        "badgeImagePath": "/images/halloween-contributor-badge.png"
+      },
+      {
+        "badgeId": 22,
+        "badgeName": "Winter Chills Writer",
+        "badgeDescription": "Badge for being a Winter Chills Writer",
+        "badgeImagePath": "/images/winter-chills-writer-badge.png"
+      }
+    ],    
+    "CollaborationBadges": [
+      {
+        "badgeId": 23,
+        "badgeName": "Team Player",
+        "badgeDescription": "Badge for being a Team Player and collaborating with other writers",
+        "badgeImagePath": "/images/team-player-badge.png"
+      },
+      {
+        "badgeId": 24,
+        "badgeName": "Co-Author",
+        "badgeDescription": "Badge for being a Co-Author in a collaborative story",
+        "badgeImagePath": "/images/co-author-badge.png"
+      }
+    ]
+}
+  

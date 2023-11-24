@@ -20,22 +20,32 @@
 
         <li><a class="navLinks_" href="/">Home</a></li>
         <li><a class="navLinks_" href="/#about">About Us</a></li>
-        <li><a class="navLinks_" href="/deathClock/questions">Death Clock</a></li>
+        <li><a class="navLinks_" href="/deathClock/questions">DeathClock</a></li>
 
         <!-- logo circle middle -->
         <li id="largerNav_img_wrap">
             <a class="navLinks_" href="/">
                 <picture>
-                    <source srcset="../IMAGES/logos/logo1.webp" type="image/webp"> 
-                    <source srcset="../IMAGES/logos/logo1.png" type="image/png">
-                    <img src="../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo">
+                    <source srcset="../../IMAGES/logos/logo1.webp" type="image/webp"> 
+                    <source srcset="../../IMAGES/logos/logo1.png" type="image/png">
+                    <img src="../../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo">
                 </picture>
             </a>
         </li>
 
-        <li><a class="navLinks_" href="/deathClock/graveyard">Grave Yard</a></li>
-        <li><a class="navLinks_" href="/terrorTales">Creepy Pastas</a></li>
-        <li><a class="navLinks_" href="/">Other</a></li>
+        <li><a class="navLinks_" href="/deathClock/graveyard">GraveYard</a></li>
+        <li><a class="navLinks_" href="/terrorTales">CreepyPastas</a></li>
+        
+
+
+        <!-- if path /terrorTales and userActive -->
+        <% if(userActive && path == "/terrorTales") {%>
+            <li><a class="navLinks_" href="/terrorTales/submission">CreateSub</a></li>
+        <% }else{ %>
+            <li><a class="navLinks_" href="/#contact">Contact</a></li>
+        <% } %>
+
+        
 
         <% if(!userActive) {%>
             <li><a class="navLinks_" id="logIn" href="/user/login">Login</a></li>
@@ -85,9 +95,9 @@
         <li class="nav_small_liWrap" id="smallNav_image_wrap">            
             <a href="/">
                 <picture>
-                    <source srcset="../IMAGES/logos/logo1.webp" type="image/webp"> 
-                    <source srcset="../IMAGES/logos/logo1.png" type="image/png">
-                    <img src="../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo2">
+                    <source srcset="../../IMAGES/logos/logo1.webp" type="image/webp"> 
+                    <source srcset="../../IMAGES/logos/logo1.png" type="image/png">
+                    <img src="../../IMAGES/logos/logo1.webp" alt="logo" id="nav_logo2">
                 </picture>
             </a>
         </li>
