@@ -80,7 +80,63 @@ const CommonStoryTemplates = (data) => {
 
 
 
-// top 5 ranking stories mold
+//create a loading animation like the mold on  CommonStoryTemplates
+
+
+
+
+const loadingAnimationTemplate = () => {
+
+    return `
+
+            <div class="loading_story_wrap">
+
+                <div class="loadingAnimation loading_story_innerTitle_wrap"></div>
+
+                <div class="loading_story_innerInfo_wrap">
+
+                    <div class="loading_story_info_wrap">
+
+                        <div class="loading_info_wrap_first">
+                            <div class="loadingAnimation loading_readingTime"></div>
+                            <div class="loadingAnimation loading_legalName"></div>
+                        </div>
+
+                        <div class="loading_info_wrap_second">
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                        </div>
+                        
+                    </div>
+
+                    <h3 class="loadingAnimation loading_storySummary"></h3>
+
+                    <div class="loading_storyTags_wrap">
+                        <span class="loadingAnimation loading_storyTag"></span>
+                        <span class="loadingAnimation loading_storyTag"></span>
+                        <span class="loadingAnimation loading_storyTag"></span>
+                    </div>
+
+                </div>
+
+        </div>
+
+    `; 
+
+};
+
+
+const loadLoadinHTML = () => {
+    id_('storyListWrap').innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+        id_('storyListWrap').innerHTML += loadingAnimationTemplate();
+    }
+};
 
 
 
@@ -92,6 +148,10 @@ const CommonStoryTemplates = (data) => {
 let allowOnce = true;
 
 const query_fetch = async () => {
+
+    //loading animation
+    loadLoadinHTML();
+
     const searchInput = id_("search").value;
     const languageSelect = id_("language").value;
 
@@ -161,6 +221,13 @@ const query_fetch = async () => {
 };
 
 const debounceQueryFetch = (event) => {
+
+    // add loading animation
+    id_('storyListWrap').innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+        id_('storyListWrap').innerHTML += loadingAnimationTemplate();
+    }
+
     clearTimeout(timer);
     timer = setTimeout(() => {
         page = 1;

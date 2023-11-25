@@ -53,7 +53,11 @@ const burgerButton = id_('nav_small_burgerButton');
 const icons = queryAll_('.icon');
 const navLinks = queryAll_('.navLinks_');
 
-const toggleMenu = () => {
+const toggleMenu = (e) => {
+
+  // check if linked clicked is #open_dropdown then return
+  if (e.target.id === 'open_dropdown') return;
+
   nav.classList.toggle(slideRight, !menuOpen);
   nav.classList.toggle(slideLeft, menuOpen);
   menuOpen = !menuOpen;
@@ -63,9 +67,9 @@ const toggleMenu = () => {
 
 //  close menu when click on navLinks
 navLinks.forEach(navLink => {
-  navLink.addEventListener('click', () => {
+  navLink.addEventListener('click', (e) => {
     if (menuOpen) {
-      toggleMenu();
+      toggleMenu(e);
     }
   });
 });
@@ -82,9 +86,9 @@ navLinks.forEach(navLink => {
   });
  });
  
- window.addEventListener('scroll', () => {
+ window.addEventListener('scroll', (e) => {
   if (menuOpen) {
-     toggleMenu();
+     toggleMenu(e);
      icons.forEach(icon => {
        icon.classList.remove('open');
      });
