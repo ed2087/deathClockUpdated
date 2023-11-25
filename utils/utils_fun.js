@@ -11,6 +11,7 @@ const someUserInfo = async (req, res, next) => {
     return {
         userName: user.username,
         userActive: req.session.user ? true : false,
+        userData: req.session.user ? req.session.user : null,
     }
 
 };

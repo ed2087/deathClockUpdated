@@ -39,11 +39,20 @@
 
 
         <!-- if path /terrorTales and userActive -->
-        <% if(userActive && path == "/terrorTales") {%>
-            <li><a class="navLinks_" href="/terrorTales/submission">CreateSub</a></li>
-        <% }else{ %>
-            <li><a class="navLinks_" href="/#contact">Contact</a></li>
-        <% } %>
+        <li id="dropDown_wrap_li">
+            <a id="open_dropdown" class="navLinks_">Other</a>
+            <ul id="dropdown_nav">
+                <li class="dropdownList">
+                    <a href="/disclaimer">Disclaimer</a>
+                </li>
+                <li class="dropdownList">
+                    <a href="/faq">FAQ</a>
+                </li>
+                <li class="dropdownList">
+                    <a href="/contact">Contact</a>
+                </li>
+            </ul>
+        </li>
 
         
 
@@ -119,4 +128,23 @@
 </nav>
 
 
+
+<script>
+
+    // dropdown nav
+    const dropdown_nav = document.getElementById('dropdown_nav');
+
+    const dropDownFunction = () => {
+       
+        if(dropdown_nav.style.display === 'flex'){
+            dropdown_nav.style.display = 'none';
+        }else{
+            dropdown_nav.style.display = 'flex';
+        }
+    }
+
+    document.getElementById('open_dropdown').addEventListener('click', dropDownFunction);    
+
+
+</script>
 

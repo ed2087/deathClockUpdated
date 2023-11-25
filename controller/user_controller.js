@@ -111,7 +111,10 @@ exports.postLogin = async (req, res, next) => {
                 email: user.email,
                 role: user.role,
                 userVerified: user.userVerified,
-                userOnline: true
+                userOnline: true,
+                isStoryAllowed: user.isStoryAllowed,
+                isCommentAllowed: user.isCommentAllowed,
+                isBanned: user.isBanned,
             };
 
             //set session

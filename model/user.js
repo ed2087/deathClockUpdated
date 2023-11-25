@@ -80,6 +80,21 @@ const userSchema = new mongoose.Schema({
       
     }
   ],
+  // is user allow to post stories by default yes
+  isStoryAllowed: {
+    type: Boolean,
+    default: true
+  },
+  // is user allow to post comments by default yes
+  isCommentAllowed: {
+    type: Boolean,
+    default: true
+  },
+  // is uder banned by default no
+  isBanned: {
+    type: Boolean,
+    default: false
+  },
 
 });
 

@@ -21,8 +21,8 @@ exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive } = await someUserInfo(req, res, next);
-        console.log("userActive:", userActive);
+      const { userName, userActive, userData } = await someUserInfo(req, res, next);
+      
 
       res.status(200).render("../views/storypages/terrorTales", {
         title: "Terror Tales",
@@ -30,6 +30,7 @@ exports.terrorTalesPage = async (req, res, next) => {
         headerTitle: "TERROR TALES",
         userActive,
         userName,
+        userData
       });
 
     } catch (error) {
