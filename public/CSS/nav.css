@@ -9,6 +9,7 @@
     height: calc(100vh - 97px);
     z-index: 100;
     background: var(--black_trasparent);
+    overflow: auto;
 }
 
     #nav_inner_ulWrap{
@@ -336,9 +337,10 @@
         top: 0;
         z-index: 100;
         left: 0;
-        border-bottom: solid 4px #eb6612;
+        border-bottom: solid 4px var(--global-darkOrange);
         background: var(--black_trasparent);
         height: auto;
+        overflow: visible;
     }
         #userInterFace_wrap{
             display: none;
@@ -439,10 +441,13 @@
                       #dropdown_nav{
                         display: none;
                         position: absolute;
-                        left: 0;
-                        top: 100%;
+                        left: 0px;
+                        top: 110%;
                         background: black;
                         flex-direction: column;
+                        border: solid 4px var(--global-darkOrange);
+                        border-top: none;
+                        transition: all 0.5s ease-in-out;
                       }
                         #dropdown_nav .dropdownList{
                           margin-bottom: 10px;

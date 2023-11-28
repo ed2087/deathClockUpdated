@@ -56,7 +56,7 @@ h1,h2,h3,h4,h5,h6{
     --global-green: #00ff00;
     --globlal-brightRed: #ff0000;
     --global-darkred: #480607;
-    --global-darkOrange: darkorange;
+    --global-darkOrange: #eb6612;
     --yellow_gradient: linear-gradient(to bottom, #ffd600, #ffba00, #fb9e00, #f58200, #eb6612);
     --black_trasparent: rgb(0 0 0 / 85%);
     --darkImage_background: linear-gradient(to right bottom, #000000, #0b0b0b, #141414, #1a1a1a, #202020, #202020, #202020, #202020, #1a1a1a, #141414, #0b0b0b, #000000);
@@ -95,6 +95,7 @@ h1,h2,h3,h4,h5,h6{
     font-weight: 300;
     font-size: 1.1rem;
     min-width: 150px;
+    cursor: pointer;
 }
     
         /* hover */
