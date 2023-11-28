@@ -25,7 +25,7 @@
 
                 <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
                 <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
-                <input type="date" name="age" placeholder="age" required value="<%= body != null ? body.age : ''  %>">
+                <input type="date" id="date" name="age" placeholder="age" required value="<%= body != null ? body.age : ''  %>">
                 <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
                 <input type="password" name="confirmPassword" placeholder="confirm password" required value="<%= body != null ? body.confirmPassword : ''  %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -112,6 +112,13 @@
 
             }
     </script>
+
+        <script>
+            // add current date 
+            const dateEle = document.getElementById("date");
+            const currentDate = new Date().toISOString().split("T")[0];
+            dateEle.value = currentDate;
+        </script>
 
     <!-- script -->
     <script src="../../JS/master.js"></script> 

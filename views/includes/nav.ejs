@@ -40,7 +40,7 @@
 
         <!-- if path /terrorTales and userActive -->
         <li id="dropDown_wrap_li">
-            <a id="open_dropdown" class="navLinks_">Other</a>
+            <a id="open_dropdown" class="navLinks_">Other &#8681;</a>
             <ul id="dropdown_nav">
                 <li class="dropdownList">
                     <a href="/disclaimer">Disclaimer</a>
@@ -133,13 +133,17 @@
 
     // dropdown nav
     const dropdown_nav = document.getElementById('dropdown_nav');
+    const open_dropdown = document.getElementById('open_dropdown');
 
     const dropDownFunction = () => {
-       
+       //&#8679; up arrow
+         //&#8681; down arrow
         if(dropdown_nav.style.display === 'flex'){
             dropdown_nav.style.display = 'none';
+            open_dropdown.innerHTML = 'Other &#8681;';
         }else{
             dropdown_nav.style.display = 'flex';
+            open_dropdown.innerHTML = 'Other &#8679;';
         }
     }
 

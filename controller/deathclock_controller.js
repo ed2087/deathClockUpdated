@@ -13,6 +13,7 @@ exports.deathclockQuestions = async function (req, res, next) {
   res.status(200).render("../views/deathclock/mortality_questions", {
     path: "/deathclockQuestions",
     title: "The Time Ticker: How Long Have You Go",
+    headerTitle: "Death Clock",
     csrfToken: res.locals.csrfToken,
     userActive,
     userName,
@@ -38,6 +39,7 @@ exports.deathclockResults = async function (req, res, next) {
       res.status(200).render("../views/deathclock/mortality_results", {
         path: "/mortality_results",
         title: "The Time Ticker: How Long Have You Go",
+        headerTitle: `${user.name}'s Death Clock Results`,
         csrfToken: res.locals.csrfToken,
         user: user,
         userActive,
@@ -83,6 +85,7 @@ exports.graveyard = async function (req, res, next) {
       res.status(200).render("../views/deathclock/graveyard", {
         path: "/graveyard",
         title: "The Time Ticker: How Long Have You Go",
+        headerTitle: "Graveyard",
         csrfToken: res.locals.csrfToken,
         users: package_,
         userActive,
