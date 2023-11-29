@@ -1,5 +1,6 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="../../CSS/graveYard.css">
 </head>
 <body>
 
@@ -7,47 +8,35 @@
     <!-- nav include -->
     <%- include('../includes/nav.ejs') %>
 
-
-    <table>
-        <thead>
-            <tr>
-                <th>User Name</th>                
-                <th>Days Left</th>
-                <th>Hours Left</th>
-                <th>Months Left</th>
-                <th>Predicted Death Year</th>
-                <th>Seconds Left</th>
-                <th>Weeks Left</th>
-                <th>Years Left</th>
-                <th>link</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(function(user) { %>
-                <tr>
-                    <td><%= user.userName %></td>                    
-                    <td><%= user.clock.daysLeft %></td>
-                    <td><%= user.clock.hoursLeft %></td>
-                    <td><%= user.clock.monthsLeft %></td>
-                    <!-- get current date and add predictedDeathYear -->
-                    <td><%= user.clock.expectedFutureDate.year %></td>
-                    <td><%= user.clock.secondsLeft %></td>
-                    <td><%= user.clock.weeksLeft %></td>
-                    <td><%= user.clock.yearsLeft %></td>
-                    <!-- atag link -->
-                    <td>
-                        <a href="/deathClock/results/<%= user.userShortId %>">More...</a>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
 
 
-    <!-- script -->
-    <script>
-        var users = <%- JSON.stringify(users) %>;
-    </script>
+    <main id="main">
+
+        <!-- title -->
+        <div id="top_title_wrap">
+            <h2 id="topTitle">
+                Uncover Your Estimated LifeSpan
+            </h2>
+            <p id="article">
+                Step into the chilling abyss as the death clock unveils your fate.
+            </p>
+        </div>
+
+
+        <section id="graveyard">
+
+            <ul id="graveyard_wrap"></ul>
+
+            <!-- load more button -->
+            <button id="loadMore" class="call_to_action_red">Load More</button>
+
+        </section>
+        
+
+    </main>
+    
     <script src="../../JS/master.js"></script> 
     <script src="../../JS/graveyardApp.js"></script> 
 </body>

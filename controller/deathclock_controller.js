@@ -58,48 +58,102 @@ exports.deathclockResults = async function (req, res, next) {
 
 // graveyard where all users are listed
 exports.graveyard = async function (req, res, next) {
+
   try {
-    // get all users
-    const users = await DeathClockModel.find();
 
-    // loop through users and get only the ones that user.allowed is true
+    // Get the latest 10 users that are allowed using aggregation
+    const users = await DeathClockModel.find({ allowed: true })
+      .sort({ updatedAt: -1 })
+      .limit(10)
+      .exec();
 
-    const allowedUsers = users.filter((user) => {
-      return user.allowed === true;
+    // Extract relevant user information
+    const package_ = users.map((user) => ({
+      userName: user.name,
+      userShortId: user.shortId,
+      clock: user.clock,
+    }));
+
+    //check if user is logged in
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
+    // Render deathclockResults
+    res.status(200).render("../views/deathclock/graveyard", {
+      path: "/graveyard",
+      title: "The Time Ticker: How Long Have You Go",
+      headerTitle: "Graveyard",
+      csrfToken: res.locals.csrfToken,
+      users: package_,
+      userActive,
+      userName,
     });
 
-    const package_ = allowedUsers.map((user) => {
-      return {
-        userName: user.name,
-        userShortId: user.shortId,
-        clock: user.clock,
-      };
-    });
-    
-    if (users) {
-
-      //check if user is logged in
-      let {userName, userActive} = await someUserInfo(req, res, next);
-
-      // render deathclockResults
-      res.status(200).render("../views/deathclock/graveyard", {
-        path: "/graveyard",
-        title: "The Time Ticker: How Long Have You Go",
-        headerTitle: "Graveyard",
-        csrfToken: res.locals.csrfToken,
-        users: package_,
-        userActive,
-        userName,
-      });
-    } else {
-      console.log("user not found");
-      res.redirect("/");
-    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.redirect("/");
+  }
+
+};
+
+
+exports.graveyardPagination = async function (req, res, next) {
+  try {
+    const { page, limit } = req.query;
+    const package_ = await loadMoreClocks(page, limit, res);
+
+    // Send JSON response
+    const response = {
+      status: package_.length === 0 ? null : "ok",
+      data: package_,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
     res.redirect("/");
   }
 };
+
+// Load more users' clocks
+async function loadMoreClocks(page, limit, res) {
+
+  try {
+    // Convert page and limit to numbers with default values
+    const page_ = (page * 1) || 1;
+    const limit_ = (limit * 1) || 10;
+
+    // Calculate the number of documents to skip for pagination
+    const skip = (page_ - 1) * limit_;
+
+    // Get the latest users that are allowed using aggregation
+    const users = await DeathClockModel.find({ allowed: true })
+      .sort({ updatedAt: -1 })
+      .skip(skip)
+      .limit(limit_)
+      .exec();
+
+
+    // how many clocks are available
+    const totalClocks_avalable = await DeathClockModel.find({ allowed: true }).countDocuments();
+    
+    // Extract relevant user information
+    const package_ = users.map((user) => ({
+      userName: user.name,
+      userShortId: user.shortId,
+      clock: user.clock,
+      avalable: totalClocks_avalable,
+    }));
+
+    return package_;
+  } catch (error) {
+    console.error(error);
+    res.redirect("/");
+  }
+
+};
+
+
+
 
 // update user clock
 exports.updateUserClock = async function (req, res, next) {

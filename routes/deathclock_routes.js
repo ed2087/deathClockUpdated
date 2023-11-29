@@ -2,18 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 // Controller
-const deathclockController = require("../controller/deathclock_controller.js");
+const {deathclockQuestions,deathclockResults,graveyard,updateUserClock,graveyardPagination} = require("../controller/deathclock_controller.js");
 
 // DeathclockQuestions
-router.get("/questions", deathclockController.deathclockQuestions);
+router.get("/questions", deathclockQuestions);
 
 // DeathclockResults
-router.get("/results/:id", deathclockController.deathclockResults);
+router.get("/results/:id", deathclockResults);
+
+// GraveyardPagination
+router.get("/pagination", graveyardPagination);
 
 // Graveyard
-router.get("/graveyard", deathclockController.graveyard);
+router.get("/graveyard", graveyard);
 
 // UpdateUserClock
-router.post("/updateUserClock", deathclockController.updateUserClock);
+router.post("/updateUserClock", updateUserClock);
+
 
 module.exports = router;
