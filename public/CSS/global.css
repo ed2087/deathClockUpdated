@@ -130,7 +130,7 @@ h1,h2,h3,h4,h5,h6{
 .special_yellow_text{
     font-family: 'Griffy', cursive;
     color: var(--global-yellow);
-    font-weight: bolder;
+    font-weight: 500;
 }
 
 

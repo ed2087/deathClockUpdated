@@ -13,6 +13,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        margin-bottom: 1em;
     }
 
         #top_title_wrap h2{
@@ -21,13 +22,14 @@
             margin-bottom: 20px;
         }
 
-        #top_title_wrap p{
-            font-size: 1.2rem;
-            font-weight: 400;
-            margin-bottom: 20px;
-            text-align: center;
-            padding: 10px 0;
-        }
+            #article{
+                font-size: 1.2rem;
+                font-weight: 400;
+                margin-bottom: 20px;
+                text-align: center;
+                display: block;
+                margin-top: 10px;
+            }
 
     /* form */
     #healthForm{
@@ -41,10 +43,11 @@
             font-size: 1.2rem;
             color: var(--global-yellow);
             border-bottom: dotted 3px var(--global-red);
+            min-height: 300px;
         }
             #healthForm fieldset legend{
                 color: var(--global-yellow);
-                border-bottom: solid 3px var(--global-red);
+                border-bottom: solid 4px var(--global-red);
                 margin-bottom: 20px;
                 padding: 10px;
             }
@@ -68,6 +71,7 @@
                 color: white;
                 background: black;
                 font-size: 1.1rem;
+                display: block;
             }
             /* placeholder white */
             #healthForm fieldset div input::placeholder, #healthForm fieldset div select::placeholder{
