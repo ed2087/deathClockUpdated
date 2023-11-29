@@ -7,7 +7,7 @@ const liMold = (user) => {
     return `
         <li class="gaveyard_graves">
             <!-- image -->
-            <img src="../../IMAGES/utils/Grave.webp" alt="grave" class="graveyard_grave" alt="tomb stone" onload="imageLoaded(this)">
+            <img src="../../../IMAGES/utils/Grave.webp" alt="grave" class="graveyard_grave" alt="tomb stone" onload="imageLoaded(this)">
 
             <!-- users info -->
             <div class="user_infowrap">
