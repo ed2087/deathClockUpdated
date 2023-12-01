@@ -1,36 +1,23 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
     <!-- css  -->
-    <link rel="stylesheet" href="../../CSS/userInterface.css.css">
+    <link rel="stylesheet" href="../../CSS/userInterface.css">
 </head>
 <body>
 
-    <!-- verify email -->
-    <h1>verify</h1>  
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>  
 
-    
-    <h2>We sent a verification link to your email</h2>
-    <br>
-    <br>
-    <!-- dint get email -->
-    <a href="/user/resenverificationLink/<%=id%>">Didn't get the email?</a>
+    <main id="main_wrap">
+        <div id="verify_wrap">
 
-    <br>
-    <br>
-
-    <!-- log in -->
-    <!-- home -->
-    <a href="/">home</a>
-
-    <a href="/deathClock/questions">questions</a>
-
-    <!-- /graveyard -->
-    <a href="/deathClock/graveyard">graveyard</a>
-
-    <!-- /terrorTales/home -->
-    <a href="/terrorTales">terrorTales</a>
-    
-    <a href="/user/login">Log In</a>
+            <h2>Verification Link Sent</h2>
+            <p>We've sent a verification link to your email.</p>
+            
+            <!-- Didn't get the email? -->
+            <a class="call_to_action_red" href="/user/resendVerificationLink/<%= id %>">Resend Verification.</a>
+        </div>  
+    </main>
 
     <!-- script -->
     <script src="../JS/master.js"></script> 

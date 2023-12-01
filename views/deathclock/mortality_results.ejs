@@ -17,17 +17,152 @@
     
     <!-- nav include -->
     <%- include('../includes/nav.ejs') %>
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
 
 
-    <h1>results</h1>
-    <p>You have lived for: <span id="timeLived"></span></p>
-    <p>You have approximately: <span id="remainingTime"></span></p>
-    <p>You have approximately: <span id="expectedFutureDate"></span></p>
-    <p id="predictionStory"></p>
+    <main id="main">
 
-    <div id="charts_">
-        <canvas id="chart"></canvas>
-    </div>
+        <section class="section_wrap">
+
+            <div class="section_container">
+                
+                <h1><%= userName %> DEATH PREDICTION</h1>
+
+                <!-- SHARE BUTTONS -->
+                <div id="shareLinks_wrap">
+                    <h3>Share your results</h3>
+                    <div id="shareLinks">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.deathclock.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock%20https://www.deathclock.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.deathclock.com/&title=Death%20Clock&summary=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock&source=https://www.deathclock.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.pinterest.com/pin/create/button/?url=https://www.deathclock.com/&media=&description=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock" target="_blank"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                    <p>Share With Your Freinds</p>
+                </div>                    
+
+            </div>
+
+        </section>
+
+
+        <section class="section_wrap">
+
+            <div class="inner_sectionHeader_wrap">
+                <h2>YOU HAVE APPROXIMATELY:</h2>
+            </div>
+
+
+            <!-- left and right divs -->
+            <ul class="left">
+
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">YEARS LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="yearsLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">MONTHS LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="monthsLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">WEEKS LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="weeksLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">DAYS LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="daysLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">HOURS LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="hrsLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">MINUTES LEFT</h3>
+                    <p class="deathInfo loading_dotts" id="minLeft"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">SECONDS LEFT</h3>
+                    <p class="deathInfo loading_dotts"  id="secLeft"></p>
+                </li>
+
+            </ul>
+
+            <div class="right">
+
+                <!-- GRAVE IMAGE -->
+                <img src="../../../IMAGES/utils/Grave.webp" alt="grave">
+
+                <!-- USER INFO -->
+                <div class="user_info">
+                    <h3>IN LOVING MEMORY</h3>
+                    <h4>TAKEN FROM US ON</h4>
+                    <p id="deathYear" class="loading_dotts"></p>
+                    <h5>REST IN PEACE</h5>
+                </div> 
+
+            </div>
+
+        </section>
+
+        <section class="section_wrap" id="stats">
+
+            <div class="inner_sectionHeader_wrap">
+                <h2>YOUR DEATH CLOCK</h2>
+            </div>
+
+            <div id="charts_">
+                <div id="gridLoading" class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                <canvas id="chart"></canvas>
+            </div>
+
+        </section>
+
+
+        <section class="section_wrap">
+
+            <div class="inner_sectionHeader_wrap">
+                <h2>YOU HAVE LIVED FOR:</h2>
+            </div>
+
+
+            <!-- left and right divs -->
+            <ul class="left">
+
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">YEARS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="yearsLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">MONTHS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="monthsLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">WEEKS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="weeksLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">DAYS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="daysLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">HOURS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="hrsLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">MINUTES LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="minLived"></p>
+                </li>
+                <li class="userDeath_info_cards">
+                    <h3 class="card_header">SECONDS LIVED</h3>
+                    <p class="deathInfo loading_dotts" id="secLived"></p>
+                </li>
+
+            </ul>
+
+        </section>
+
+
+    </main>
 
     
 

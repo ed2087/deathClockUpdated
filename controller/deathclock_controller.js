@@ -99,12 +99,13 @@ exports.graveyard = async function (req, res, next) {
 exports.graveyardPagination = async function (req, res, next) {
   try {
     const { page, limit } = req.query;
-    const package_ = await loadMoreClocks(page, limit, res);
+    const {package_, totalClocks_avalable} = await loadMoreClocks(page, limit, res);
 
     // Send JSON response
     const response = {
       status: package_.length === 0 ? null : "ok",
       data: package_,
+      totalClocks_avalable,
     };
 
     res.status(200).json(response);
@@ -135,16 +136,19 @@ async function loadMoreClocks(page, limit, res) {
 
     // how many clocks are available
     const totalClocks_avalable = await DeathClockModel.find({ allowed: true }).countDocuments();
-    
+ 
     // Extract relevant user information
     const package_ = users.map((user) => ({
       userName: user.name,
       userShortId: user.shortId,
       clock: user.clock,
-      avalable: totalClocks_avalable,
     }));
 
-    return package_;
+    return {
+      package_,
+      totalClocks_avalable,
+    };
+    
   } catch (error) {
     console.error(error);
     res.redirect("/");

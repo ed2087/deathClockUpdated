@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now, // Set the default value to the current date/time
-  }
+  },
 });
 
 // Create the User model

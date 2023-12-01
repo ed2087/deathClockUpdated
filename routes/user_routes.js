@@ -47,11 +47,6 @@ router.post("/register", [
         .isEmail()
         .withMessage("Please enter valid Email")
         .normalizeEmail(),
-
-    // check users age make sure they are 18 or older
-    check("age")
-        .isInt({ min: 18 })
-        .withMessage("You must be 18 or older to use this site"),
     //check password
     check(
         "password",

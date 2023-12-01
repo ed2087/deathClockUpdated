@@ -25,7 +25,7 @@
 
                 <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
                 <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
-                <input type="date" id="date" name="age" placeholder="age" required value="<%= body != null ? body.age : ''  %>">
+                <input type="date" id="date" name="age"  required value="" min="1950-01-01" max="2018-12-31">
                 <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
                 <input type="password" name="confirmPassword" placeholder="confirm password" required value="<%= body != null ? body.confirmPassword : ''  %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -58,17 +58,13 @@
             function refreshCaptcha() {
 
                 const darkRiddles = [
-                    "What has to be broken before you can use it?",
-                    "I am always coming, but never arrive. What am I?",
-                    "What has no beginning, end, or middle?",
-                    "I am always hungry, but never eat. What am I?",
-                    "What has one eye, but cannot see?",
-                    "What has no voice, but can still speak to you?",
-                    "What has no legs, but can still travel the world?",
-                    "What has no wings, but can still fly?",
-                    "What has no life, but can still grow?",
-                    "What has no teeth, but can still bite you?"
+                        "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",
+                        "The more you take, the more you leave behind. What am I?",
+                        "I have keys but open no locks. I have space but no room. You can enter, but you can't go inside. What am I?",
+                        "What has a heart that doesn't beat?",
+                        "I am always hungry, I must always be fed. The finger I lick will soon turn red. What am I?"
                 ];
+
 
                 const randomDarkRiddle = darkRiddles[Math.floor(Math.random() * darkRiddles.length)];
                 const label = document.getElementById('captcha_label');
@@ -84,22 +80,18 @@
                     e.preventDefault();
 
                     const riddlesAnswers = [
-                        "An egg",
-                        "Tomorrow",
-                        "A doughnut",
-                        "Fire",
-                        "A needle",
-                        "A book",
-                        "A stamp",
-                        "Time",
-                        "A beard",
-                        "The cold"
+                        "an echo",
+                        "footsteps",
+                        "a keyboard",
+                        "an artichoke",
+                        "a fire",
+                        "x"
                     ];
 
-                    const input = document.getElementById('captcha_input').value;
+                    const input = document.getElementById('captcha_input').value.trim().toLowerCase();
                     
                     // Check if the answer is correct
-                    if (riddlesAnswers.includes(input.toLowerCase())) {
+                    if (riddlesAnswers.includes(input)) {
                         document.querySelector('form').submit();
                     } else {
                         alert('Wrong answer, try again');
@@ -114,10 +106,30 @@
     </script>
 
         <script>
-            // add current date 
+            // set max to 18 years old from current date
+            const setDateAttribute = () => {
+                const date = new Date();
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                const maxDate = `${year - 18}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+                
+                const dateEle = document.getElementById("date");
+                dateEle.setAttribute("max", maxDate);
+            };
+
+            setDateAttribute();
+
+            // listen to the change event on the date input and add new date value 
             const dateEle = document.getElementById("date");
-            const currentDate = new Date().toISOString().split("T")[0];
-            dateEle.value = currentDate;
+
+            const updateDateVALUE = () => {
+                const date = dateEle.value;
+                dateEle.setAttribute("value", date);
+            };
+
+            dateEle.addEventListener("change", updateDateVALUE);
+
         </script>
 
     <!-- script -->

@@ -78,26 +78,26 @@ exports.postLogin = async (req, res, next) => {
             //validate
             const validate_ = registerValidation(req);
 
-            if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field, req.body)
+            if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field, req.body)
 
             //check if user exist
             const user = await User.findOne({email: email});
             
             if(!user){
                 //there is no user with that email
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email", req.body);
             }
 
             //check if user is verified
             if(!user.userVerified){
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Please activate your account", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Please activate your account", "email", req.body);
             }
 
             //check password
             const validPassword = await bcrypt.compare(password, user.password);
 
             if(!validPassword){
-                return handlingFlashError(res, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password", req.body);
             }
 
             //create session
@@ -141,12 +141,22 @@ exports.postLogin = async (req, res, next) => {
 exports.postRegister = async (req, res, next) => {
 
     try {
-        const {username,email,password} = req.body;
+        const {username,email,age,password} = req.body;        
+        
+        const currentYear = new Date();
+        const userAge = new Date(age);
+        //user age
+        const age_ = currentYear.getFullYear() - userAge.getFullYear();
+
+        //check if user is 13 years old
+        if(age_ < 13) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "You must be 13 years old to register", "age", req.body);
 
         //validate
         const validate_ = registerValidation(req);
 
-        if(validate_.length > 0) return handlingFlashError(res, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field, req.body)
+        console.log(validate_);
+
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field, req.body)
 
         
         //incript password
@@ -156,13 +166,14 @@ exports.postRegister = async (req, res, next) => {
         //check if user exist
         const userExist = await User.findOne({email: email});
 
-        if(userExist) return handlingFlashError(res, "../views/usersInterface/register", "Register", "Email already exist", "email", req.body);
+        if(userExist) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "Email already exist", "email", req.body);
         
 
         //create user
         const user = new User({
             username: username,
             email: email,
+            age: userAge,
             password: hashedPassword,
             activateToken: uuidv4()
         });
@@ -256,15 +267,26 @@ exports.verificationPage = async (req, res, next) => {
 
         //get id query
         const {id,activateToken} = req.query;
+        let {userName, userActive} = await someUserInfo(req, res, next);
 
         try {
+
+            //check if user exist
+            const user = await User.findById(id);
+
+            //check if user exist not redirect to login page
+            if(!user) return res.redirect("/user/login");
+
+            //check if user is verified
+            if(user.userVerified) return res.redirect("/user/login");
 
             res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
                 title: "Resend Activation Link",
                 message: null,
                 field: null,
                 id: id,
-                activateToken: activateToken
+                activateToken: activateToken,
+                userActive
             });
 
             
@@ -359,7 +381,7 @@ exports.logout = async (req, res, next) => {
         req.session.destroy();
 
         // Redirect to the login page
-        res.redirect("/user/login");
+        res.redirect("/");
 
     } catch (error) {
         //send to globalErrorHandler        
@@ -370,8 +392,11 @@ exports.logout = async (req, res, next) => {
 
 
 
-function handlingFlashError (res, urlPath, title, msg, path, body) {
-    console.log(body);
+async function handlingFlashError (res,req,next, urlPath, title, msg, path, body) {
+
+    //check if user is logged in
+    let {userName, userActive} = await someUserInfo(req, res, next);
+    
     //if body is undefined
     if(body === undefined){
         body = null;
@@ -381,7 +406,8 @@ function handlingFlashError (res, urlPath, title, msg, path, body) {
         title: title,
         message: msg,
         field: path,
-        body: body
+        body: body,
+        userActive
     });
 
 }
@@ -389,3 +415,5 @@ function handlingFlashError (res, urlPath, title, msg, path, body) {
 
 //passworD2087
 //http://localhost:3000/user/activate/9e210301-23d9-45d6-bae9-bce2322e23d9
+
+//http://localhost:3001/user/verificationPage?id=6569eab199a4b8078107ae01&activateToken=40629eb4-4e66-4e30-b379-3da46e5ffbb6
