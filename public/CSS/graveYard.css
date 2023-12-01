@@ -7,6 +7,9 @@
     display: flex;
     flex-direction: column;
     margin: 2em 0;
+    background: url('../../../IMAGES/utils/Smoke.webp') no-repeat;
+    background-position-x: right;
+    background-position-y: top;
 }
 #top_title_wrap{
     display: flex;
@@ -46,7 +49,7 @@
         }
         .gaveyard_graves{
             width: 100%;
-            max-width: 350px;
+            max-width: 300px;
             margin: 10px;
             padding: 10px;
             position: relative;
@@ -106,68 +109,34 @@
                 #loadMore{
                     margin: 40px auto;
                 }
-/* animation loading */
-.lds-ellipsis {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
+
+
+
+@media only screen and (min-width:800px){
+
+    #top_title_wrap h2{
+        font-size: 2.2rem;
+    }
+
+    #top_title_wrap p{
+        font-size: 1.3rem;
+    }
+
 }
-    .lds-ellipsis div {
-    position: absolute;
-    top: 33px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: var(--globlal-brightRed);
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-    }
-    .lds-ellipsis div:nth-child(1) {
-    left: 8px;
-    animation: lds-ellipsis1 0.6s infinite;
-    }
-    .lds-ellipsis div:nth-child(2) {
-    left: 8px;
-    animation: lds-ellipsis2 0.6s infinite;
-    }
-    .lds-ellipsis div:nth-child(3) {
-    left: 32px;
-    animation: lds-ellipsis2 0.6s infinite;
-    }
-    .lds-ellipsis div:nth-child(4) {
-    left: 56px;
-    animation: lds-ellipsis3 0.6s infinite;
-    }
-    @keyframes lds-ellipsis1 {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
-    }
-    @keyframes lds-ellipsis3 {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(0);
-    }
-    }
-    @keyframes lds-ellipsis2 {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(24px, 0);
-    }
-    }
 
-@media only screen and (min-width:600px){
+@media only screen and (min-width:1024px){   
+    
 
-    .gaveyard_graves{
-        /* max-width: calc(100% / 5 - 20px);
-        min-width: 250px; */
-    }
+ }
+
+ @media only screen and (min-width:1300px){
+    
+
+}
+ @media only screen and (min-width:1500px){ 
+
+        #top_title_wrap h2{
+            font-size: 2.8rem;
+        }
 
 }

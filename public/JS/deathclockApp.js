@@ -135,6 +135,33 @@ function calculateTime(userBirthdate) {
 
 
 
+const addhtmlInfo_todeathclock = (userDetails_) => {  
+
+  id_("yearsLeft").innerHTML = userDetails_.remainingTime.years.toLocaleString();
+  id_("monthsLeft").innerHTML = userDetails_.remainingTime.months.toLocaleString();
+  id_("weeksLeft").innerHTML = userDetails_.remainingTime.weeks.toLocaleString();
+  id_("daysLeft").innerHTML = userDetails_.remainingTime.days.toLocaleString();
+  id_("hrsLeft").innerHTML = userDetails_.remainingTime.hours.toLocaleString();
+  id_("minLeft").innerHTML = userDetails_.remainingTime.minutes.toLocaleString();
+  id_("secLeft").innerHTML = userDetails_.remainingTime.seconds.toLocaleString();
+
+};
+
+const addhtmlInfo_timeLived = (userDetails_) => {
+
+
+  id_("yearsLived").innerHTML = userDetails_.timeLived.years.toLocaleString();
+  id_("monthsLived").innerHTML = userDetails_.timeLived.months.toLocaleString();
+  id_("weeksLived").innerHTML = userDetails_.timeLived.weeks.toLocaleString();
+  id_("daysLived").innerHTML = userDetails_.timeLived.days.toLocaleString();
+  id_("hrsLived").innerHTML = userDetails_.timeLived.hours.toLocaleString();
+  id_("minLived").innerHTML = userDetails_.timeLived.minutes.toLocaleString();
+  id_("secLived").innerHTML = userDetails_.timeLived.seconds.toLocaleString();
+
+};
+
+
+
 // Function to update and display the time every second
 let lock = false;
 function updateTime() {
@@ -169,17 +196,35 @@ function updateTime() {
         lock = true;
     }
 
-    // Update HTML elements
-    document.getElementById("timeLived").textContent = `${result.timeLived.years} years, ${result.timeLived.months.toLocaleString()} months, ${result.timeLived.weeks.toLocaleString()} weeks, ${result.timeLived.days.toLocaleString()} days, ${result.timeLived.hours.toLocaleString()} hours, ${result.timeLived.minutes.toLocaleString()} minutes, ${result.timeLived.seconds.toLocaleString()} seconds`;
-    document.getElementById("remainingTime").textContent = `${result.remainingTime.years} years, ${result.remainingTime.months.toLocaleString()} months, ${result.remainingTime.days.toLocaleString()} days, ${result.remainingTime.hours.toLocaleString()} hours, ${result.remainingTime.minutes.toLocaleString()} minutes, ${result.remainingTime.seconds.toLocaleString()} seconds left`;
-    document.getElementById("expectedFutureDate").textContent = `${expectedFutureDate.year}-${expectedFutureDate.month}-${expectedFutureDate.day}`;
-}
+    // send data to function to update html
+    addhtmlInfo_todeathclock(result);
+    addhtmlInfo_timeLived(result);
 
-// Call the updateTime function every second
-setInterval(updateTime, 1000);
+    // add deathdate to html
+    id_("deathYear").textContent = `${expectedFutureDate.year}-${expectedFutureDate.month}-${expectedFutureDate.day}`;
 
-// Call the updateTime function immediately to display the initial values
-updateTime();
+};
+
+
+// onload
+window.onload = () =>{
+
+    //add loadingMold_dotts to all elements with class="loading_dotts"
+    const loading_dotts = queryAll_(".loading_dotts");
+    loading_dotts.forEach(element => {
+        element.innerHTML = loadingMold_dotts;
+    });
+
+    // set a timer then load function
+    setTimeout(() => {
+
+      updateTime();
+      setInterval(updateTime, 1000);
+
+    }, 2000);
+
+};
+
 
 
 
@@ -232,5 +277,10 @@ function startChart(data) {
         },
       },
     });
-  }
+
+    // remove #gridLoading from html
+    id_("gridLoading").remove();
+    
+
+};
   

@@ -8,6 +8,15 @@ const query_ = (query) => document.querySelector(query);
 const queryAll_ = (query) => document.querySelectorAll(query);
 const create_ = (element) => document.createElement(element);
 
+// GLOBAL HTML MOLDS
+
+const loadingMold_dotts = `
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+`;
+
+const loadingMold_grid = `
+  <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+`;
 
 
 //fetch
