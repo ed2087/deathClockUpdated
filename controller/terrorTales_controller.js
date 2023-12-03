@@ -40,6 +40,64 @@ exports.terrorTalesPage = async (req, res, next) => {
 
 };
 
+
+
+// Read page
+exports.readPage = async (req, res, next) => {
+    try {
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+        const storyId = req.params.id;
+
+        // Get the story by ID
+        const story = await Story.findById(storyId);
+
+        // If story not found, return a 404 error
+        if (!story) {
+            return globalErrorHandler(req, res, 404, "Story not found");
+        }
+
+        // Check if the user is logged in and has already read this story
+        if (userActive) {
+            const user = await User.findById(req.session.userId);
+
+            if (user && !user.books.includes(storyId)) {
+                // Add the story to the user's books array if not already present
+                user.books.push(storyId);
+                await user.save();
+            }
+        }
+
+        // Increment the readCount every time a user reads a story
+        story.readCount++;
+        await story.save();
+
+        // Format the story text
+        const storyText = await formatStory(story.storyText, 80);
+
+        // Update the story object with the formatted text
+        story.storyText = storyText;
+        console.log(story);
+        // Render the read page with the story details
+        res.status(200).render("../views/storypages/read", {
+            title: "Read",
+            path: "/read",
+            headerTitle: `${story.storyTitle}`,
+            userActive,
+            userName,
+            story,
+            userData
+        });
+
+    } catch (error) {
+        console.error("Error in readPage:", error);
+        globalErrorHandler(req, res, 500, "Something went wrong");
+    }
+};
+
+
+
+
+
 // Submission page
 exports.submission = async  (req, res, next) => {
   try {
@@ -291,6 +349,12 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                                 $options: "i",
                             },
                         },
+                        {
+                            unicUrlTitle: {
+                                $regex: query,
+                                $options: "i",
+                            },
+                        },
 
                     ],
                 },
@@ -369,6 +433,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                     readingTime: 1,
                     comments: 1,
                     readCount: 1,
+                    unicUrlTitle: 1,
                 },
             },
         ];
@@ -391,6 +456,33 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
 
 
 
+
+// FUNCTIONS
+
+async function formatStory(text) {
+    // Define a regular expression that matches the end of a sentence
+    const regex = /([^!.?]*[.!?])\s*(?=[A-Z]|$)/g;
+  
+    // Split the text into sentences using the regex
+    const sentences = text.match(regex) || [];
+  
+    // Wrap each sentence in a <p> tag with the class name
+    const paragraphs = sentences.map((sentence) => `<p class="sentence_p">${sentence.trim()}</p>`);
+  
+    // Join the paragraphs into a single string
+    const formattedText = paragraphs.join("");
+  
+    return formattedText;
+
+}
+  
+  
+  
+
+
+
+
+
 // create a one time function to add reading time to all stories if not exist
 const addReadingTime = async () => {
     try {
@@ -407,4 +499,28 @@ const addReadingTime = async () => {
 };
 
 //addReadingTime();
+
+
+
+
+// crete a function to crete a unique url title for each story
+const createUniqueUrlTitle = async () => {
+    try {
+        const stories = await Story.find({});
+
+        stories.forEach(async (story) => {
+            story.unicUrlTitle = story.storyTitle.replace(/\s/g, '-').toLowerCase();
+            await story.save();
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+//createUniqueUrlTitle();
+
+
+
+
+
 

@@ -1,0 +1,70 @@
+    <!-- head include -->
+    <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="../../../CSS/readPage.css">
+</head>
+<body>
+
+
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
+
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
+
+    <!-- do not allow to refresh -->
+
+    <main id="master_wrap">                   
+            
+        <section class="story_secs" id="story_info">
+
+            <!-- created date, upvotes, views, comments -->
+            <div id="story_info_wrap">
+                <div class="story_info_list" id="story_info_date">
+                    <img src="../../IMAGES/Icons/calendar.webp" alt="pen" />
+                    <p><%= new Date(story.createdAt).toLocaleDateString('en-US') %></p>
+                </div>
+                <div class="story_info_list" id="story_info_upvotes">
+                    <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
+                    <p><%= story.upvotes.length  %></p>
+                </div>
+                <div  class="story_info_list"id="story_info_views">
+                    <img src="../../IMAGES/Icons/view.webp" alt="pen" />
+                    <p><%= story.readCount %></p>
+                </div>
+                <div class="story_info_list" id="story_info_comments">
+                    <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
+                    <p><%= story.comments.length  %></p>
+                </div>
+            </div>
+            
+            <div id="user_info_wrap">
+                <div id="userAvatar_wrap">
+                    <h2><%= story.creditingName.charAt(0) %></h2>
+                </div>
+                <div id="user_name">
+                    <p> <span style="font-weight: 600;">Written By</span> <span class="specialCharacter">@</span><%= story.creditingName %></p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="story_secs" id="story_wrap_sec">
+
+            <div id="story_wrap">
+
+                <div id="story">
+                    <p><%- story.storyText %></p>
+                </div>
+
+            </div>
+
+        </section>
+        
+
+    </main>  
+
+    <!-- script -->
+    <script src="../../JS/master.js"></script>  
+    <script src="../../JS/readPageFun.js"></script>  
+</body>
+</html>
