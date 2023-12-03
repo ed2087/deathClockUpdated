@@ -12,6 +12,7 @@ let timer;
 /////////////////////////////////////////////////
 
 const CommonStoryTemplates = (data) => {
+    console.log(data)
     const { createdAt, comments, extraTags, categories } = data;
     const date = new Date(createdAt);
     const formattedDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
@@ -69,7 +70,7 @@ const CommonStoryTemplates = (data) => {
                         ${extraTags_categories}
                     </div>
                     
-                    <a class="read_story_button" href="#">Read Story</a>
+                    <a class="read_story_button" href="/terrorTales/horrorStory/${data._id}">Read Story</a>
 
                 </div>
 

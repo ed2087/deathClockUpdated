@@ -1,0 +1,7 @@
+console.log("readPageFun.js");
+
+
+
+
+
+
