@@ -25,7 +25,7 @@
                 </div>
                 <div class="story_info_list" id="story_info_upvotes">
                     <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
-                    <p><%= story.upvotes.length  %></p>
+                    <p id="upvoteCounter"><%= story.upvotes.length  %></p>
                 </div>
                 <div  class="story_info_list"id="story_info_views">
                     <img src="../../IMAGES/Icons/view.webp" alt="pen" />
@@ -55,6 +55,37 @@
                 <div id="story">
                     <p><%- story.storyText %></p>
                 </div>
+
+                <!-- upvote downvote and report -->
+                <div id="story_actions"> 
+                    
+                    <!-- csrf -->
+                    <input type="hidden" id="csrf" value="<%= csrfToken %>">
+                    <!-- post id hiddent -->
+                    <input type="hidden" id="postId" value="<%= story._id %>">
+
+                    <div class="story_actions_list" id="story_actions_upvote">
+                        <button class="upvote_butons" id="upVote" onclick="upvoteFetch()">
+                            <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
+                            <p>upvote</p>
+                        </button>
+                    </div>
+
+                    <!-- <div class="story_actions_list" id="story_actions_downvote">
+                        <button class="upvote_butons" id="downVote" onclick="upvoteFetch()">
+                            <img src="../../IMAGES/Icons/down-arrow.webp" alt="pen" />
+                            <p>Downvote</p>
+                        </button>
+                    </div> -->
+
+                    <div class="story_actions_list" id="story_actions_report">
+                        <button id="report" onclick="reportFun()">
+                            <img src="../../IMAGES/Icons/flag.webp" alt="pen" />
+                            <p>Report</p>
+                        </button>
+                    </div>
+
+                </div>                
 
             </div>
 

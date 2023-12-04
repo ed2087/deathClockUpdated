@@ -60,11 +60,10 @@ const storySchema = new mongoose.Schema({
   },
   upvotes: [
     {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the user who upvoted
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the user who upvoted
+      required: true,
+      
     },
   ],
   upvoteCount: {
@@ -102,6 +101,10 @@ const storySchema = new mongoose.Schema({
         required: true,
       },
       reason: String, // Optional: You can specify a reason for the report
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   // date of creation

@@ -14,6 +14,7 @@ const uuidv4 = require('uuid').v4;
 // Hash password
 const bcrypt = require("bcryptjs");
 const { validationResult } = require('express-validator');
+const { get } = require("mongoose");
 
 
 // Home page
@@ -250,6 +251,171 @@ exports.submissionPost = async function (req, res, next) {
         });
     }
 };
+
+
+// upvote
+exports.upvote = async (req, res, next) => {
+    try {
+        const { storyID, token } = req.query;
+        console.log(storyID, token);
+
+        const { userName, userActive } = await someUserInfo(req, res, next);
+
+        // Check CSRF token
+        const csrfValid = checkCsrf(req, res, next, token);
+
+        if (!csrfValid) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to upvote"
+            });
+        }
+
+        if (!userActive) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to upvote"
+            });
+        }
+
+        // get user
+        const user = await User.findById(req.session.userId);
+        // get story
+        const story = await Story.findById(storyID);
+
+        // check if user has already upvoted
+        const upvote = story.upvotes.find(upvote_ => upvote_.toString() === user._id.toString());
+
+        if (upvote) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You have already upvoted"
+            });
+        }
+
+        // add upvote to story
+        story.upvotes.push(user._id);
+
+        // increment upvote count
+        story.upvoteCount++;
+
+        // save story
+        await story.save();
+
+        return res.status(200).json({
+            status: "ok",
+            message: story.upvoteCount
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong"
+        });
+    }
+};
+
+
+// report
+exports.report = async (req, res, next) =>{
+
+    try{
+
+        const { storyID, token, reason } = req.query;
+
+        console.log(storyID, token, reason);
+
+        const story = await Story.findById(storyID);
+
+        const { userName, userActive } = await someUserInfo(req, res, next);
+
+
+        //check if user is logged in
+        if (!userActive) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to report"
+            });
+        }
+
+        // Check CSRF token
+        const csrfValid = checkCsrf(req, res, next, token);
+
+        if (!csrfValid) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to report"
+            });
+        }
+
+
+        // check if user has already reported
+        const report = story.reports.find(report_ => report_.userId.toString() === req.session.userId.toString());
+
+        if (report) {
+            return res.status(401).json({
+                status: "fail",
+                message: `You have already reported this story for the following reason: ${report.reason}`
+            });
+        }
+
+        // add report to story
+        story.reports.push({
+            userId: req.session.userId,
+            reason: reason
+        });
+
+        // save story
+        await story.save();
+
+
+        // send email to admin
+        const adminEmail = process.env.HELP_EMAIL;
+        //get website url
+        const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
+        const subject = `${story.storyTitle} has been reported`;
+
+        const bodyContent = `
+            <h2>${story.storyTitle} has been reported</h2>
+            <p>Dear Admin,</p>
+            <p>${userName} has reported ${story.storyTitle} for the following reason:</p>
+            <p>${reason}</p>
+            <p>Best regards,</p>
+            <p>TerrorHub Team</p>
+            <a href="${websiteUrl}/horrorStory/${story._id}">${story.storyTitle}</a>
+        `;
+
+        const html = htmlTemplate(bodyContent);
+
+        //send email to all admins and moderators
+        //find all admins and moderators
+        const admins = await User.find({ $or: [{ role: "admin" }, { role: "moderator" }] });
+
+        admins.forEach(async (admin) => {
+            await sendEmail(admin.email, subject, html);
+        });
+
+        //and one to adminEmail
+        await sendEmail(adminEmail, subject, html);
+
+        return res.status(200).json({
+            status: "ok",
+            message: `Thank you for reporting this story. We will review it as soon as possible.`,
+        });
+
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong"
+        });
+    }
+
+};
+
+
 
 
 
