@@ -76,7 +76,7 @@ exports.readPage = async (req, res, next) => {
 
         // Update the story object with the formatted text
         story.storyText = storyText;
-        console.log(story);
+        
         // Render the read page with the story details
         res.status(200).render("../views/storypages/read", {
             title: "Read",

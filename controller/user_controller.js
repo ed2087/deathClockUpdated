@@ -28,9 +28,6 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 }));
 
 
-
-
-
 //log in page
 exports.loginPage = async (req, res, next) => {
 
@@ -39,6 +36,7 @@ exports.loginPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/login",{
         title: "Login",
+        path: "/login",
         message: null,
         field: null,
         body: null,
@@ -56,6 +54,7 @@ exports.registerPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/register",{
         title: "Register",
+        path: "/register",
         message: null,
         field: null,
         body: null,
@@ -69,7 +68,6 @@ exports.registerPage = async (req, res, next) => {
 
 
 //post login
-
 exports.postLogin = async (req, res, next) => {
    try {
 
@@ -282,6 +280,7 @@ exports.verificationPage = async (req, res, next) => {
 
             res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
                 title: "Resend Activation Link",
+                path: "/user/verificationPage",
                 message: null,
                 field: null,
                 id: id,
