@@ -63,3 +63,34 @@
             font-size: 1.1rem;
             padding: 6px;
         }
+
+/*  */
+
+#story_actions{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+    .story_actions_list{
+        margin-right: 10px;
+    }
+        .story_actions_list button{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border: solid 1px var(--global-red);
+            padding: 0 10px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+            #upVote:hover{
+                background: green;
+            }
+            #downVote:hover{
+                background: red;
+            }
+            #report:hover{
+                background: darkred;
+            }
