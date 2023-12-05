@@ -24,8 +24,14 @@ const upvoteFetch = async () => {
     if (data.status === "ok") {
         //update upvote count
         id_("upvoteCounter").innerHTML = data.message;
+        // disable upvote button
+        id_("upVote").disabled = true;
+        //alert user
+        alert("Thank you for upvoting this story");
     }else{
-        alert(data.message);
+        alert(data.message); 
+        // disable upvote button
+        id_("upVote").disabled = true;
     }
 
 };
@@ -67,6 +73,9 @@ const reportFun = async () => {
 
 
 };
+
+
+
 
 
 

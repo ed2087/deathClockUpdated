@@ -94,3 +94,120 @@
             #report:hover{
                 background: darkred;
             }
+
+
+#socialWrap_icons{
+    display: flex;
+    flex-wrap: wrap;
+}
+    #socialWrap_icons h4{
+        display: block;
+        width: 100%;
+        font-weight: 100;
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    #socialWrap_icons li{
+        margin-right: 10px;
+        height: 30px;
+        width: 30px;
+        transition: all 0.3s ease-in-out;
+    }
+        
+        #socialWrap_icons li img:hover{
+            /* scale */
+            transform: scale(1.2);
+        }
+    
+
+#related_stories_wrap{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+    #related_stories{
+        display: flex;
+        flex-direction: column;
+    }
+        #related_stories h2{
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        #related_stories_list{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+            .related_stories_list_item{
+                width: 100%;
+                margin: 10px;
+                max-width: 350px;
+            }
+                .related_stories_list_item a{
+                    color: white;
+                    padding: 10px;
+                }
+                    .related_stories_list_item_img{
+                        min-height: 250px;
+                        background: var(--darkImage_background);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                        .related_stories_list_item_img h3{
+                            font-size: 2rem;
+                            text-align: center;
+                            padding: 20px;
+                        }
+
+                    .related_stories_list_item_info{
+                        padding: 10px;
+                    }
+
+                        .related_stories_list_item_info p{
+                            font-size: 1rem;
+                        }
+
+                        .dotte_stlye{
+                            color: lightgreen;
+                            font-size: 1.5rem;
+                            margin-left: 5px;
+                        }
+
+@media only screen and (min-width:800px){
+    .related_stories_list_item{
+        width: calc(50% - 20px);
+    }
+}
+
+
+@media only screen and (min-width:1200px){
+
+    #related_stories{
+        width: 90%;
+    }
+
+    .related_stories_list_item{
+        width: calc(33% - 20px);
+    }
+}
+
+@media only screen and (min-width:1300px){
+
+    #related_stories{
+        width: 80%;
+    }
+}
+
+@media only screen and (min-width:1600px){
+
+    #related_stories{
+        width: 70%;
+    }
+}

@@ -8,8 +8,6 @@ const sendData = async (e) => {
   
     const form = document.querySelector('#submission_form');
 
-    console.log(form);   
-
     // Get all form elements
     const elements = form.querySelectorAll('input, textarea, select, checkbox, radio');
 
@@ -94,3 +92,62 @@ const sendData = async (e) => {
 
 };
 
+
+const alertUserText = (id, Textlength) =>{
+
+    let text = id_(id).value;
+    let textLength = text.length;
+
+    if(textLength > Textlength){
+        id_(id).style.color = "red";
+        id_("storySubmit_form").disabled = true;
+    }else{
+        id_(id).style.color = "black";
+        id_("storySubmit_form").disabled = false;
+    }
+
+};
+
+// listen to #storySummary textarea and count characters
+id_("storySummary").addEventListener("keyup", () => {
+    alertUserText("storySummary", 400);
+});
+
+
+//storyTitle
+id_("storyTitle").addEventListener("keyup", () => {
+    alertUserText("storyTitle", 80);
+});
+
+
+
+// check if #website is a valid url
+
+async function isUrlSecured(url) {
+    try {
+        // Use the URL constructor to validate the URL
+        new URL(url);
+        // Check if the URL starts with "https://"
+        const securedRegex = /^https:\/\//;
+        return securedRegex.test(url);
+    } catch (error) {
+        // If an error is caught, the URL is invalid
+        return false;
+    }
+}
+
+function validateUrl() {
+    let url = id_("website").value;
+
+    // wait till user stops typing the check if url is valid
+    setTimeout(async () => {
+        if (await isUrlSecured(url)) {
+            id_("website").style.color = "green";
+        } else {
+            id_("website").style.color = "red";
+        }
+    }, 1000);
+}
+
+id_("website").addEventListener("keyup", validateUrl);
+id_("website").addEventListener("change", validateUrl);
