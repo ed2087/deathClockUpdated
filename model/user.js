@@ -96,10 +96,16 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   // books user has read
-  books: [
+  booksRead: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book"
+      bookId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book"
+      },
+      booksReadCount: {
+        type: Number,
+        default: 0
+      }
     }
   ],
 

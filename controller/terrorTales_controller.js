@@ -52,19 +52,35 @@ exports.readPage = async (req, res, next) => {
         // Get the story by ID
         const story = await Story.findById(storyId);
 
+        // get top 5 stories using this story language and tags
+        const top5Stories = await getTop6Stories(story);        
+
         // If story not found, return a 404 error
         if (!story) {
             return globalErrorHandler(req, res, 404, "Story not found");
         }
 
-        // Check if the user is logged in and has already read this story
+        // Check if the user is logged in
         if (userActive) {
             const user = await User.findById(req.session.userId);
 
-            if (user && !user.books.includes(storyId)) {
-                // Add the story to the user's books array if not already present
-                user.books.push(storyId);
+            // Check if the user has already read this story
+            const hasAlreadyRead = user.booksRead.some(book => book.bookId.toString() === story._id.toString());
+
+            if (!hasAlreadyRead) {
+                // If the user has not read the story, add it to their books array
+                user.booksRead.push({
+                    bookId: story._id,
+                    booksReadCount: 1
+                });
                 await user.save();
+            } else {
+                // If user has already read the story, then increment the readCount
+                const book = user.booksRead.find(book => book.bookId.toString() === story._id.toString());
+                if (book) {
+                    book.booksReadCount++;
+                    await user.save();
+                }
             }
         }
 
@@ -86,7 +102,8 @@ exports.readPage = async (req, res, next) => {
             userActive,
             userName,
             story,
-            userData
+            userData,
+            top5Stories
         });
 
     } catch (error) {
@@ -94,6 +111,7 @@ exports.readPage = async (req, res, next) => {
         globalErrorHandler(req, res, 500, "Something went wrong");
     }
 };
+
 
 
 
@@ -416,11 +434,19 @@ exports.report = async (req, res, next) =>{
 };
 
 
+// comments
+exports.comments = async (req, res, next) => {
+
+    
+    // not sure if im adding this maybe later
+
+};
+
+
 
 
 
 // query for stories 
-
 exports.queryStories = async function (req, res, next) {
 
     const {query,language,ranking,page,limit} = req.query;    
@@ -622,6 +648,50 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
 
 
 
+// getTop5Stories function to get top 5 stories using this story language and tags
+async function getTop6Stories(story) {
+    try {
+        const top5Stories = await Story.aggregate([
+            {
+                $match: {
+                    $and: [
+                        {
+                            _id: { $ne: story._id } // Exclude the current story
+                        },
+                        {
+                            $or: [
+                                {
+                                    tags: {
+                                        $in: story.tags
+                                    }
+                                },
+                                {
+                                    language: story.language
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                $sort: {
+                    upvoteCount: -1
+                }
+            },
+            {
+                $limit: 6
+            }
+        ]);
+
+        return top5Stories;
+    } catch (error) {
+        console.error("Error in getTop5Stories:", error);
+        throw error; // Propagate the error for handling by the calling code
+    }
+}
+
+
+
 
 // FUNCTIONS
 
@@ -640,50 +710,11 @@ async function formatStory(text) {
   
     return formattedText;
 
-}
-  
-  
-  
-
-
-
-
-
-// create a one time function to add reading time to all stories if not exist
-const addReadingTime = async () => {
-    try {
-        const stories = await Story.find({});
-
-        stories.forEach(async (story) => {
-            const readingTime = calculateReadingTime(story.storyText);
-            story.readingTime = readingTime;
-            await story.save();
-        });
-    } catch (error) {
-        console.log(error);
-    }
 };
+  
+  
+  
 
-//addReadingTime();
-
-
-
-
-// crete a function to crete a unique url title for each story
-const createUniqueUrlTitle = async () => {
-    try {
-        const stories = await Story.find({});
-
-        stories.forEach(async (story) => {
-            story.unicUrlTitle = story.storyTitle.replace(/\s/g, '-').toLowerCase();
-            await story.save();
-        });
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-//createUniqueUrlTitle();
 
 
 
