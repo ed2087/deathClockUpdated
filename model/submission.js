@@ -15,6 +15,10 @@ const storySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  unicUrlTitle: {
+    type: String,
+    required: true,
+  },
   storySummary: {
     type: String,
     required: true,
@@ -56,11 +60,10 @@ const storySchema = new mongoose.Schema({
   },
   upvotes: [
     {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the user who upvoted
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the user who upvoted
+      required: true,
+      
     },
   ],
   upvoteCount: {
@@ -98,6 +101,10 @@ const storySchema = new mongoose.Schema({
         required: true,
       },
       reason: String, // Optional: You can specify a reason for the report
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   // date of creation
@@ -106,6 +113,15 @@ const storySchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+
+// pre create a unique url title
+storySchema.pre('save', function (next) {
+  this.unicUrlTitle = this.storyTitle.replace(/\s/g, '-').toLowerCase();
+  next();
+});
+
+
 
 const Story = mongoose.model('Story', storySchema);
 

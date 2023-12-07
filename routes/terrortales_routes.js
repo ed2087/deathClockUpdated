@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 const { isAuthenticated } = require("../utils/auth.js");
 
 // Controller
-const {submission,submissionPost,terrorTalesPage,queryStories} = require("../controller/terrorTales_controller.js");
+const {submission,submissionPost,terrorTalesPage,queryStories,readPage,upvote, report} = require("../controller/terrorTales_controller.js");
 
 // Submission page
 router.get("/submission", isAuthenticated, submission);
@@ -30,6 +30,15 @@ router.post("/submission", [
 // Query stories
 router.get("/query", queryStories);
 
+// Read page
+router.get("/horrorStory/:id", readPage);
+
+
+// Upvote
+router.get("/upvote", upvote);
+
+// Report
+router.get("/report", report);
 
 // Landing page
 router.get("*", terrorTalesPage);

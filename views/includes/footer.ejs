@@ -1,0 +1,108 @@
+<footer id="globalFooter">
+
+    <div id="footerInner_wrap">
+
+        <!-- logo + description -->
+        <div class="footerMenu_wrap" id="footerLogo_wrap">
+            <a href="/" id="footerLogo"><img src="../../../IMAGES/logos/logo5.webp" alt="logo"></a>
+            <p id="footerDescription">
+                Unravel mysteries with our Death Clock, delve into Creepy Pastas, and embrace the darkness. Your portal to the unknown.
+            </p>
+        </div>        
+
+        <!-- footer menu about Us links (terms & conditions, online agreement, etc.) -->
+        <div class="footerMenu_wrap">
+
+            <h3>About Us</h3>
+
+            <ul class="footerMenu">
+                <li><a href="/">Terms & Conditions</a></li>
+                <li><a href="/">Online Agreement</a></li>
+                <!-- Add more links as needed -->
+            </ul>
+
+        </div>
+
+        <!-- footer menu quick Links -->
+        <div class="footerMenu_wrap">
+
+            <h3>Quick Links</h3>
+
+            <ul class="footerMenu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#about">About us</a></li>
+                <li><a href="/deathClock/questions">DeathClock</a></li>
+                <li><a href="/deathClock/graveyard">GraveYard</a></li>
+                <li><a href="/terrorTales">CreepyPastas</a></li>
+                <li><a href="/terrorTales/submission">Create Story</a></li>
+                
+                <% if(!userActive) {%>
+                    <li><a href="/user/register">Sign Up </a></li>
+                    <li><a href="/user/login">Login</a></li>
+                <% }else{ %>
+                    <li><a href="/user/logout">Log Out</a></li>
+                <% } %>
+
+            </ul>
+
+        </div>
+
+        <!-- footer menu contact Us links (phone, email, etc.) -->
+        <div class="footerMenu_wrap">
+
+            <h3>Contact Us</h3>
+
+            <ul class="footerMenu">
+                <li><a href="help.terrorhub@gmail.com">Web Master</a></li>
+                <!-- Add more contact links as needed -->
+            </ul>
+
+        </div>
+
+
+        <!-- footer menu social links (facebook, twitter, etc.) -->
+        <div class="footerMenu_wrap" id="socialLinks">
+
+            <h3>Social Media</h3>
+
+            <ul class="footerMenu" id="footerMenu_ul">
+                <li>
+                    <a href="https://www.facebook.com/mydeathclock1" id="smFacebook" target="_blank">
+                        <img src="../../../IMAGES/social/Facebook.webp" alt="facebook">
+                    </a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/terrorhubWeb" id="smTwitter" target="_blank">
+                        <img src="../../../IMAGES/social/Twitter.webp" alt="twitter">
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.instagram.com/terrorhub.website/" id="smInstagram" target="_blank">
+                        <img src="../../../IMAGES/social/Instagram.webp" alt="instagram">
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.tiktok.com/@terrorhub.website" id="smTikTok" target="_blank">
+                        <img src="../../../IMAGES/social/TikTok.webp" alt="tiktok">
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.youtube.com/@terrorhub-website" id="smYouTube" target="_blank">
+                        <img src="../../../IMAGES/social/YouTube.webp" alt="youtube">
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+
+    </div>
+
+
+    <div id="footerBottom_wrap">
+
+        <p>&copy; 2023 TerrorHub. All Rights Reserved. | <span class="version">Version 1.0 (Beta)</span></p>
+    
+    </div>
+
+</footer>

@@ -14,6 +14,7 @@ const uuidv4 = require('uuid').v4;
 // Hash password
 const bcrypt = require("bcryptjs");
 const { validationResult } = require('express-validator');
+const { get } = require("mongoose");
 
 
 // Home page
@@ -39,6 +40,82 @@ exports.terrorTalesPage = async (req, res, next) => {
     }
 
 };
+
+
+
+// Read page
+exports.readPage = async (req, res, next) => {
+    try {
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+        const storyId = req.params.id;
+
+        // Get the story by ID
+        const story = await Story.findById(storyId);
+
+        // get top 5 stories using this story language and tags
+        const top5Stories = await getTop6Stories(story);        
+
+        // If story not found, return a 404 error
+        if (!story) {
+            return globalErrorHandler(req, res, 404, "Story not found");
+        }
+
+        // Check if the user is logged in
+        if (userActive) {
+            const user = await User.findById(req.session.userId);
+
+            // Check if the user has already read this story
+            const hasAlreadyRead = user.booksRead.some(book => book.bookId.toString() === story._id.toString());
+
+            if (!hasAlreadyRead) {
+                // If the user has not read the story, add it to their books array
+                user.booksRead.push({
+                    bookId: story._id,
+                    booksReadCount: 1
+                });
+                await user.save();
+            } else {
+                // If user has already read the story, then increment the readCount
+                const book = user.booksRead.find(book => book.bookId.toString() === story._id.toString());
+                if (book) {
+                    book.booksReadCount++;
+                    await user.save();
+                }
+            }
+        }
+
+        // Increment the readCount every time a user reads a story
+        story.readCount++;
+        await story.save();
+
+        // Format the story text
+        const storyText = await formatStory(story.storyText, 80);
+
+        // Update the story object with the formatted text
+        story.storyText = storyText;
+        
+        // Render the read page with the story details
+        res.status(200).render("../views/storypages/read", {
+            title: "Read",
+            path: "/read",
+            headerTitle: `${story.storyTitle}`,
+            userActive,
+            userName,
+            story,
+            userData,
+            top5Stories
+        });
+
+    } catch (error) {
+        console.error("Error in readPage:", error);
+        globalErrorHandler(req, res, 500, "Something went wrong");
+    }
+};
+
+
+
+
+
 
 // Submission page
 exports.submission = async  (req, res, next) => {
@@ -194,9 +271,182 @@ exports.submissionPost = async function (req, res, next) {
 };
 
 
+// upvote
+exports.upvote = async (req, res, next) => {
+    try {
+        const { storyID, token } = req.query;
+        console.log(storyID, token);
+
+        const { userName, userActive } = await someUserInfo(req, res, next);
+
+        // Check CSRF token
+        const csrfValid = checkCsrf(req, res, next, token);
+
+        if (!csrfValid) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to upvote"
+            });
+        }
+
+        if (!userActive) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to upvote"
+            });
+        }
+
+        // get user
+        const user = await User.findById(req.session.userId);
+        // get story
+        const story = await Story.findById(storyID);
+
+        // check if user has already upvoted
+        const upvote = story.upvotes.find(upvote_ => upvote_.toString() === user._id.toString());
+
+        if (upvote) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You have already upvoted"
+            });
+        }
+
+        // add upvote to story
+        story.upvotes.push(user._id);
+
+        // increment upvote count
+        story.upvoteCount++;
+
+        // save story
+        await story.save();
+
+        return res.status(200).json({
+            status: "ok",
+            message: story.upvoteCount
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong"
+        });
+    }
+};
+
+
+// report
+exports.report = async (req, res, next) =>{
+
+    try{
+
+        const { storyID, token, reason } = req.query;
+
+        console.log(storyID, token, reason);
+
+        const story = await Story.findById(storyID);
+
+        const { userName, userActive } = await someUserInfo(req, res, next);
+
+
+        //check if user is logged in
+        if (!userActive) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to report"
+            });
+        }
+
+        // Check CSRF token
+        const csrfValid = checkCsrf(req, res, next, token);
+
+        if (!csrfValid) {
+            return res.status(401).json({
+                status: "fail",
+                message: "You must be logged in to report"
+            });
+        }
+
+
+        // check if user has already reported
+        const report = story.reports.find(report_ => report_.userId.toString() === req.session.userId.toString());
+
+        if (report) {
+            return res.status(401).json({
+                status: "fail",
+                message: `You have already reported this story for the following reason: ${report.reason}`
+            });
+        }
+
+        // add report to story
+        story.reports.push({
+            userId: req.session.userId,
+            reason: reason
+        });
+
+        // save story
+        await story.save();
+
+
+        // send email to admin
+        const adminEmail = process.env.HELP_EMAIL;
+        //get website url
+        const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
+        const subject = `${story.storyTitle} has been reported`;
+
+        const bodyContent = `
+            <h2>${story.storyTitle} has been reported</h2>
+            <p>Dear Admin,</p>
+            <p>${userName} has reported ${story.storyTitle} for the following reason:</p>
+            <p>${reason}</p>
+            <p>Best regards,</p>
+            <p>TerrorHub Team</p>
+            <a href="${websiteUrl}/horrorStory/${story._id}">${story.storyTitle}</a>
+        `;
+
+        const html = htmlTemplate(bodyContent);
+
+        //send email to all admins and moderators
+        //find all admins and moderators
+        const admins = await User.find({ $or: [{ role: "admin" }, { role: "moderator" }] });
+
+        admins.forEach(async (admin) => {
+            await sendEmail(admin.email, subject, html);
+        });
+
+        //and one to adminEmail
+        await sendEmail(adminEmail, subject, html);
+
+        return res.status(200).json({
+            status: "ok",
+            message: `Thank you for reporting this story. We will review it as soon as possible.`,
+        });
+
+
+    }catch(error){
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong"
+        });
+    }
+
+};
+
+
+// comments
+exports.comments = async (req, res, next) => {
+
+    
+    // not sure if im adding this maybe later
+
+};
+
+
+
+
 
 // query for stories 
-
 exports.queryStories = async function (req, res, next) {
 
     const {query,language,ranking,page,limit} = req.query;    
@@ -291,6 +541,12 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                                 $options: "i",
                             },
                         },
+                        {
+                            unicUrlTitle: {
+                                $regex: query,
+                                $options: "i",
+                            },
+                        },
 
                     ],
                 },
@@ -369,6 +625,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                     readingTime: 1,
                     comments: 1,
                     readCount: 1,
+                    unicUrlTitle: 1,
                 },
             },
         ];
@@ -391,20 +648,76 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
 
 
 
-// create a one time function to add reading time to all stories if not exist
-const addReadingTime = async () => {
+// getTop5Stories function to get top 5 stories using this story language and tags
+async function getTop6Stories(story) {
     try {
-        const stories = await Story.find({});
+        const top5Stories = await Story.aggregate([
+            {
+                $match: {
+                    $and: [
+                        {
+                            _id: { $ne: story._id } // Exclude the current story
+                        },
+                        {
+                            $or: [
+                                {
+                                    tags: {
+                                        $in: story.tags
+                                    }
+                                },
+                                {
+                                    language: story.language
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                $sort: {
+                    upvoteCount: -1
+                }
+            },
+            {
+                $limit: 6
+            }
+        ]);
 
-        stories.forEach(async (story) => {
-            const readingTime = calculateReadingTime(story.storyText);
-            story.readingTime = readingTime;
-            await story.save();
-        });
+        return top5Stories;
     } catch (error) {
-        console.log(error);
+        console.error("Error in getTop5Stories:", error);
+        throw error; // Propagate the error for handling by the calling code
     }
-};
+}
 
-//addReadingTime();
+
+
+
+// FUNCTIONS
+
+async function formatStory(text) {
+    // Define a regular expression that matches the end of a sentence
+    const regex = /([^!.?]*[.!?])\s*(?=[A-Z]|$)/g;
+  
+    // Split the text into sentences using the regex
+    const sentences = text.match(regex) || [];
+  
+    // Wrap each sentence in a <p> tag with the class name
+    const paragraphs = sentences.map((sentence) => `<p class="sentence_p">${sentence.trim()}</p>`);
+  
+    // Join the paragraphs into a single string
+    const formattedText = paragraphs.join("");
+  
+    return formattedText;
+
+};
+  
+  
+  
+
+
+
+
+
+
 

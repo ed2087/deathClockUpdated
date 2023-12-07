@@ -28,9 +28,6 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 }));
 
 
-
-
-
 //log in page
 exports.loginPage = async (req, res, next) => {
 
@@ -39,6 +36,7 @@ exports.loginPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/login",{
         title: "Login",
+        path: "/login",
         message: null,
         field: null,
         body: null,
@@ -56,6 +54,7 @@ exports.registerPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/register",{
         title: "Register",
+        path: "/register",
         message: null,
         field: null,
         body: null,
@@ -69,7 +68,6 @@ exports.registerPage = async (req, res, next) => {
 
 
 //post login
-
 exports.postLogin = async (req, res, next) => {
    try {
 
@@ -78,26 +76,26 @@ exports.postLogin = async (req, res, next) => {
             //validate
             const validate_ = registerValidation(req);
 
-            if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field, req.body)
+            if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", validate_[0].msg, validate_[0].field, req.body)
 
             //check if user exist
             const user = await User.findOne({email: email});
             
             if(!user){
                 //there is no user with that email
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Invalid Email or Password", "email", req.body);
             }
 
             //check if user is verified
             if(!user.userVerified){
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Please activate your account", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Please activate your account", "email", req.body);
             }
 
             //check password
             const validPassword = await bcrypt.compare(password, user.password);
 
             if(!validPassword){
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Invalid Email or Password", "password", req.body);
             }
 
             //create session
@@ -149,14 +147,14 @@ exports.postRegister = async (req, res, next) => {
         const age_ = currentYear.getFullYear() - userAge.getFullYear();
 
         //check if user is 13 years old
-        if(age_ < 13) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "You must be 13 years old to register", "age", req.body);
+        if(age_ < 13) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register", "Register", "You must be 13 years old to register", "age", req.body);
 
         //validate
         const validate_ = registerValidation(req);
 
         console.log(validate_);
 
-        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field, req.body)
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register",  "Register", validate_[0].msg, validate_[0].field, req.body)
 
         
         //incript password
@@ -166,7 +164,7 @@ exports.postRegister = async (req, res, next) => {
         //check if user exist
         const userExist = await User.findOne({email: email});
 
-        if(userExist) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "Email already exist", "email", req.body);
+        if(userExist) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register", "Register", "Email already exist", "email", req.body);
         
 
         //create user
@@ -282,6 +280,7 @@ exports.verificationPage = async (req, res, next) => {
 
             res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
                 title: "Resend Activation Link",
+                path: "/user/verificationPage",
                 message: null,
                 field: null,
                 id: id,
@@ -392,7 +391,7 @@ exports.logout = async (req, res, next) => {
 
 
 
-async function handlingFlashError (res,req,next, urlPath, title, msg, path, body) {
+async function handlingFlashError (res,req,next, urlPath, title, path, msg, path, body) {
 
     //check if user is logged in
     let {userName, userActive} = await someUserInfo(req, res, next);
@@ -404,6 +403,7 @@ async function handlingFlashError (res,req,next, urlPath, title, msg, path, body
 
     res.render(urlPath, {
         title: title,
+        path: path,
         message: msg,
         field: path,
         body: body,

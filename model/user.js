@@ -95,6 +95,19 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // books user has read
+  booksRead: [
+    {
+      bookId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book"
+      },
+      booksReadCount: {
+        type: Number,
+        default: 0
+      }
+    }
+  ],
 
 });
 
