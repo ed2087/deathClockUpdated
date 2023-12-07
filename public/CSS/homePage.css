@@ -61,6 +61,102 @@
                             z-index: 1;
                         }
 
+
+/* LATEST STORIES SECTION */
+    #LatestStories{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+        #topStory_wrap{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+            .title_wrap{
+                background: var(--darkImage_background);
+                width: 100%;
+                height: 300px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: solid 1px var(--global-red);
+            }
+                .title_wrap h2{
+                    font-size: 2.5rem;
+                    color: white;
+                    text-align: center;
+                    padding: 10px;
+                }            
+                .storyInfo_item{
+                    display: flex;
+                    flex-wrap: wrap;
+                    padding: 10px;
+                    text-align: left;
+                    margin-bottom: 10px;
+                }
+                    .sotoryItem_wrap{
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: center;
+                        justify-content: center;
+                        margin-right: 10px;
+                    }
+                        .sotoryItem_wrap img{
+                            margin-right: 10px;
+                        }
+
+                        .sotoryItem_wrap p{
+                            color: white;
+                        }
+
+                        .importanINfo{
+                            color: var(--global-yellow);
+                        }
+                    .storyInfo_summary{
+                        text-align: left;
+                        color: white;
+                        padding: 0 20px;
+                    }
+                        .storyInfo_summary a{
+                            color: var(--global-yellow);
+                        }
+
+            .listWrap_small{
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+                .listItem{
+                    margin-bottom: 20px;
+                }
+                    .listItem_link_wrap{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-evenly;
+                    }
+                        .listItem_link_wrap .title_wrap {
+                            height: auto;
+                            min-height: 200px;
+                            padding: 10px;
+                            width: calc(40% - 20px);
+                        }
+
+                        .content_wrap_{
+                            width: calc(60% - 20px);
+                        }
+                            .listItem_link_wrap .title_wrap h2{
+                                font-size: 1.5rem;
+                            }
+
+                .storyInfo_item{
+                
+                }
+
 @media only screen and (min-width:400px){
 
     .about_title{
@@ -80,6 +176,11 @@
     .about_ptag{
         font-size: 1.1rem;
         width: 80%;
+        margin: 0 auto;
+    }
+
+    #LatestStories{
+        width: 90%;
         margin: 0 auto;
     }
 
@@ -112,6 +213,27 @@
         .innserSectionWrap{
             width: 90%;
         }
+        
+
+}
+
+
+@media only screen and (min-width:1300px){
+    #latestStories_inner_wrap{
+        display: flex;
+        flex-wrap: wrap;
+    }
+        #topStory_wrap{
+            width: calc(50% - 20px);
+        }
+
+        #listWrap_small{
+            width: calc(50% - 20px);
+        }
+
+        #topStory_wrap {
+            justify-content: flex-start;
+        }
 
 }
 
@@ -119,7 +241,7 @@
 
 @media only screen and (min-width:1500px){
     
-    .innserSectionWrap{
+    .innserSectionWrap, #LatestStories{
         width: 80%;
     }
 
