@@ -151,3 +151,41 @@ function validateUrl() {
 
 id_("website").addEventListener("keyup", validateUrl);
 id_("website").addEventListener("change", validateUrl);
+
+
+
+// Get the terms div and show/hide link by their IDs
+
+
+// Function to toggle visibility of terms
+let isTermsVisible = false; // Global variable to track the visibility state of terms
+
+function toggleTerms(event) {
+    // Prevent form submission when the button is clicked
+    event.preventDefault();
+
+    let termsDiv = id_('termsAndConditions');
+    let showTermsLink = id_('showTermsLink');
+
+    // Toggle the visibility state
+    isTermsVisible = !isTermsVisible;
+
+    // Update the display property based on the visibility state
+    termsDiv.style.display = isTermsVisible ? 'block' : 'none';
+
+    // Toggle the text and color of the button
+    showTermsLink.textContent = isTermsVisible ? 'Hide Terms and Conditions' : 'Show Terms and Conditions';
+    showTermsLink.style.color = isTermsVisible ? '' : 'red';
+
+    // Set focus on the appropriate element
+    if (isTermsVisible) {
+        termsDiv.focus();
+    } else {
+        showTermsLink.focus();
+    }
+}
+
+
+// get current date
+id_("serviceDate").innerHTML = getCurrentYear();
+

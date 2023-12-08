@@ -8,6 +8,16 @@ const query_ = (query) => document.querySelector(query);
 const queryAll_ = (query) => document.querySelectorAll(query);
 const create_ = (element) => document.createElement(element);
 
+
+
+const getCurrentYear = () => {
+  const currentDate = new Date();
+  const currentDate_ = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+    return currentDate_;
+}
+
+
+
 // GLOBAL HTML MOLDS
 
 const loadingMold_dotts = `

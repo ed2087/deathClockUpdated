@@ -117,6 +117,22 @@ h1,h2,h3,h4,h5,h6{
 }
 
 
+/* read more styles */
+.readMoreLink{
+    color: var(--global-yellow);
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-family: 'Griffy', cursive;
+    display: block;
+}
+
+    /* hover */
+    .readMoreLink:hover{
+        color: var(--global-green);
+    
+    }
+
+
 @media only screen and (min-width:800px){
     .call_to_action_yellow, .call_to_action_red{
         font-size: 1.3rem;

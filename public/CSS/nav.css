@@ -367,6 +367,10 @@
                     border: none;
                     width: auto;
                 }
+
+                .activeLinkStyles{
+                    border-bottom: solid 2px var(--global-yellow);
+                }
     
                 #largerNav_img_wrap{
                     min-width: 200px;

@@ -163,7 +163,22 @@
             margin: 40px auto;
         }
 
+        .inner_formGroup{
+            display: flex;
+            flex-wrap: wrap;
+        }
+            .inner_formGroup input{
+                margin-right: 10px;
+                width: 100%;
+                min-width: 200px;
+            }
 
+
+@media only screen and (min-width:600px){
+    .inner_formGroup input{
+        width: calc(50% - 10px);
+    }
+}
 
 @media only screen and (min-width:1100px){
 
