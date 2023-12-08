@@ -43,7 +43,7 @@
                     <%= topStoryByUpvotes.storySummary  %>
 
                     <!-- reamore link -->
-                    <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes._id  %>" class="readMore_link">Read More....</a>
+                    <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes._id  %>" class="readMoreLink">Read More....</a>
                 </p>
             </div>
 
@@ -89,6 +89,8 @@
                             
                             <p class="storyInfo_summary">
                                 <%- topStorys[i].storySummary  %>
+                                <!-- read more -->
+                                <span class="readMoreLink">Read More ....</span>
                             </p>
 
                         </div>
