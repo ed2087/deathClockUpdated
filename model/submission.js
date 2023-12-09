@@ -15,10 +15,6 @@ const storySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  unicUrlTitle: {
-    type: String,
-    required: true,
-  },
   storySummary: {
     type: String,
     required: true,
@@ -112,13 +108,6 @@ const storySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
-
-
-// pre create a unique url title
-storySchema.pre('save', function (next) {
-  this.unicUrlTitle = this.storyTitle.replace(/\s/g, '-').toLowerCase();
-  next();
 });
 
 
