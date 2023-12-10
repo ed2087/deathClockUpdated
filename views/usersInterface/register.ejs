@@ -18,12 +18,14 @@
 
             <% if(message) {%>
                 <div class="message"><%= message %></div>
+            <% }else{ %>
+                <div class="message"></div>
             <% } %>
 
             <!-- register form -->
             <form action="/user/register" method="POST">
 
-                <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
+                <input type="text" id="userName" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
                 <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
                 <input type="date" id="date" name="age" required value="1990-01-01" min="1950-01-01" max="2018-12-31">
                 <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
@@ -138,6 +140,6 @@
 
     <!-- script -->
     <script src="../../JS/master.js"></script> 
-    
+    <script src="../../JS/userInterface.js"></script> 
 </body>
 </html>

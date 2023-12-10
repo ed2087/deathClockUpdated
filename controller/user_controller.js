@@ -67,6 +67,39 @@ exports.registerPage = async (req, res, next) => {
 };
 
 
+exports.checkUserName = async (req, res, next) => {
+    try {
+        const { userName } = req.query;
+
+        console.log(userName);
+
+        // Check if username exists (case-insensitive)
+        const userExist = await User.findOne({ username: userName.toLowerCase() });
+
+        if (userExist) {
+            return res.status(200).json({
+                status: true,
+                message: "Username exists"
+            });
+        } else {
+            return res.status(200).json({
+                status: false,
+                message: "Username does not exist"
+            });
+        }
+    } catch (error) {
+        // Handle errors appropriately
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal Server Error"
+        });
+    }
+};
+
+
+
+
 //post login
 exports.postLogin = async (req, res, next) => {
    try {
@@ -139,10 +172,14 @@ exports.postLogin = async (req, res, next) => {
 exports.postRegister = async (req, res, next) => {
 
     try {
-        const {username,email,age,password} = req.body;        
+        let {username,email,age,password} = req.body;        
         
         const currentYear = new Date();
-        const userAge = new Date(age);
+        const userAge = new Date(age);        
+
+        //username to lower case
+        username = username.toLowerCase().trim();
+
         //user age
         const age_ = currentYear.getFullYear() - userAge.getFullYear();
 
@@ -411,6 +448,7 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
     });
 
 }
+
 
 
 //passworD2087

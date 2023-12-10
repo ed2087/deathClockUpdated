@@ -8,7 +8,7 @@ const { isAuthenticated } = require("../utils/auth.js");
 //csrf
 const { checkCsrf, checkCsrfToken } = require("../utils/csrf.js");
 // Controller
-const {loginPage,registerPage,postLogin,postRegister,activateAccount,verificationPage,resendVerification,logout} = require("../controller/user_controller.js");
+const {loginPage,registerPage,postLogin,postRegister,activateAccount,verificationPage,resendVerification,logout,checkUserName} = require("../controller/user_controller.js");
 
 
 // Login page
@@ -82,5 +82,8 @@ router.get("/resenverificationLink/:id", resendVerification);
 
 // Activate account
 router.get("/activate/:token", activateAccount);
+
+//check username
+router.get("/userName", checkUserName);
 
 module.exports = router;
