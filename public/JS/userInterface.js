@@ -35,7 +35,7 @@ const fetchUsernameCheck = async (username) => {
         // Display message and set color
         console.log(data.message);
         query(".message").innerHTML = data.message;
-        id("userName").style.color = "green"; // Set color to green for a good format
+        id("userName").style.color = "red"; // Set color to green for a good format
     } catch (error) {
         console.error(error);
         // Handle errors appropriately

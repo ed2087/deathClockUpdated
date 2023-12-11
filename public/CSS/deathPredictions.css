@@ -3,7 +3,10 @@
 }
 
 #header{
-    min-height: 50vh;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
     #main{
@@ -107,7 +110,7 @@
                             padding: 5px 10px;
                         }
                         .deathInfo{
-                            font-size: 1.1rem;
+                            font-size: 1.3rem;
                             font-weight: bolder;
                         }
 
