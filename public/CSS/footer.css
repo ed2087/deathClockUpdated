@@ -1,0 +1,72 @@
+#globalFooter{
+    margin-top: 2em;
+    padding-top: 20px;
+    background-image: linear-gradient(to bottom, #000000, #160408, #23070c, #2e090e, #3a070d, #3a070d, #3a070d, #3a070d, #2e090e, #23070c, #160408, #000000);
+}
+
+    #footerInner_wrap{
+        display: flex;
+        flex-wrap: wrap;
+        padding: 20px;
+        align-items: start;
+    }
+        .footerMenu_wrap{
+            display: flex;
+            flex-direction: column;  
+            width: 100%;   
+            justify-content: space-evenly;       
+            flex: 1 1 20%;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+            #footerLogo{
+                margin: 0 auto;
+                margin-bottom: 10px;
+            } 
+            #footerDescription{
+               padding: 0 10px;
+               text-align: center;
+            }
+
+            .footerMenu_wrap h3{
+                font-size: 1.3em;
+                margin-bottom: 10px;
+                color: var(--global-yellow);
+            }
+
+            .footerMenu{
+                display: flex;
+                flex-direction: column;
+                padding: 0 10px;
+            }
+                .footerMenu li{
+                    margin-bottom: 5px;
+                }
+                    .footerMenu li a{
+                        color: white;
+                        font-size: 1.1em;
+                    }
+                    .footerMenu li a:hover{
+                        color: var(--global-yellow);
+                    }
+            #footerMenu_ul{
+                display: flex;
+                flex-wrap: wrap;
+                flex-direction: row;
+            }
+                #footerMenu_ul li{
+                    width: 35px;
+                    height: 35px;
+                    margin: 5px;
+                }
+
+        #footerBottom_wrap{
+            background: black;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .version {
+            font-weight: bold;
+            color: #3366cc; /* Adjust the color as needed */
+        }
