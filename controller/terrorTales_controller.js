@@ -7,7 +7,7 @@ const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 const {isToxic} = require("../utils/toxicity_tensorflow.js");
 const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
-
+const nlp = require('compromise');
 //packages
 const { checkCsrf } = require("../utils/csrf.js");
 const uuidv4 = require('uuid').v4;
@@ -694,23 +694,42 @@ async function getTop6Stories(story) {
 
 
 // FUNCTIONS
+function cleanStory(text) {
+    // Remove double quotes and extra whitespaces
+    const cleanedText = text.replace(/["“”]/g, '').replace(/\s+/g, ' ').trim();
+    return cleanedText;
+}
+
 
 async function formatStory(text) {
-    // Define a regular expression that matches the end of a sentence
-    const regex = /([^!.?]*[.!?])\s*(?=[A-Z]|$)/g;
-  
-    // Split the text into sentences using the regex
-    const sentences = text.match(regex) || [];
-  
-    // Wrap each sentence in a <p> tag with the class name
-    const paragraphs = sentences.map((sentence) => `<p class="sentence_p">${sentence.trim()}</p>`);
-  
-    // Join the paragraphs into a single string
-    const formattedText = paragraphs.join("");
-  
-    return formattedText;
 
-};
+    // Remove double quotes and extra whitespaces
+    text = cleanStory(text);
+
+    const doc = nlp(text);
+    const sentences = doc.sentences().out('array');
+
+    // Wrap each sentence ending with .?! in a <p> tag
+    const formattedText = sentences
+        .map((sentence) => {
+            // Check if the sentence ends with .?!
+            if (/[.?!]$/.test(sentence)) {
+                return `<p class="sentence_p">${sentence.trim()}</p>`;
+            } else {
+                return sentence.trim();
+            }
+        })
+        .join('');
+
+    return `<div id="story">${formattedText}</div>`;
+    
+}
+
+
+
+
+
+
   
   
   
