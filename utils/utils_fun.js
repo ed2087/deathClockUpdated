@@ -52,6 +52,7 @@ class GetStories {
         this.byQuery = [];
         this.allStorys = [];
         this.topStoryByUpvotes = [];
+        this.bookByTitle = [];
     }
 
     async getTopStorys(limit) {
@@ -118,6 +119,12 @@ class GetStories {
     async getStorysByQuery(query, limit) {
         this.byQuery = await Storys.find({ $text: { $search: query } }).limit(limit);
         return this.byQuery;
+    }
+
+    // find a story by title
+    async getStoryByTitle(title) {
+        this.bookByTitle = await Storys.find({ title: title });
+        return this.bookByTitle;
     }
 
 }

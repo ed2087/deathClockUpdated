@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify'); // Make sure to install this package using `npm install slugify`
 
 const storySchema = new mongoose.Schema({
   legalName: {
@@ -14,6 +15,12 @@ const storySchema = new mongoose.Schema({
   storyTitle: {
     type: String,
     required: true,
+  },
+  // create a slug for the story title
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
   },
   storySummary: {
     type: String,
@@ -110,11 +117,35 @@ const storySchema = new mongoose.Schema({
   },
 });
 
+// Middleware to create a slug before saving the story
+storySchema.pre('save', function (next) {
+  if (!this.isModified('storyTitle')) {
+    return next();
+  }
+
+  this.slug = slugify(this.storyTitle, { lower: true });
+  next();
+});
+
+// ... (your existing code)
+
 const Story = mongoose.model('Story', storySchema);
 
 module.exports = Story;
 
+// create a text index
+storySchema.index({
+  legalName: 'text',
+  creditingName: 'text',
+  storyTitle: 'text',
+  storySummary: 'text',
+  tags: 'text',
+  storyText: 'text',
+  categories: 'text',
+  extraTags: 'text',
+  slug: 'text', // Include slug in text index
+});
 
 
-//create a text index
-storySchema.index({legalName: 'text', creditingName: 'text', storyTitle: 'text', storySummary: 'text', tags: 'text', storyText: 'text', categories: 'text', extraTags: 'text'});
+
+

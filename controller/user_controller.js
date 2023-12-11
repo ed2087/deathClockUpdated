@@ -71,7 +71,46 @@ exports.checkUserName = async (req, res, next) => {
     try {
         const { userName } = req.query;
 
-        console.log(userName);
+        // NAMES NOT ALLOWED TO USE BECAUSE THEY ARE FOR THE WEBSITE/ADMIN
+        const namesNotAllowed =[
+            "terrorhub",
+            "terrorhubadmin",
+            "terrorhubadministrator",
+            "terrorhubadminstrator",
+            "terrorhubadminstrators",
+            "terrorhubadmins",
+            "admin",
+            "administrator",
+            "administrators",
+            "admins",
+            "moderator",
+            "moderators",
+            "mod",
+            "mods",
+            "developer",
+            "developers",
+            "dev",
+            "devs",
+            "terrorhubdev",
+            "terrorhubdeveloper",
+            "terrorhubdevelopers",
+            "deathclock",
+            "clock",
+            "death",
+            "terror",
+            "hub",
+            "terrorhubclock",
+            "terrorhubdeath",
+        ]
+
+
+        // Check if username is in the namesNotAllowed array
+        if (namesNotAllowed.includes(userName.toLowerCase())) {
+            return res.status(200).json({
+                status: true,
+                message: "Username exists"
+            });
+        }
 
         // Check if username exists (case-insensitive)
         const userExist = await User.findOne({ username: userName.toLowerCase() });

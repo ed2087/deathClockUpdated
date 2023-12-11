@@ -15,6 +15,7 @@ const uuidv4 = require('uuid').v4;
 const bcrypt = require("bcryptjs");
 const { validationResult } = require('express-validator');
 const { get } = require("mongoose");
+const slugify = require('slugify'); // Make sure to install this package using `npm install slugify`
 
 
 // Home page
@@ -46,11 +47,12 @@ exports.terrorTalesPage = async (req, res, next) => {
 // Read page
 exports.readPage = async (req, res, next) => {
     try {
-        const { userName, userActive, userData } = await someUserInfo(req, res, next);
-        const storyId = req.params.id;
 
-        // Get the story by ID
-        const story = await Story.findById(storyId);
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+        const slug = req.params.slug;
+
+        // Get the story by title
+        const story = await Story.findOne({ slug: slug });
 
         // get top 5 stories using this story language and tags
         const top5Stories = await getTop6Stories(story);        
@@ -139,6 +141,9 @@ exports.submission = async  (req, res, next) => {
 //create users submission
 exports.submissionPost = async function (req, res, next) {
     try {
+
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+        
         // Check CSRF token
         const csrfValid = checkCsrf(req, res, next, req.body._csrf);
         if (!csrfValid) {
@@ -147,7 +152,6 @@ exports.submissionPost = async function (req, res, next) {
 
         const {
             legalName,
-            creditingName,
             storyTitle,
             storySummary,
             tags,
@@ -162,7 +166,7 @@ exports.submissionPost = async function (req, res, next) {
 
         
         // Check for required fields
-        const requiredFields = [legalName, storyTitle, storySummary, storyText, ageVerification, acceptedTerms, creditingName, categories, tags];
+        const requiredFields = [legalName, storyTitle, storySummary, storyText, ageVerification, acceptedTerms, categories, tags];
         if (requiredFields.some(field => !field)) {
             return res.status(400).json({
                 status: 400,
@@ -192,11 +196,16 @@ exports.submissionPost = async function (req, res, next) {
         //get time book will take to read
         const readingTime = calculateReadingTime(storyText);
 
+        //generate slugify
+        const slug = slugify(storyTitle, { lower: true, strict: true });
+
+
         // Save data to the database
         const submission = await Story.create({
             legalName,
-            creditingName,
+            creditingName: userName,
             storyTitle,
+            slug: slug,
             storySummary,
             tags: tagsArray,
             storyText,
@@ -229,6 +238,8 @@ exports.submissionPost = async function (req, res, next) {
 
         if (submission && user_) {
 
+            const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
             //send email to user and admin that a new submission has been submitted
             const email = user.email;
             const subject = "Your Story has been submitted successfully";
@@ -241,7 +252,7 @@ exports.submissionPost = async function (req, res, next) {
                 <p>Thank you for your contribution.</p>
                 <p>Best regards,</p>
                 <p>TerrorHub Team</p>
-                <a href="https://www.terrorhub.com">TerrorHub</a>
+                <a href="${websiteUrl}/horrorStory/${submission._id}">${submission.storyTitle}</a>
             `;
 
             const html = htmlTemplate(bodyContent);
@@ -434,6 +445,49 @@ exports.report = async (req, res, next) =>{
 };
 
 
+//checkBookTitle
+exports.checkBookTitle = async (req, res, next) => {
+
+    try {
+
+        const { bookTitle } = req.params  
+        
+        //check csrf token in header
+        const csrfValid = checkCsrf(req, res, next, req.headers["csrf-token"]);
+        
+        if (!csrfValid) {
+            return res.status(401).json({
+                status: "fail",
+                message: "Try again later"
+            });
+        } 
+
+        // Check if the book title is already taken
+        const book = await Story.findOne({ storyTitle: bookTitle.toLowerCase() });
+        
+        if (book) {
+            return res.status(400).json({
+                status: 400,
+                message: "Book title is already taken"
+            });
+        }
+
+        return res.status(200).json({
+            status: 200,
+            message: "Book title is available"
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong"
+        });
+    }
+   
+};
+
+
 // comments
 exports.comments = async (req, res, next) => {
 
@@ -443,6 +497,17 @@ exports.comments = async (req, res, next) => {
 };
 
 
+// update story
+exports.updateStory = async (req, res, next) => {
+
+};
+
+
+// delete story
+exports.deleteStory = async (req, res, next) => {
+
+
+};
 
 
 
@@ -542,7 +607,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                             },
                         },
                         {
-                            unicUrlTitle: {
+                            slug: {
                                 $regex: query,
                                 $options: "i",
                             },
@@ -626,6 +691,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                     comments: 1,
                     readCount: 1,
                     unicUrlTitle: 1,
+                    slug: 1,
                 },
             },
         ];
