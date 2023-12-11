@@ -16,7 +16,7 @@ const fetchUsernameCheck = async (username) => {
         return;
     } else {
         query(".message").innerHTML = "";
-        id("userName").style.color = "white";
+        id("userName").style.color = "lightgreen";
     }
 
     // Check if username is empty
@@ -28,7 +28,7 @@ const fetchUsernameCheck = async (username) => {
         const data = await response.json();
 
         if (data.status !== true) {
-            id("userName").style.color = "white";
+            id("userName").style.color = "lightgreen";
             return;
         }
 
@@ -39,7 +39,7 @@ const fetchUsernameCheck = async (username) => {
     } catch (error) {
         console.error(error);
         // Handle errors appropriately
-        id("userName").style.color = "white";
+        id("userName").style.color = "lightgreen";
         query(".message").innerHTML = "Error checking username";
     }
 };

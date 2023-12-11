@@ -21,6 +21,8 @@ const CommonStoryTemplates = (data) => {
     const renderStoryTag = (tag) => `<span class="storyTag"><span class="story_hashtag">#</span>${tag}</span>`;
     const extraTags_categories = [...extraTags, ...categories].map(renderStoryTag).join('');
 
+
+
     return `
 
             <div class="story_wrap">
@@ -70,7 +72,7 @@ const CommonStoryTemplates = (data) => {
                         ${extraTags_categories}
                     </div>
                     
-                    <a class="read_story_button" href="/terrorTales/horrorStory/${data._id}">Read Story</a>
+                    <a class="read_story_button" href="/terrorTales/horrorStory/${data.slug}">Read Story</a>
 
                 </div>
 

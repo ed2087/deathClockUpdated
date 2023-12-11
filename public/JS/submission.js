@@ -189,3 +189,78 @@ function toggleTerms(event) {
 // get current date
 id_("serviceDate").innerHTML = getCurrentYear();
 
+
+
+
+// check book title if it exists in database
+const checkBookTitle = async () => {    
+
+
+        let bookTitle = id_("storyTitle").value;
+
+
+        //if bookTitle is empty return
+        if(bookTitle === "") return;
+
+
+        //dont allow any type of special characters in title only letters and numbers
+        let regex = /^[a-zA-Z0-9 ]*$/;
+        if (!regex.test(bookTitle)) {
+
+            id_("storyTitle").style.color = "red";
+            //disable submit button
+            id_("storySubmit_form").disabled = true;
+
+            //alert user
+            alert("Only letters and numbers are allowed in the title");
+
+            return;
+        }else{
+            id_("storyTitle").style.color = "green";
+            id_("storySubmit_form").disabled = false;
+        }
+
+
+        let url = `/terrorTales/checkBookTitle/${bookTitle}`;
+    
+        const csrf = id_("csrf").value;
+    
+        try {
+    
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "csrf-token": csrf
+                }
+            });
+
+            const data = await response.json();
+    
+            if (data.status === 200) {
+                id_("storyTitle").style.color = "green";
+                //enable submit button
+                id_("storySubmit_form").disabled = false;                
+            }
+            
+            if (data.status === 400) {
+                id_("storyTitle").style.color = "red";
+                //disable submit button
+                id_("storySubmit_form").disabled = true;
+                //alert user
+                alert("Book title already exists");
+            }
+    
+        } catch (error) {
+            console.log(error);
+        }
+    
+};
+
+
+// listen to #bookTitle textarea and count characters but wait till user stops typing
+let timer = null;
+id_("storyTitle").addEventListener("keyup", () => {
+    clearTimeout(timer);
+    timer = setTimeout(checkBookTitle, 1000);
+});
+
