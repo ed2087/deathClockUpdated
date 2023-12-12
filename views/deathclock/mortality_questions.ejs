@@ -73,6 +73,33 @@
                         <option value="More than 6 hours">More than 6 hours</option>
                     </select>
                 </div>
+                <!-- this is question 23 ask for weight and type kilos or punds -->
+                <div>
+                    <label for="q23">💀 What is your weight?</label>
+
+                    <div class="specialWrap">
+                        <input type="number" step="any" id="q23_" name="weight" required placeholder="Weight?">
+                        <select id="q23" name="weightType" required>
+                            <option value="kg">Kilograms</option>
+                            <option value="lbs">lbs</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- create one for height -->
+                <div>
+                    <label for="q24">💀 What is your height?</label>
+
+                    <div class="specialWrap">
+                        <input type="number" step="any" id="q24_" name="height" required placeholder="Height?">
+                        <select id="q24" name="heightType" required>
+                            <option value="cm">Centimeters</option>
+                            <option value="ft">Feet</option>
+                        </select>
+                    </div>
+
+                </div>
             </fieldset>
         
             <!-- Health History Section -->
@@ -80,7 +107,7 @@
                 <legend>Health History: A Chronicle of Suffering</legend>
                 <!-- Question 5 -->
                 <div>
-                    <label for="q6">💀 Do you bear the weight of chronic maladies, as your soul withers like a decaying rose?</label>
+                    <label for="q6">💀 Do you bear the weight of chronic maladies, as your soul withers like a decaying rose (e.g., diabetes, heart disease)?</label>
                     <select id="q6" name="medical" required>
                         <option value="Yes">Yes, I am burdened</option>
                         <option value="No">No, I stand unscathed</option>
@@ -91,9 +118,11 @@
                     <label for="q7">💀 Have you ever been cursed with the diagnosis of cancer, a sinister mark that hungers for your essence?</label>
                     <select id="q7" name="cancer" required>
                         <option value="Yes">Yes, I have faced the abyss</option>
+                        <option value="safe">Yes, but it is in remission</option>
                         <option value="No">No, I remain untouched</option>
                     </select>
-                </div>
+                </div>                
+
             </fieldset>
         
             <!-- Lifestyle Section -->
@@ -128,16 +157,16 @@
                 <legend>Family History: The Curse Passed Down</legend>
                 <!-- Question 10 -->
                 <div>
-                    <label for="q11">💀 Has anyone in your immediate family been claimed by a stroke or heart attack before the age of 60, their souls collected by the Reaper?</label>
-                    <select id="q11" name="stroke" required>
+                    <label for="q10">💀 Has anyone in your immediate family been claimed by a stroke or heart attack before the age of 60, their souls collected by the Reaper?</label>
+                    <select id="q10" name="stroke" required>
                         <option value="Yes">Yes, the curse runs deep</option>
                         <option value="No">No, we defy the shadows</option>
                     </select>
                 </div>
                 <!-- Question 11 -->
                 <div>
-                    <label for="q12">💀 Does your lineage bear the weight of hereditary afflictions, like a cursed tapestry passed from generation to generation?</label>
-                    <select id="q12" name="hereditary" required>
+                    <label for="q11">💀 Does your lineage bear the weight of hereditary afflictions, like a cursed tapestry passed from generation to generation?</label>
+                    <select id="q11" name="hereditary" required>
                         <option value="Diabetes">Diabetes</option>
                         <option value="Hypertension">Hypertension</option>
                         <option value="Alzheimer's">Alzheimer's</option>                    
@@ -153,8 +182,8 @@
                 <legend>Medical Tests: Probing the Abyss</legend>
                 <!-- Question 12 -->
                 <div>
-                    <label for="q13">💀 When was your last cholesterol test, mortal, and what were the results, as your veins run thick with despair?</label>
-                    <select id="q13" name="cholesterol" required>
+                    <label for="q12">💀 When was your last cholesterol test, mortal, and what were the results, as your veins run thick with despair?</label>
+                    <select id="q12" name="cholesterol" required>
                         <option value="Within the normal range">Healthy: Within the normal range</option>
                         <option value="High">Elevated: High levels</option>
                         <option value="No">Not Tested: No recent test</option>
@@ -162,8 +191,8 @@
                 </div>
                 <!-- Question 13 -->
                 <div>
-                    <label for="q14">💀 Have you submitted to the scrutiny of recent blood pressure measurements, as your heart races towards its inevitable end, a frantic beat in the symphony of your doom?</label>
-                    <select id="q14" name="bloodPressure" required>
+                    <label for="q13">💀 Have you submitted to the scrutiny of recent blood pressure measurements, as your heart races towards its inevitable end, a frantic beat in the symphony of your doom?</label>
+                    <select id="q13" name="bloodPressure" required>
                         <option value="Within the normal range">Within the normal range</option>
                         <option value="High">High</option>
                         <option value="No">Not Tested: No recent test</option>
@@ -177,8 +206,8 @@
 
                 <!-- Question 14 -->
                 <div>
-                    <label for="q15">💀 How often do you consume the offerings of fruits and vegetables, seeking a reprieve from the abyss, though it is futile?</label>
-                    <select id="q15" name="vegetables" required>
+                    <label for="q14">💀 How often do you consume the offerings of fruits and vegetables, seeking a reprieve from the abyss, though it is futile?</label>
+                    <select id="q14" name="vegetables" required>
                         <option value="Daily">Daily</option>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -194,8 +223,8 @@
                 <legend>Alcohol Consumption: Spirits that Haunt</legend>
                 <!-- Question 15 -->
                 <div>
-                    <label for="q16">💀 How often do you commune with the spirits of alcohol, drowning your sorrows as you journey towards oblivion?</label>
-                    <select id="q16" name="alcohol" required>
+                    <label for="q15">💀 How often do you commune with the spirits of alcohol, drowning your sorrows as you journey towards oblivion?</label>
+                    <select id="q15" name="alcohol" required>
                         <option value="Daily">Daily</option>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -211,8 +240,8 @@
                 <legend>Stress: A Dance with Madness</legend>
                 <!-- Question 16 -->
                 <div>
-                    <label for="q17">💀 As the relentless shadows of stress encroach, how do you futilely attempt to ward them off?</label>
-                    <select id="q17" name="stress" required>
+                    <label for="q16">💀 As the relentless shadows of stress encroach, how do you futilely attempt to ward them off?</label>
+                    <select id="q16" name="stress" required>
                         <option value="Exercise">I engage in physical toil, a Sisyphean endeavor.</option>
                         <option value="Meditation">I seek solace in meditation, a brief respite from the looming abyss.</option>
                         <option value="Talk to a therapist">I confide in a therapist, a frail lifeline in the tumultuous sea of my mind.</option>
@@ -228,8 +257,8 @@
                 <legend>Occupation: A Pact with Mundanity</legend>
                 <!-- Question 17 -->
                 <div>
-                    <label for="q18">💀 Does your occupation serve as an eternal torment, a mortal coil, as you labor in the looming shadow of the Reaper?</label>
-                    <select id="q18" name="occupation" required>
+                    <label for="q17">💀 Does your occupation serve as an eternal torment, a mortal coil, as you labor in the looming shadow of the Reaper?</label>
+                    <select id="q17" name="occupation" required>
                         <option value="Yes">Indeed, it is an unending nightmare.</option>
                         <option value="No">No, it offers but a brief respite in the ever-present darkness.</option>
                     </select>
@@ -239,17 +268,17 @@
 
             <!-- Travel Section -->
             <fieldset>
-                <legend>Travel: Journeys in the Shadows</legend>
+                <legend>Examining One's Mortality</legend>
                 <!-- Question 18 -->
                 <div>
                     <!-- fix!!!!!!!!!!!!!!!!!! -->
-                    <label for="q19">💀 How frequently do you travel?</label>
-                    <select id="q19" name="travel" required>
-                        <option value="Frequently">Frequently, a restless soul</option>
-                        <option value="Occasionally">Occasionally, a fleeting escape</option>
-                        <option value="Rarely">Rarely, bound by the chains of routine</option>
-                        <option value="Never">Never, a prisoner of the shadows</option>
-                    </select>
+                    <label for="q18">💀 How often do you get health checkups or screenings (e.g. cancer, heart disease)?</label>
+                    <select id="q18" name="checkups">
+                        <option value="annually">Annually</option>
+                        <option value="every 2-3 years">Every 2-3 years</option>
+                        <option value="only when symptomatic">Only when symptomatic</option>
+                        <option value="never">Never</option>
+                      </select>
                 </div>
                 <!-- Continue navigating the obscure with more questions -->
             </fieldset>
@@ -259,8 +288,8 @@
                 <legend>Sleep: Slumber or Eternal Rest?</legend>
                 <!-- Question 19 -->
                 <div>
-                    <label for="q20">💀 How many hours of sleep do you typically get per night, mortal, as you wrestle with your nightmares?</label>
-                    <select id="q20" name="sleep" required>
+                    <label for="q19">💀 How many hours of sleep do you typically get per night, mortal, as you wrestle with your nightmares?</label>
+                    <select id="q19" name="sleep" required>
                         <option value="Less than 5 hours">Less than 5 hours, haunted by insomnia</option>
                         <option value="5-7 hours">5-7 hours, restless slumber</option>
                         <option value="7-9 hours">7-9 hours, a fleeting respite</option>
@@ -275,8 +304,8 @@
                 <legend>Social Life: Navigating the Abyss of Existence</legend>
                 <!-- Question 20 -->
                 <div>
-                    <label for="q21">💀 How often do you engage in social activities or spend time with friends and family, as you cling to the mortal realm, seeking companionship in the void?</label>
-                    <select id="q21" name="social" required>
+                    <label for="q20">💀 How often do you engage in social activities or spend time with friends and family, as you cling to the mortal realm, seeking companionship in the void?</label>
+                    <select id="q20" name="social" required>
                         <option value="Daily">Daily, seeking solace in company</option>
                         <option value="Weekly">Weekly, a fragile connection to humanity</option>
                         <option value="Monthly">Monthly, distant echoes of laughter</option>
@@ -289,14 +318,15 @@
 
             <!-- Sun Exposure Section -->
             <fieldset>
-                <legend>Sun Exposure: Embracing the Unseen Forces</legend>
+                <legend>Fending Off the Reaper's Touch</legend>
                 <!-- Question 21 -->
                 <div>
-                    <label for="q22">💀 Do you get regular sun exposure, as you walk the fine line between light and darkness, feeling the sun's touch like a fleeting memory of warmth?</label>
-                    <select id="q22" name="sun" required>
-                        <option value="Yes">Yes, basking in the uncertain warmth</option>
-                        <option value="No">No, shunning the celestial embrace</option>
-                    </select>
+                    <label for="q21">💀 Have you received vaccinations recommended for your age (flu, pneumonia, shingles, etc.)?</label>
+                    <select id="q21" name="vaccines">
+                        <option value="up-to-date">Yes, I'm up-to-date on all recommended vaccines</option>
+                        <option value="some">I've received some but not others</option>  
+                        <option value="none">No, I have not received recommended vaccinations</option>
+                      </select>
                 </div>
                 <!-- Continue your dance with the sun's enigmatic rays with more questions -->
             </fieldset>
@@ -306,8 +336,8 @@
                 <legend>Supplements: Augmenting Your Fate</legend>
                 <!-- Question 22 -->
                 <div>
-                    <label for="q23">💀 Do you take any dietary supplements or vitamins regularly, as you seek to defy destiny, clinging to the hope that elixirs will ward off the Reaper?</label>
-                    <select id="q23" name="supplements" required>
+                    <label for="q22">💀 Do you take any dietary supplements or vitamins regularly, as you seek to defy destiny, clinging to the hope that elixirs will ward off the Reaper?</label>
+                    <select id="q22" name="supplements" required>
                         <option value="Yes">Yes, clinging to hope in the form of pills</option>
                         <option value="No">No, embracing your fate with empty hands</option>
                     </select>
@@ -320,8 +350,8 @@
                 <legend>Dark Pact - Eternal Graveyard</legend>
                 <!-- Question 23: Permission -->
                 <div>
-                    <label for="q24">💀 Do you dare grant us the unholy permission to add your clock to our cursed graveyard, sealing your fate in the embrace of the Reaper's eternal darkness?</label>
-                    <select id="q24" name="permission" required>
+                    <label for="q_permission">💀 Do you dare grant us the unholy permission to add your clock to our cursed graveyard, sealing your fate in the embrace of the Reaper's eternal darkness?</label>
+                    <select id="q_permission" name="permission" required>
                         <option value="true">Yes, I embrace the darkness</option>
                         <option value="false">No, keep my soul free</option>
                     </select>

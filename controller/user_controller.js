@@ -335,6 +335,97 @@ exports.activateAccount = async (req, res, next) => {
 
 };
 
+
+
+// reset password page
+exports.resetPasswordPage = async (req, res, next) => {   
+       
+    try {
+
+        //check if user is logged in
+        let {userName, userActive} = await someUserInfo(req, res, next);
+
+        res.render("../views/usersInterface/resetPassword.ejs",{
+            title: "Reset Password",
+            path: "/user/resetPassword",
+            message: null,
+            field: null,
+            body: null,
+            userActive
+        });
+        
+    } catch (error) {
+
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
+        
+    }
+
+
+};
+
+
+//reset password post
+exports.resetPassword = async (req, res, next) => {
+    try {
+
+        const {email, password} = req.body;
+
+        //validate
+        const validate_ = registerValidation(req);
+
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/resetPassword", "/user/resetPassword", "Reset Password", validate_[0].msg, validate_[0].field, req.body)
+
+        //check if user exist
+        const user = await User.findOne({email: email});
+
+        if(!user) return handlingFlashError(res,req,next, "../views/usersInterface/resetPassword", "/user/resetPassword", "Reset Password", "Email does not exist", "email", req.body);
+
+        //incript password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        //update user
+        user.password = hashedPassword;
+
+        //save user
+        const userSaved = await user.save();
+
+        if(userSaved){
+
+
+            //get website url
+            const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
+            //send email
+            const html = htmlTemplate(
+
+                `
+                    <h2>
+                        Your password has been reset successfully
+                    </h2>
+                    <p>Your password has been reset successfully</p>
+                    <a href="${websiteUrl}/user/login">Login</a>
+
+                `
+            );
+
+            //send verification email
+            const email = await sendEmail(user.email, "TerrorHub Reset Password", html);
+
+            res.redirect("/user/login");
+
+            
+        }
+        
+    } catch (error) {
+        console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
+        
+    }
+};
+
 //verification Page
 
 exports.verificationPage = async (req, res, next) => {
