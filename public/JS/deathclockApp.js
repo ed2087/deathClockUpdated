@@ -4,7 +4,7 @@ console.log("deathclock_app.js loaded");
 
 let userData = user;
 let jsonData = JSON.parse(userData.jsonFile);
-
+console.log(jsonData);
 // get totalPoints from the json file and return value
 
 // get totalPoints from the json file and return value
@@ -41,7 +41,49 @@ const updateUserClock = async (userDetails_) => {
    startChart(data);
 };
 
+
+const calculateHealthScore = (bmi) => {
+  let healthScore = 0;
+
+  if (bmi < 18.5) {
+      healthScore = -2; // Underweight
+  } else if (bmi < 25) {
+      healthScore = 1; // Normal weight
+  } else if (bmi < 30) {
+      healthScore = -2; // Overweight (positive value)
+  } else if (bmi < 35) {
+      healthScore = -3; // Obese class I (positive value)
+  } else if (bmi < 40) {
+      healthScore = -4; // Obese class II (positive value)
+  } else if (bmi >= 40) {
+      healthScore = -5; // Obese class III (positive value)
+  } else {
+      console.error("Error in calculateHealthScore function");
+  }
+
+  return healthScore;
+};
+
+
+const getBmi_HScore = () => {
+
+  // get bmi from json by id q25
+  const bmi = jsonData.find((element) => {
+      return element.id === "q25";
+  });
+
+  const bmiHealthScore = calculateHealthScore(parseInt(bmi.user.userAnswer));
+
+  return bmiHealthScore;
+
+};
+
+
+
 function calculateTime(userBirthdate) {
+  
+
+  const bmiHealthScore = getBmi_HScore();
 
   const averageLifeExpectancy = 70;
   const removeOraddYears = questionsPoints[0];
@@ -66,7 +108,8 @@ function calculateTime(userBirthdate) {
   const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
   const timeLivedYears = Math.floor(timeLivedMonths / 12);
 
-  let totalLifeExpectancy = (averageLifeExpectancy + removeOraddYears) - timeLivedYears;
+  let levedY_bmiHealthScore = timeLivedYears + bmiHealthScore;
+  let totalLifeExpectancy = (averageLifeExpectancy + removeOraddYears) - levedY_bmiHealthScore;
  
   if (timeLivedYears > averageLifeExpectancy || (timeLivedMonths / 12) > totalLifeExpectancy) {
       totalLifeExpectancy = (timeLivedMonths / 12) + (timeLivedMonths / 12) / 8;
@@ -284,3 +327,6 @@ function startChart(data) {
 
 };
   
+
+
+// addd user info to cards

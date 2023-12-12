@@ -85,6 +85,13 @@
                         width: 100%;
                   }
 
+                  .resetPassword{
+                        color: var(--global-yellow);
+                        font-size: 1rem;
+                        width: 100%;
+                        text-align: center;
+                        margin-bottom: 20px;
+                  }
 
 /*  */
 

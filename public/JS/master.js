@@ -118,7 +118,12 @@ navLinks.forEach(navLink => {
 ////////////////////// DISPLAY PASSWORD /////////////////////////
 
 function showPassword_() {
-  var x = document.getElementsByName("password")[0];
-  x.type = x.type === "password" ? "text" : "password";
-};
+  const passwordInputs = document.querySelectorAll('input[type="password"]');
+
+  passwordInputs.forEach((input) => {
+    input.type = (input.type === "password") ? "text" : "password";
+  });
+
+}
+
 

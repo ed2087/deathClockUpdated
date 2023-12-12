@@ -88,6 +88,18 @@
                 font-size: 1rem;
                 padding: 10px;
             }
+
+
+            .specialWrap{
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+            }
+                .specialWrap input{
+                    margin-right: 10px !important;
+                    padding: 10px !important;
+                }
+                
 @media only screen and (min-width:800px){
 
     #top_title_wrap h2{
