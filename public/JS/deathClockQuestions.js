@@ -84,7 +84,11 @@ const sanitizeInput = (input) => {
 }
 
 
-/////////////////////////////////////////
+//listen for q1 on keyup event
+const q1 = id_('q1');
+if (q1) {
+    q1.addEventListener('keyup', checkQ1);
+}
 
 const checkAll = async (e) => {
     e.preventDefault();
