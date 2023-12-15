@@ -127,3 +127,25 @@ function showPassword_() {
 }
 
 
+
+////////////////////// WELCOME /////////////////////////
+console.log(
+  '%cWelcome to HorrorHub.com',
+  'font-size: 24px; color: #ff4500; font-weight: bold;'
+);
+console.log(
+  '%c💀 Created by 404-notfound | Contact: help.terrorhub@gmail.com',
+  'font-size: 16px; color: #fac536;'
+);
+console.log(
+  '%c💀 Discover a world of spine-chilling horror content and supernatural thrills!',
+  'font-size: 16px; color: #fac536;'
+);
+console.log(
+  '%c💀 Explore haunted tales, eerie mysteries, and the darkest corners of the horror genre.',
+  'font-size: 16px; color: #fac536;'
+);
+console.log(
+  '%c💀 Dare to enter and embrace the fear! Enjoy your spooky journey with HorrorHub.',
+  'font-size: 16px; color: #fac536;'
+);

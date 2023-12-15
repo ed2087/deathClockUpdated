@@ -4,7 +4,7 @@ console.log("deathclock_app.js loaded");
 
 let userData = user;
 let jsonData = JSON.parse(userData.jsonFile);
-console.log(jsonData);
+
 // get totalPoints from the json file and return value
 
 // get totalPoints from the json file and return value
@@ -31,7 +31,7 @@ const updateUserClock = async (userDetails_) => {
     //use sendJson function
    let data = await sendJson("/deathClock/updateUserClock", "POST", userDetails_);   
    data = data.data;
-
+console.log(data);
    data =[        
         data.usersMin[0].min,
         data.usersAvg[0].avg,
@@ -42,24 +42,93 @@ const updateUserClock = async (userDetails_) => {
 };
 
 
+// MESSAGE FOR  USER////////////////////////////////
+
+const createLifestyleMessageForBmi = (bmi, num) => {
+
+
+  let lifestyleMessage = "";
+
+  switch (num) {
+    case 1:
+      lifestyleMessage = `Your BMI of <span class="bmi_span">${bmi}</span> indicates you are currently underweight. This may be due to high metabolism, inadequate calorie intake, or over-exercising. We recommend working with a dietitian to ensure you are meeting your nutritional needs to support a healthy, active lifestyle. Small, nutritious snacks between meals can help.`;
+      break;
+    case 2: 
+      lifestyleMessage = `Great job maintaining a BMI of <span class="bmi_span">${bmi}</span>, which falls within the normal healthy weight range! To stay feeling your best, aim for a balanced diet high in fruits and vegetables, lean proteins and whole grains. Stay active with a combination of cardio and strength training most days of the week.`;
+      break;
+    case 3:
+      lifestyleMessage = `Your BMI of <span class="bmi_span">${bmi}</span> falls within the overweight range. The good news is small, sustainable lifestyle changes can improve your health and wellbeing over time. Try adding more steps daily, swapping sugary drinks for water, getting 7-9 hours of sleep, and focusing on portion control as some options to get started.`;   
+      break;
+    case 4:
+     lifestyleMessage = `With a BMI of <span class="bmi_span">${bmi}</span>, your current weight falls into obesity class I. Reaching a healthier weight can be challenging, but we're here to help. Let's collaborate with your healthcare provider to set nutrition, exercise, sleep and stress relief goals you can maintain long-term. We'll be with you each step of the way towards feeling your best.`;
+      break;
+    case 5:
+    lifestyleMessage = `Your BMI is currently <span class="bmi_span">${bmi}</span>, which is categorized as class II obesity. The great news is that improving small habits overtime can make a big difference in your health, energy levels and quality of life. Let's work together on a lifestyle adjustment plan just for you. We'll help you identify healthy changes you can sustain long-term.`;
+      break;
+    case 6:
+     lifestyleMessage = `Your current BMI of <span class="bmi_span">${bmi}</span> falls into the class III obesity range, indicating potential health risks. The good news is we can work together to help support positive lifestyle changes to improve your wellbeing. Let's collaborate with your healthcare provider to create reasonable nutrition, physical activity, sleep and stress relief goals you can maintain long-term while feeling your best.`;
+      break; 
+    default:
+     lifestyleMessage = "Unable to calculate lifestyle recommendations.";
+  
+  }
+
+  id_("lifestyle_Content").innerHTML = lifestyleMessage;
+
+ 
+};
+
+
+
+const ageMessage = (age) => {
+  let message;
+
+  if (age < 18) {
+      message = `Embrace your youth at <span class="bmi_span">${age}</span>! Spend time with friends, explore hobbies, excel at school, and ensure adequate sleep for growth. To enhance your lifespan, focus on maintaining a balanced diet, staying physically active, and avoiding harmful habits like smoking.`;
+  } else if (age >= 18 && age < 30) {
+      message = `Seize the opportunities in your <span class="bmi_span">${age}s</span>! Explore travel, education, career, and relationships. Maintain balance between work, leisure, and self-care for a fulfilling life journey. Consider incorporating regular exercise, a nutritious diet, and stress management practices to promote longevity.`;
+  } else if (age >= 30 && age < 50) {
+      message = `In your <span class="bmi_span">${age}s</span>, share knowledge, mentor others, prioritize mental well-being, stay physically active, and consult healthcare experts for tailored health advice. Implementing a healthy lifestyle, including proper nutrition, regular exercise, and preventive healthcare measures, can contribute to a longer and healthier life.`;
+  } else {
+      message = `Offer wisdom at <span class="bmi_span">${age}</span>! Focus on fulfillment through part-time work, engaging hobbies, fostering social connections, and prioritizing your health and well-being. Consider incorporating activities that support mental and physical health, such as regular exercise, a balanced diet, and routine health check-ups, to enhance your overall lifespan.`;
+  }
+
+  id_("age_Content").innerHTML = message;
+};
+
+
+
+
+
+//END MESSAGE FOR  USER////////////////////////////////
+
+
 const calculateHealthScore = (bmi) => {
   let healthScore = 0;
 
   if (bmi < 18.5) {
       healthScore = -2; // Underweight
+      createLifestyleMessageForBmi(bmi, 1);
   } else if (bmi < 25) {
       healthScore = 1; // Normal weight
+      createLifestyleMessageForBmi(bmi, 2);
   } else if (bmi < 30) {
       healthScore = -2; // Overweight (positive value)
+      createLifestyleMessageForBmi(bmi, 3);
   } else if (bmi < 35) {
       healthScore = -3; // Obese class I (positive value)
+      createLifestyleMessageForBmi(bmi, 4);
   } else if (bmi < 40) {
       healthScore = -4; // Obese class II (positive value)
+      createLifestyleMessageForBmi(bmi, 5);      
   } else if (bmi >= 40) {
       healthScore = -5; // Obese class III (positive value)
+      createLifestyleMessageForBmi(bmi, 6);
   } else {
       console.error("Error in calculateHealthScore function");
   }
+
+  
 
   return healthScore;
 };
@@ -80,6 +149,53 @@ const getBmi_HScore = () => {
 
 
 
+function deathCountdown(deathYear) {
+
+  var now = new Date().getTime();
+
+  var countDownDate = new Date();
+
+  const getFulldeathYear = new Date().getFullYear() + deathYear;
+
+  //we need the tick go down till the user death date
+  countDownDate.setFullYear(getFulldeathYear);
+
+  countDownDate.setHours(0, 0, 0, 0);
+
+  var distance = countDownDate.getTime() - now;
+
+  // Time calculations for years, months, weeks, days, hours, minutes and seconds
+ 
+
+  var years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
+  var months = Math.floor(distance / (1000 * 60 * 60 * 24 * 30.44));
+  var weeks = Math.floor(distance / (1000 * 60 * 60 * 24 * 7));
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor(distance / (1000 * 60 * 60));
+  var minutes = Math.floor(distance / (1000 * 60));
+  var seconds = Math.floor(distance / 1000);
+  var milliseconds = Math.floor(distance);
+
+
+
+  // get 
+
+  // Return the countdown object with formatted time
+  return {
+    years: years,
+    months: months,
+    weeks: weeks,
+    days: days,
+    hours: hours,
+    minutes: minutes,
+    seconds: seconds,
+    milliseconds: milliseconds,
+  };
+
+}
+
+
+
 function calculateTime(userBirthdate) {
   
 
@@ -95,6 +211,7 @@ function calculateTime(userBirthdate) {
   }
 
   const timeLivedMilliseconds = currentDate.getTime() - dob.getTime();
+  //we need to create something likew this for the botom paert
 
   if (timeLivedMilliseconds <= 0) {
       return "Congratulations, you've already surpassed the average life expectancy!";
@@ -106,28 +223,42 @@ function calculateTime(userBirthdate) {
   const timeLivedDays = Math.floor(timeLivedHours / 24);
   const timeLivedWeeks = Math.floor(timeLivedDays / 7);
   const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
-  const timeLivedYears = Math.floor(timeLivedMonths / 12);
+  const timeLivedYears = Math.floor(timeLivedMonths / 12);  
 
-  let levedY_bmiHealthScore = timeLivedYears + bmiHealthScore;
-  let totalLifeExpectancy = (averageLifeExpectancy + removeOraddYears) - levedY_bmiHealthScore;
  
-  if (timeLivedYears > averageLifeExpectancy || (timeLivedMonths / 12) > totalLifeExpectancy) {
-      totalLifeExpectancy = (timeLivedMonths / 12) + (timeLivedMonths / 12) / 8;
+  let totalLifeExpectancy_ = 0;
+
+  if (averageLifeExpectancy > timeLivedYears) {
+    totalLifeExpectancy_ = averageLifeExpectancy - timeLivedYears + removeOraddYears + bmiHealthScore;
+  } else {
+    totalLifeExpectancy_ = timeLivedYears - averageLifeExpectancy + removeOraddYears + bmiHealthScore;
   }
 
-  const remainingYears = Math.floor(totalLifeExpectancy - (timeLivedMonths / 12));
-  const remainingMonths = Math.floor((totalLifeExpectancy * 12) - timeLivedMonths);
-  const remainingWeeks = Math.floor((totalLifeExpectancy * 52) - timeLivedWeeks);
-  const remainingDays = Math.floor((totalLifeExpectancy * 365) - timeLivedDays);
-  const remainingHours = Math.floor((totalLifeExpectancy * 365 * 24) - timeLivedHours);
-  const remainingMinutes = Math.floor((totalLifeExpectancy * 365 * 24 * 60) - timeLivedMinutes);
-  const remainingSeconds = Math.floor((totalLifeExpectancy * 365 * 24 * 60 * 60) - timeLivedSeconds);
+  
+  if (totalLifeExpectancy_ < 0) {
+    //get 10% of his life in timeLivedYears
+    totalLifeExpectancy_ = parseInt(timeLivedYears * 0.3)
+  }
 
+  // Ensure totalLifeExpectancy_ is not negative
+  totalLifeExpectancy_ = Math.max(totalLifeExpectancy_, 0);  
+  
   // Calculate the future date when the user is expected to reach their remaining life expectancy
   
-  let yearDeath = currentDate.getFullYear() + remainingYears;
-  let monthDeath = currentDate.getMonth() + remainingMonths;
-  let dayDeath = currentDate.getDate() + remainingDays
+    const timeleft = deathCountdown(totalLifeExpectancy_);
+
+  const yearsLeftYears = timeleft.years;
+  const yearsLeftMonths = timeleft.months;
+  const yearsLeftWeeks = timeleft.weeks;
+  const yearsLeftDays = timeleft.days;
+  const yearsLeftHours = timeleft.hours;
+  const yearsLeftMinutes = timeleft.minutes;
+  const yearsLeftSeconds = timeleft.seconds;
+
+
+  let yearDeath = currentDate.getFullYear() + yearsLeftYears;
+  let monthDeath = currentDate.getMonth() + yearsLeftMonths;
+  let dayDeath = currentDate.getDate() + yearsLeftDays
       monthDeath = monthDeath % 12;
       dayDeath = dayDeath % 30;
       
@@ -160,13 +291,13 @@ function calculateTime(userBirthdate) {
           seconds: timeLivedSeconds,
       },
       remainingTime: {
-          years: remainingYears,
-          months: remainingMonths,
-          weeks: remainingWeeks,
-          days: remainingDays,
-          hours: remainingHours,
-          minutes: remainingMinutes,
-          seconds: remainingSeconds,
+          years: yearsLeftYears,
+          months: yearsLeftMonths,
+          weeks: yearsLeftWeeks,
+          days: yearsLeftDays,
+          hours: yearsLeftHours,
+          minutes: yearsLeftMinutes,
+          seconds: yearsLeftSeconds,
       },
       expectedFutureDate: {
           year: expectedFutureDate.year,
@@ -229,13 +360,19 @@ function updateTime() {
         secondsLeft: result.remainingTime.seconds,
         expectedFutureDate: expectedFutureDate,
         //
-    };
+    };   
    
     
 
     //send the package to the server
     if(!lock){
         updateUserClock(userClock);
+
+        //get users age just the year 
+        const age = new Date().getFullYear() - new Date(userDetails_.userBirthdate).getFullYear();
+        ageMessage(age);
+
+
         lock = true;
     }
 
