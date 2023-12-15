@@ -77,7 +77,7 @@ const sanitizeInput = (input) => {
     // remove special characters
     for (let i = 0; i < SPECIAL_CHARACTERS.length; i++) {
         const specialCharacter = SPECIAL_CHARACTERS[i];
-        sanitizedInput = sanitizedInput.replace(new RegExp(specialCharacter, 'g'), '');
+        sanitizedInput = sanitizedInput.split(specialCharacter).join('');
     }
 
     return sanitizedInput;
@@ -89,6 +89,9 @@ const q1 = id_('q1');
 if (q1) {
     q1.addEventListener('keyup', checkQ1);
 }
+
+
+
 
 const checkAll = async (e) => {
     e.preventDefault();
