@@ -30,11 +30,11 @@
       "answer_options": [
         {
           "option": "Male",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "Female",
-          "scores": [10]
+          "scores": [5]
         },
         {
           "option": "Other",
@@ -58,19 +58,19 @@
         },
         {
           "option": "High school graduate",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Some college or vocational training",
-          "scores": [7]
+          "scores": [3]
         },
         {
           "option": "Bachelor's degree",
-          "scores": [8]
+          "scores": [4]
         },
         {
           "option": "Postgraduate degree (e.g., Master's, Ph.D.)",
-          "scores": [10]
+          "scores": [5]
         }
       ],
       "user": {
@@ -86,11 +86,11 @@
       "answer_options": [
         {
           "option": "Less than 1 hour",
-          "scores": [8]
+          "scores": [5]
         },
         {
           "option": "1-2 hours",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "2-4 hours",
@@ -122,7 +122,7 @@
         },
         {
           "option": "No",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -146,7 +146,7 @@
         },
         {
           "option": "No",
-          "scores": [10]
+          "scores": [2]
         }
       ],
       "user":{
@@ -178,7 +178,7 @@
         },
         {
           "option": "No, I don't smoke",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -194,11 +194,11 @@
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [6]
+          "scores": [5]
         },
         {
           "option": "Weekly",
-          "scores": [5]
+          "scores": [4]
         },
         {
           "option": "Monthly",
@@ -206,7 +206,7 @@
         },
         {
           "option": "Rarely",
-          "scores": [1]
+          "scores": [0]
         },
         {
           "option": "Never",
@@ -230,7 +230,7 @@
         },
         {
           "option": "No",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -258,15 +258,15 @@
         },
         {
           "option": "Cancer",
-          "scores": [-15]
+          "scores": [-10]
         },
         {
           "option": "Diabetes & Hypertension",
-          "scores": [-12]
+          "scores": [-5]
         },        
         {
           "option": "None",
-          "scores": [5]
+          "scores": [0]
         }
       ],
       "user":{
@@ -282,7 +282,7 @@
       "answer_options": [
         {
           "option": "Within the normal range",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "High",
@@ -306,15 +306,15 @@
       "answer_options": [
         {
           "option": "Within the normal range",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "High",
-          "scores": [-10]
+          "scores": [-5]
         },
         {
           "option": "No",
-          "scores": [0]
+          "scores": [-2]
         }
       ],
       "user":{
@@ -330,15 +330,15 @@
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [5]
-        },
-        {
-          "option": "Weekly",
           "scores": [3]
         },
         {
-          "option": "Monthly",
+          "option": "Weekly",
           "scores": [2]
+        },
+        {
+          "option": "Monthly",
+          "scores": [1]
         },
         {
           "option": "Rarely",
@@ -374,11 +374,11 @@
         },
         {
           "option": "Rarely",
-          "scores": [2]
+          "scores": [0]
         },
         {
           "option": "Never",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -394,15 +394,15 @@
       "answer_options": [
         {
           "option": "Exercise",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Meditation",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Talk to a therapist",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Ignore it",
@@ -426,11 +426,11 @@
       "answer_options": [
         {
           "option": "Yes",
-          "scores": [5]
+          "scores": [-5]
         },
         {
           "option": "No",
-          "scores": [-5]
+          "scores": [0]
         }
       ],
       "user":{
@@ -444,8 +444,8 @@
       "category": "Medical Tests",
       "question": "How often do you get health checkups or screenings (e.g. cancer, heart disease)?",
       "answer_options": [
-        {"option": "annually", "scores": [8]},
-        {"option": "every 2-3 years", "scores": [5]}, 
+        {"option": "annually", "scores": [3]},
+        {"option": "every 2-3 years", "scores": [0]}, 
         {"option": "only when symptomatic", "scores": [-5]},
         {"option": "never", "scores": [-10]}
       ],
@@ -466,11 +466,11 @@
         },
         {
           "option": "5-7 hours",
-          "scores": [3]
+          "scores": [2]
         },
         {
           "option": "7-9 hours",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "More than 9 hours",
@@ -502,11 +502,11 @@
         },
         {
           "option": "Rarely",
-          "scores": [-5]
+          "scores": [-2]
         },
         {
           "option": "Never",
-          "scores": [-10]
+          "scores": [-5]
         }
       ],
       "user":{
@@ -520,7 +520,7 @@
       "answer_options": [
         {"option": "up-to-date", "scores": [2]},
         {"option": "some", "scores": [1]},
-        {"option": "none", "scores": [-5]}
+        {"option": "none", "scores": [-10]}
       ],
       "user": {
         "points": "",
@@ -535,11 +535,11 @@
       "answer_options": [
         {
           "option": "Yes",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "No",
-          "scores": [-5]
+          "scores": [-2]
         }
       ],
       "user":{

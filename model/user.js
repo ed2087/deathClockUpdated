@@ -29,6 +29,15 @@ const userSchema = new mongoose.Schema({
   },
   activateToken : String,
   passwordResetToken: String,
+  //we need to tract times password reset and date
+  passwordResetTokenTimes: {
+    type: Number,
+    default: 0
+  },
+  passwordResetTokenDate: {
+    type: Date,
+    default: Date.now
+  },
   birthdate: {
     type: Date,
     required: false,

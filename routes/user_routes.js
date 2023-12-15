@@ -8,7 +8,21 @@ const { isAuthenticated } = require("../utils/auth.js");
 //csrf
 const { checkCsrf, checkCsrfToken } = require("../utils/csrf.js");
 // Controller
-const {loginPage,registerPage,postLogin,postRegister,activateAccount,verificationPage,resendVerification,logout,checkUserName,resetPasswordPage,resetPassword} = require("../controller/user_controller.js");
+const {
+    loginPage,
+    registerPage,
+    postLogin,
+    postRegister,
+    activateAccount,
+    verificationPage,
+    resendVerification,
+    logout,
+    checkUserName,
+    resetPasswordRequestPage,
+    resetPasswordPage,
+    sendResetLinkToEmail,
+    resetPassword,
+} = require("../controller/user_controller.js");
 
 
 // Login page
@@ -83,17 +97,23 @@ router.get("/resenverificationLink/:id", resendVerification);
 // Activate account
 router.get("/activate/:token", activateAccount);
 
+//reset password request page
+router.get("/resetPasswordRequest", resetPasswordRequestPage);
+
 //reset password page
 router.get("/resetPassword", resetPasswordPage);
 
-//reset password
-router.post("/resetPassword", [
+//send reset link to email
+router.post("/sendResetLinkToEmail", [
     //check email
     check("email")
         .isEmail()
         .withMessage("Please enter valid Email")
         .normalizeEmail(),
-    //check password
+], checkCsrfToken, sendResetLinkToEmail);
+
+//reset password
+router.post("/resetPassword", [    
     check(
         "password",
         "Please enter a password at least 10 character and contain At least one uppercase.At least one lower case.At least one special character. ",
