@@ -729,6 +729,41 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 
+//send a test email to robledo2087@gmail.com
+const sendTestEmail = async () => {
+
+try {
+    
+    //send email
+    const html = htmlTemplate(
+        `
+            <h2>Verify your TerrorHub email</h2>
+            <p>Click on the link below to verify your email address and complete your TerrorHub registration:</p>
+            <a href="https://www.google.com">Verify your email</a>
+        `
+    );
+
+    //send verification email
+    const email = await sendEmail("robledo2087@gmail.com", "TerrorHub test", html);      
+
+
+
+
+} catch (error) {
+
+console.log(error);
+    
+}
+
+
+};
+
+
+//sendTestEmail();
+
+
+
+
 //passworD2087
 //http://localhost:3000/user/activate/9e210301-23d9-45d6-bae9-bce2322e23d9
 

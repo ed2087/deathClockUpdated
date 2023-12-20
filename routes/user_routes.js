@@ -53,8 +53,8 @@ router.get("/register", isAuthenticated, registerPage);
 router.post("/register", [
     //check username
     check("username")
-        .isLength({ min: 5, max:20 })
-        .withMessage("Username must be between 5 to 20 characters")
+        .isLength({ min: 5, max:15 })
+        .withMessage("Username must be between 5 to 15 characters")
         .isString(),
     //check email
     check("email")

@@ -20,7 +20,7 @@
 
             <!-- important message -->
             <div id="important_message">
-                <h3>
+                <h3 style="font-size: 2rem; color: red;">
                     Prohibited Content
                 </h3>
 
@@ -43,10 +43,14 @@
 
                 </ul>
 
-                <p>Any User Content that is deemed to be in violation of these guidelines will be removed from the site and the user will be banned from submitting further content. Users found in violation of these terms may be subject to account suspension or termination.</p>
+                <br>
+
+                <p><strong class="special_red_text">Important Note:</strong> Any User Content that is deemed to be in violation of these guidelines will be removed from the site and the user will be banned from submitting further content. Users found in violation of these terms may be subject to account suspension or termination.</p>
+
+                <br>
 
                 <p>
-                    <span class="special_red_text">Important Note:</span> If you are under 18, do NOT submit stories here. Instead, email your story and parent/guardian contact info to: <a class="link_styles" href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>
+                    <strong class="special_red_text">Important Note:</strong> If you are under 18, do NOT submit stories here. Instead, email your story and parent/guardian contact info to: <a class="link_styles" href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>
 
                     As a minor, you cannot enter into a publishing contract. If we are interested in your story, we will contact your parent/guardian for consent and release forms.
                     
@@ -62,7 +66,7 @@
                     <label for="legalName">Legal Name (Will not be shared with the public)*</label>
                     <input type="text" id="legalName" name="legalName" required placeholder="Enter Full Legal Name">
                     <p class="input_info">
-                        To submit your story, we require your legal name. you'll have to agree to terms and condition, granting permission for its publication on our site. Rest assured, your legal name will be treated confidentially and will not be disclosed publicly unless you choose to be credited by your legal name, as indicated below.
+                        To submit your story, we require your full legal name. By doing so, you agree to our terms and conditions, granting us permission to publish your story on our site. Don't worry, your full legal name will be treated with the utmost confidentiality and will not be disclosed publicly. Providing your full name also helps us in case we need to contact you regarding your story and ensures that proper credit is given where it's due.
                     </p>
                 </div>
 
@@ -80,20 +84,27 @@
                     <select id="language" name="language">
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Italian">Italian</option>
+                        <option value="Mandarin Chinese">Mandarin Chinese</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Arabic">Arabic</option>
+                        <option value="Bengali">Bengali</option>
                         <option value="Portuguese">Portuguese</option>
                         <option value="Russian">Russian</option>
-                        <option value="Chinese">Chinese</option>
                         <option value="Japanese">Japanese</option>
+                        <option value="Punjabi">Punjabi</option>
+                        <option value="German">German</option>
+                        <option value="Wu Chinese">Wu Chinese</option>
+                        <option value="Javanese">Javanese</option>
                         <option value="Korean">Korean</option>
-                        <option value="Arabic">Arabic</option>
-                        <option value="Hindi">Hindi</option>
-                        <option value="Other">Other</option>
+                        <option value="French">French</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Marathi">Marathi</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Turkish">Turkish</option>
+                        <option value="Vietnamese">Vietnamese</option>
                     </select>
                     <p class="input_info">
-                        Please select the language in which your story is written. If your story is written in a language other than those listed, please select "Other" and specify the language in the "Other Language" field.
+                        Please choose the language in which your story is written. If your preferred language isn't listed, please contact the admin to request its addition to the options.
                     </p>
                 </div>
                 
@@ -114,7 +125,7 @@
                     <label for="website">Website</label>
                     <input type="text" id="website" name="website" placeholder="Enter your Secure website URL ">
                     <p class="input_info">
-                        Enter your secure website URL using (https://). If you don't have a secured website, you can leave this field blank.
+                        Enter your secure website URL using (https://). This link can be a great way to promote your website, book, or other content. If you don't have a secure website, feel free to leave this field blank.
                     </p>
                 </div>
 
@@ -147,11 +158,22 @@
                     <label for="storyText">Write Your Story*</label>
                     <textarea id="storyText" name="storyText" required placeholder="Enter the text of your story"></textarea>
                     <p class="input_info">
-                    <p class="input_info"> By submitting my story via this online form, I grant <span class="special_red_text">www.terrorHub.com</span> non-exclusive rights to publish my original work. I affirm I possess all necessary rights and have not plagiarized or borrowed content.
-                        As the copyright holder, I retain ownership and can license my story or employ it as I choose. I understand <span class="special_red_text">www.terrorHub.com</span> does not claim any ownership rights beyond publication.
-                        I agree I will not receive compensation from <span class="special_red_text">www.terrorHub.com</span> for publishing my story. I have no entitlement to profits from advertising or donations to the site.
-                        If I wish to request takedown or edits, I can directly contact the site’s administrators.
-                    </p>
+                        <p class="input_info">
+                            By submitting my story via this online form, I grant <span class="special_red_text">www.terrorhub.com</span> non-exclusive rights to publish my original work. I affirm that I possess all necessary rights and have not plagiarized or borrowed content.
+                        
+                            <br><br>
+                        
+                            As the copyright holder, I retain ownership of my story. I can license it or use it as I choose. I understand that <span class="special_red_text">www.terrorhub.com</span> only claims rights to publish my story and does not own it beyond that.
+                        
+                            <br><br>
+                        
+                            I agree not to receive any compensation from <span class="special_red_text">www.terrorhub.com</span> for publishing my story. I acknowledge that I have no claim to profits from advertising or donations on the site.
+                        
+                            <br><br>
+                        
+                            If I wish to request takedown or edits, I can contact the site’s administrators directly.
+                        </p>
+                        
                 </div>
 
 
@@ -371,8 +393,38 @@
                 </div>
 
 
-                <div id="termsAndConditions"> <h1>Terms and Conditions</h1> <p><strong>Effective Date:</strong> <span id="serviceDate"></span></p> <h2>Using Our Services</h2> <p>By using www.terrorHub.com ("Website"), you agree to these terms which may be updated periodically. Continued use signifies acceptance of any changes.</p> <h2>Your Content</h2> <p>You retain copyright ownership for any original stories, images, videos or other content ("Content") you submit to our Website. By submitting, you authorize us to edit and publish your Content non-exclusively on the Website and related publications. We will seek your approval for any major changes.</p> <h2>Compensation</h2> <p>You will not receive direct payment for Content. We may run ads and accept donations to operate the Website, but you have no entitlement to these revenues. If you wish to receive payment, contact us to negotiate separate terms.</p> <h2>Legal Policies</h2> <p>We reserve the right to edit or remove Content violating our rules or terms. We make no guarantees about preventing unauthorized duplication of published Content.</p> <h2>Contact Us</h2> <p>Questions? Contact us at help.terrorhub@gmail.com</p> <p><em>By using our Services, you agree to be bound by these Terms.</em></p> </div>
+                <div id="termsAndConditions">
 
+                    <h2 style="font-size: 2rem; color: red;">Terms and Conditions!!</h2>
+                    <p><strong>Effective Date:</strong> <span id="serviceDate"></span></p>
+                  
+                    <section>
+                      <h2>Using Our Services</h2>
+                      <p>When you use www.terrorHub.com ("Website"), you're agreeing to these terms. We might update them sometimes. If we do, we'll let you know. By continuing to use the site, you're saying you're okay with any changes.</p>
+                    </section>
+                  
+                    <section>
+                      <h2>Your Content</h2>
+                      <p>If you share stories, images, videos, or anything else ("Content") on our site, you still own it. But you're giving us permission to show it on our site and other related places. If we want to make big changes to your content, we'll ask for your approval first.</p>
+                    </section>
+                  
+                    <section>
+                      <h2>Compensation</h2>
+                      <p>We don't pay you for your content directly. We might show ads or accept donations to keep the site running. If you're looking to get paid for your work, let's talk about it separately.</p>
+                    </section>
+                  
+                    <section>
+                      <h2>Legal Policies</h2>
+                      <p>We have the right to edit or remove any content that doesn't follow our rules. We try our best to keep things secure, but we can't guarantee that someone won't copy your content without permission.</p>
+                    </section>
+                  
+                    <section>
+                      <h2>Contact Us</h2>
+                      <p>If you have questions, reach out to us at help.terrorhub@gmail.com. By using our site, you're agreeing to these Terms and Conditions.</p>
+                    </section>
+
+                </div>
+                  
                 <!-- Age Verification -->
                 <div class="form-group legalStyles" id="ageVerificationGroup">
                     <input type="checkbox" id="ageVerification" name="ageVerification" required value="true">
@@ -393,8 +445,8 @@
                 <div class="form_group" id="termsAndConditionsGroup_info">
                     <button class="call_to_action_red" id="showTermsLink" onclick="toggleTerms(event)">Show Terms and Conditions</button> 
                     <p class="input_info">
-                      <span class="special_red_text">Important Note:</span> If you are below the age of 18, please refrain from using this form to submit your story. For further information, consult our disclaimer highlighted in yellow at the top of this page. Submissions from individuals under 18 or those containing plagiarized content will not be accepted and will be automatically rejected.
-                    </p>
+                        <span class="special_red_text">Important Note:</span> If you're under 18, please don't use this form to submit your story due to [specific reason, e.g., legal restrictions]. For more details, see our disclaimer highlighted in yellow at the page's top. Stories from individuals under 18 or those with plagiarized content will be banned, and their content will be removed.
+                    </p>                    
                 </div>
 
                 <!-- You can add more fields for rating and reporting here --->

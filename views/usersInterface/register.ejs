@@ -19,7 +19,7 @@
             <% if(message) {%>
                 <div class="message"><%= message %></div>
             <% }else{ %>
-                <div class="message"></div>
+                <div class="message" id="message_alert"></div>
             <% } %>
 
             <!-- register form -->
@@ -45,7 +45,7 @@
                 <label id="captcha_label" for="captcha_input"></label>
                 <input type="text" id="captcha_input" placeholder="Your Answer" required>
 
-                <button class="call_to_action_yellow" type="submit"  onclick="allowRegestry(event)">Register</button>
+                <button class="call_to_action_yellow" id="register_button" type="submit"  onclick="allowRegestry(event)">Register</button>
 
             </form>
 
