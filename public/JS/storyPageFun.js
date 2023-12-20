@@ -12,7 +12,7 @@ let timer;
 /////////////////////////////////////////////////
 
 const CommonStoryTemplates = (data) => {
-    console.log(data)
+   
     const { createdAt, comments, extraTags, categories } = data;
     const date = new Date(createdAt);
     const formattedDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
@@ -170,7 +170,7 @@ const query_fetch = async () => {
     const url = `/terrorTales/query?${urlParams.toString()}`;
 
     const data = await fetch_(url, 'GET', null);
-    console.log(data);
+    //console.log(data);
 
     if (data.status === 200) {
 

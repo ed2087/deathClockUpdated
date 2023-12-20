@@ -307,3 +307,40 @@ h1,h2,h3,h4,h5,h6{
           opacity: 0.5;
         }
       }
+
+
+
+
+/* ////////////////////////////// */
+/* GLOBAL POP UP */
+/* ////////////////////////////// */
+#globalMessage{
+    position: fixed;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(0, 0, 0);
+    padding: 20px;
+    border: solid 1px var(--global-yellow);
+    z-index: 1000;
+    max-width: 500px;   
+}
+    #globalMessage__content{
+        padding: 10px;
+        text-align: center;
+    }
+        #globalMessage__title{
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--global-yellow);
+            text-transform: uppercase;
+        }
+        #globalMessage__message{
+            padding: 10px;
+            font-size: 1.1rem;
+            color: white;
+            margin-bottom: 20px;
+            max-width: 80%;
+            margin: 20px auto;
+        }

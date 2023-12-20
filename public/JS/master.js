@@ -126,6 +126,92 @@ function showPassword_() {
 
 }
 
+////////////////////// GLOBAL MESSAGE /////////////////////////
+
+
+const globalMessageTemplate = (title,message,extra) => {
+
+
+  const textArea = `
+      <textarea name="reason" id="globalMessage__form_textarea" placeholder="Please enter a reason"></textarea>
+  `;
+
+
+  let extraContent = '';
+
+
+  if (extra === 'textarea') extraContent = textArea;
+
+
+  return `
+    <div id="globalMessage">    
+        
+        <div id="globalMessage__content">
+            <div id="globalMessage__title">${title}</div>
+            <div id="globalMessage__message">${message}</div>
+
+            ${extraContent}
+
+            <div id="globalMessage__buttons">
+                <button class="call_to_action_red" id="globalMessage__button">OK</button>
+            </div>
+        </div>
+
+    </div>
+  `; 
+
+};
+
+
+
+const globalMessage = (title,message) => {
+  console.log('globalMessage()');
+  
+    const globalMessage = globalMessageTemplate(title,message);
+  
+    //insert globalMessage in body
+    document.body.insertAdjacentHTML('beforeend', globalMessage);
+
+    //select globalMessage
+    const globalMessage_ = id_('globalMessage');
+
+    //select button
+    const globalMessageButton = id_('globalMessage__button');
+
+    //add event listener to button
+    globalMessageButton.addEventListener('click', () => {
+      globalMessage_.remove();
+    });
+  
+};
+
+
+
+
+const globalTextareaTemplate = (title,message,url) => {
+
+  const csrf = id_("csrf").value;
+
+  return `
+    <div id="globalMessage">    
+        
+        <div id="globalMessage__content">
+            <div id="globalMessage__title">${title}</div>
+            <div id="globalMessage__message">${message}</div>
+
+            <textarea name="reason" id="globalMessage__form_textarea" placeholder="Please enter a reason"></textarea>
+
+            <div id="globalMessage__buttons">
+                <button class="call_to_action_red" id="globalMessage_Textarea_button">OK</button>
+            </div>
+
+        </div>
+
+    </div>
+  `; 
+
+};
+
 
 
 ////////////////////// WELCOME /////////////////////////

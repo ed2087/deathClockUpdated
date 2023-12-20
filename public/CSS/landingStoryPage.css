@@ -117,8 +117,32 @@
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            /* var(--darkImage_background) */
                             background-image: var(--darkImage_background);
+                            box-shadow: 0px 0px 20px 15px rgb(0 0 0) inset;
+                            -webkit-box-shadow: 0px 0px 20px 15px rgb(0 0 0) inset;
+                            -moz-box-shadow: 0px 0px 20px 15px rgb(0 0 0) inset;
+                            position: relative;
+                            z-index: 1;
                         }
+                            /* create a dark circle on the left top */
+                            .story_innerTitle_wrap::before{
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: url('../../../IMAGES/backgrounds/crepyPastaAbout.webp')no-repeat center center/cover;
+                                z-index: -1;
+                                /* make image transaprent */
+                                opacity: 0.5;
+                                /* blurry */
+                                filter: blur(3px);
+                                /* darker */
+                                -webkit-filter: brightness(0.4);
+                            }
+
                             .story_innerTitle_wrap h2{
                                 color: white;
                                 font-size: 2rem;

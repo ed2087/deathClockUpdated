@@ -27,9 +27,10 @@ const upvoteFetch = async () => {
         // disable upvote button
         id_("upVote").disabled = true;
         //alert user
-        alert("Thank you for upvoting this story");
-    }else{
-        alert(data.message); 
+        //title, message
+        globalMessage("Upvote", data.message, null);
+    }else{         
+        globalMessage("Upvote", data.message, null);
         // disable upvote button
         id_("upVote").disabled = true;
     }
@@ -66,9 +67,9 @@ const reportFun = async () => {
 
     //check if status is ok
     if (data.status === "ok") {
-       alert(data.message);
+       globalMessage("Report", data.message, null);
     }else{
-        alert(data.message);
+        globalMessage("Report", data.message, null);
     }
 
 

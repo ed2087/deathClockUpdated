@@ -23,7 +23,6 @@ function breakApartDecimal(decimalNumber) {
 }
 
 function calculateBMI(weight_lbs, height_feet) {
-    console.log({ weight: weight_lbs, height: height_feet });
 
     if (height_feet % 1 !== 0) {
         const { integerPart, fractionalPart } = breakApartDecimal(height_feet);
@@ -60,7 +59,10 @@ const checkQ1 = (e) => {
     const q1Value = q1.value;
 
     // validate length
-    if (q1Value.length > Q1_MAX_LENGTH) q1.value = q1Value.slice(0, Q1_MAX_LENGTH);
+    if (q1Value.length > Q1_MAX_LENGTH) {
+        q1.value = q1Value.slice(0, Q1_MAX_LENGTH);
+        q1Value = q1.value; // Update q1Value after truncating
+    }
 
     // remove spaces and special characters
     const sanitizedQ1Value = sanitizeInput(q1Value);
@@ -89,8 +91,6 @@ const q1 = id_('q1');
 if (q1) {
     q1.addEventListener('keyup', checkQ1);
 }
-
-
 
 
 const checkAll = async (e) => {

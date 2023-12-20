@@ -58,6 +58,7 @@
 
     #story_wrap{
         max-width: 1000px;
+        position: relative;
     }
         #story_wrap p{
             font-size: 1.1rem;
@@ -70,6 +71,10 @@
     display: flex;
     flex-wrap: wrap;
     margin: 20px 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    background: black;
 }
     .story_actions_list{
         margin-right: 10px;
@@ -80,13 +85,15 @@
             justify-content: center;
             align-items: center;
             color: white;
-            border: solid 1px var(--global-red);
-            padding: 0 10px;
+            padding: 5px 20px;
             font-size: 1rem;
             cursor: pointer;
         }
-            #upVote:hover{
+            #upVote{
                 background: green;
+            }
+            #upVote:hover{                
+                background: #0eb80e;
             }
             #downVote:hover{
                 background: red;

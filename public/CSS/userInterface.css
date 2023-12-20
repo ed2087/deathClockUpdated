@@ -21,7 +21,6 @@
             /* font-family: 'Griffy', cursive; */
             padding: 10px;
             margin-bottom: 10px;
-            border-bottom: solid 2px #fd0000;
         }
         #form_wrap form{
             display: flex;

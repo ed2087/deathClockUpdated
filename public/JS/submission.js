@@ -99,27 +99,39 @@ const alertUserText = (id, Textlength) =>{
     let textLength = text.length;
 
     if(textLength > Textlength){
+
+
+        text = text.slice(0, Textlength);
+        id_(id).value = text; // Update q1Value after truncating
+
+
         id_(id).style.color = "red";
         id_("storySubmit_form").disabled = true;
+
     }else{
+
         id_(id).style.color = "black";
         id_("storySubmit_form").disabled = false;
+
     }
 
 };
 
-// listen to #storySummary textarea and count characters
-id_("storySummary").addEventListener("keyup", () => {
-    alertUserText("storySummary", 400);
-});
+// Function to handle character count for a textarea
+const handleCharacterCount = (elementId, maxLength) => {
+    id_(elementId).addEventListener("input", () => {
+        alertUserText(elementId, maxLength);
+    });
+};
 
+// Listen to #storySummary textarea and count characters
+handleCharacterCount("storySummary", 400);
 
-//storyTitle
-id_("storyTitle").addEventListener("keyup", () => {
-    alertUserText("storyTitle", 80);
-});
+// Listen to #storyTitle textarea and count characters
+handleCharacterCount("storyTitle", 80);
 
-
+// Listen to #storyText textarea and count characters
+handleCharacterCount("storyText", 10000);
 
 // check if #website is a valid url
 
