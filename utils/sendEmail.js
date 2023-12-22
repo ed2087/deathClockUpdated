@@ -66,7 +66,6 @@ const htmlTemplate = (bodyContentet) => {
                   text-align: center;
                   color: #8c0000;
                   border: 2px solid #8c0000;
-                  font-family: 'Griffy', cursive;
                   font-weight: 300;
                   font-size: 1.1rem;
                   min-width: 150px;

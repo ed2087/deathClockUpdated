@@ -59,6 +59,11 @@ class GetStories {
         //5 top storys by upvotes/comments/reads use agregate
         this.topStorys = await Storys.aggregate([
             {
+                $match: {
+                    isApproved: true, // Filter out stories that are not approved
+                },
+            },
+            {
                 $facet: {
                     sortByUpvotes: [
                         { $sort: { upvoteCount: -1 } },
@@ -95,37 +100,37 @@ class GetStories {
     }
 
     async getTopStorysByUpvotes(limit) {
-        this.topStorysByUpvotes = await Storys.find({}).sort({ upvoteCount: -1 }).limit(limit);
+        this.topStorysByUpvotes = await Storys.find({ isApproved: true }).sort({ upvoteCount: -1 }).limit(limit);
         return this.topStorysByUpvotes;
     }
-
+    
     async getTopStorysByComments(limit) {
-        this.topStorysByComments = await Storys.find({}).sort({ comments: -1 }).limit(limit);
+        this.topStorysByComments = await Storys.find({ isApproved: true }).sort({ comments: -1 }).limit(limit);
         return this.topStorysByComments;
     }
-
+    
     async getTopStorysByReads(limit) {
-        this.topStorysByReads = await Storys.find({}).sort({ readCount: -1 }).limit(limit);
+        this.topStorysByReads = await Storys.find({ isApproved: true }).sort({ readCount: -1 }).limit(limit);
         return this.topStorysByReads;
     }
-
     
     async getAllStorys(limit) {
-        //get 10 newest storys
-        this.allStorys = await Storys.find({}).sort({ createdAt: -1 }).limit(limit);
+        // Get 10 newest stories where isApproved is true
+        this.allStorys = await Storys.find({ isApproved: true }).sort({ createdAt: -1 }).limit(limit);
         return this.allStorys;
     }
-
+    
     async getStorysByQuery(query, limit) {
-        this.byQuery = await Storys.find({ $text: { $search: query } }).limit(limit);
+        this.byQuery = await Storys.find({ $text: { $search: query }, isApproved: true }).limit(limit);
         return this.byQuery;
     }
-
-    // find a story by title
+    
+    // Find a story by title where isApproved is true
     async getStoryByTitle(title) {
-        this.bookByTitle = await Storys.find({ title: title });
+        this.bookByTitle = await Storys.find({ title: title, isApproved: true });
         return this.bookByTitle;
     }
+    
 
 }
 

@@ -56,3 +56,74 @@ exports.index = async function (req, res, next) {
   
 
 };
+
+
+
+// FAQ
+exports.faq = async function (req, res, next) {
+
+  try {
+    //check if user is logged in
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
+    res.status(200).render("faq", {
+      path: "/faq",
+      title: "FAQ",
+      headerTitle: "FAQ",
+      csrfToken: res.locals.csrfToken,
+      userActive,
+      userName,
+    });
+
+  } catch (error) {
+    console.log(error);
+    globalErrorHandler(req, res, 500, "Something went wrong");
+  }
+
+};
+
+// DISCLAIMER
+exports.disclaimer = async function (req, res, next) {
+
+  try {
+    //check if user is logged in
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
+    res.status(200).render("disclaimer", {
+      path: "/disclaimer",
+      title: "Disclaimer",
+      headerTitle: "Disclaimer",
+      csrfToken: res.locals.csrfToken,
+      userActive,
+      userName,
+    });
+
+  } catch (error) {
+    console.log(error);
+    globalErrorHandler(req, res, 500, "Something went wrong");
+  }
+
+};
+
+//termsConditions
+exports.termsConditions = async function (req, res, next) {
+
+  try {
+    //check if user is logged in
+    let {userName, userActive} = await someUserInfo(req, res, next);
+
+    res.status(200).render("termsConditions", {
+      path: "/termsConditions",
+      title: "Terms & Conditions",
+      headerTitle: "Terms & Conditions",
+      csrfToken: res.locals.csrfToken,
+      userActive,
+      userName,
+    });
+
+  } catch (error) {
+    console.log(error);
+    globalErrorHandler(req, res, 500, "Something went wrong");
+  }
+
+};

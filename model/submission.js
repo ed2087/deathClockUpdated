@@ -110,6 +110,11 @@ const storySchema = new mongoose.Schema({
       },
     },
   ],
+  // Moderation system
+  isApproved: {
+    type: Boolean,
+    default: true,
+  },
   // date of creation
   createdAt: {
     type: Date,

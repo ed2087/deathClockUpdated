@@ -510,6 +510,12 @@ exports.deleteStory = async (req, res, next) => {
 };
 
 
+// change story permision
+exports.changeStoryPermision = async (req, res, next) => {
+
+};
+
+
 
 // query for stories 
 exports.queryStories = async function (req, res, next) {
@@ -661,6 +667,11 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
         const pipeline = [
             ...countPipeline, // Reuse the count pipeline
             {
+                $match: {
+                    isApproved: true, // Filter out stories that are not approved
+                },
+            },
+            {
                 $skip: skip,
             },
             {
@@ -720,6 +731,11 @@ async function getTop6Stories(story) {
         const top5Stories = await Story.aggregate([
             {
                 $match: {
+                    isApproved: true, // Filter out stories that are not approved
+                },
+            },
+            {
+                $match: {
                     $and: [
                         {
                             _id: { $ne: story._id } // Exclude the current story
@@ -775,21 +791,16 @@ async function formatStory(text) {
     const doc = nlp(text);
     const sentences = doc.sentences().out('array');
 
-    // Wrap each sentence ending with .?! in a <p> tag
+    // Wrap each sentence in a <p> tag
     const formattedText = sentences
         .map((sentence) => {
-            // Check if the sentence ends with .?!
-            if (/[.?!]$/.test(sentence)) {
-                return `<p class="sentence_p">${sentence.trim()}</p>`;
-            } else {
-                return sentence.trim();
-            }
+            return `<p class="sentence_p">${sentence.trim()}</p>`;
         })
         .join('');
 
     return `<div id="story">${formattedText}</div>`;
-    
 }
+
 
 
 
