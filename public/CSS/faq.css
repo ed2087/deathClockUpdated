@@ -1,0 +1,80 @@
+#header{
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+    main{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+        .faqTitle_wrap{
+            margin: 20px 0;
+        }
+            .faqTitle_wrap h2{
+                font-size: 2rem;
+                color: white;
+            }
+
+        .faqWrap{
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 20px 0;
+        }
+            .faqItem{
+                margin-bottom: 10px;
+                padding: 20px;
+            }
+                .faqItem h3{
+                    font-size: 1.5rem;
+                    margin-bottom: 10px;
+                    color: var(--global-yellow);
+                }
+                .faqItem p{
+                    font-size: 1.1rem;
+                    padding: 0 10px;
+                }
+                    .faqItem p a{
+                        color: var(--global-darkOrange);
+                    }
+                        .faqItem p a:hover{
+                            color: var(--global-yellow);
+                         }    
+                .faqItem ul{
+                    margin-top: 10px;
+                    padding: 0 10px;
+                }
+                    .faqItem ul li{
+                        font-size: 1.1rem;
+                        margin-bottom: 5px;
+                        /* style inside  */
+                        list-style: circle;
+                        list-style-position: inside;
+                    }
+                        .faqItem ul li a{
+                            color: var(--global-darkOrange);                            
+
+                        }
+                            .faqItem ul li a:hover{
+                                color: var(--global-yellow);
+                            }                     
+
+@media only screen and (min-width:800px){
+    .faqTitle_wrap h2{
+        font-size: 2.5rem;
+    }
+}
+
+@media only screen and (min-width:1300px){
+    .faqTitle_wrap h2{
+        font-size: 3rem;
+    }
+}
