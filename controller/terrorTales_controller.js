@@ -216,7 +216,8 @@ exports.submissionPost = async function (req, res, next) {
             acceptedTerms,
             termsAndConditions,
             readingTime,
-            owner: req.session.userId
+            owner: req.session.userId,
+            isApproved: true,
         });  
 
 
