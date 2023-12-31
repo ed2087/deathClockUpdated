@@ -113,8 +113,23 @@ const storySchema = new mongoose.Schema({
   // Moderation system
   isApproved: {
     type: Boolean,
-    default: true,
+    default: true
   },
+  //reason for rejection and user who rejected
+  rejectionReason: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // You can create a User model for tracking who rejected the story
+        required: true,
+      },
+      reason: String, // Optional: You can specify a reason for the rejection
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   // date of creation
   createdAt: {
     type: Date,

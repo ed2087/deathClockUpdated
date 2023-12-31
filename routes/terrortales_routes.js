@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const csrfModule = require("../utils/csrf.js");
+const {csrfCheckRoute} = require("../utils/csrf.js");
 const { check, validationResult } = require('express-validator');
 //utils\auth.js
 const { isAuthenticated } = require("../utils/auth.js");
 
 // Controller
-const {submission,submissionPost,terrorTalesPage,queryStories,readPage,upvote, report, checkBookTitle} = require("../controller/terrorTales_controller.js");
+const {submission,submissionPost,terrorTalesPage,queryStories,readPage,upvote, report, checkBookTitle,deleteStory,changeStoryPermision} = require("../controller/terrorTales_controller.js");
 
 // Submission page
 router.get("/submission", isAuthenticated, submission);
@@ -43,6 +43,12 @@ router.get("/report", report);
 
 // Check book title
 router.get("/checkBookTitle/:bookTitle", checkBookTitle);
+
+// Delete story
+router.post("/deleteStory",csrfCheckRoute, deleteStory);
+
+// Change story permision
+router.post("/changeStoryPermision",csrfCheckRoute, changeStoryPermision);
 
 // Landing page
 router.get("*", terrorTalesPage);

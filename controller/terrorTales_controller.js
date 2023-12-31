@@ -5,6 +5,7 @@ const User = require("../model/user.js");
 //other
 const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
+const {successPagefun} = require("../utils/successPageHandler.js");
 const {isToxic} = require("../utils/toxicity_tensorflow.js");
 const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
 const nlp = require('compromise');
@@ -506,13 +507,105 @@ exports.updateStory = async (req, res, next) => {
 
 // delete story
 exports.deleteStory = async (req, res, next) => {
+    try {
+      const { slug, csrf } = req.body;
+      
+      const { userName, userActive, userData } = await someUserInfo(req, res, next);
+      
+      const story = await Story.findOne({ slug });
 
+      //save story name
+      const storyName = story.storyTitle;
+     
+      if (!story) {
+        return globalErrorHandler(req, res, 404, "Story not found");
+      }
+  
+      if (!userActive) {
+        return globalErrorHandler(req, res, 401, "You do not have permission to delete this story");
+      }
+  
+      const user = await User.findById(userData.id);
+      
+      if (!user) {
+        return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+      }
 
+      if (userData.role !== "admin" && story.owner.toString() !== userData.id.toString()) {
+        return globalErrorHandler(req, res, 401, "You do not have permission to delete this story");
+      }
+
+      const deleted = await Story.findByIdAndDelete(story._id);
+
+      if (!deleted) {
+        return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+      }
+
+      const index = user.contributions.stories.indexOf(story._id);
+      user.contributions.stories.splice(index, 1);
+      user.contributions.storiesCount--;
+      await user.save();
+  
+      //send message to success page
+     return successPagefun(req, res, "Story Deleted", 
+      `
+        ${storyName} has been deleted successfully.
+      `
+     );
+  
+    } catch (error) {
+      console.log(error);
+      globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+    }
 };
+  
 
 
 // change story permision
 exports.changeStoryPermision = async (req, res, next) => {
+
+    try {
+
+        const { slug, csrf} = req.body;
+
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+
+        const story = await Story.findOne({ slug });
+
+        if (!story) {
+            return globalErrorHandler(req, res, 404, "Story not found");
+        }
+
+        if (!userActive) {
+            return globalErrorHandler(req, res, 401, "You do not have permission to change this story's permision");
+        }
+
+        if (userData.role !== "admin") {
+            return globalErrorHandler(req, res, 401, "You do not have permission to change this story's permision");
+        }
+
+        //change story permision
+        story.isApproved = false;  
+        
+        // reason for rejection and user who rejected
+        story.rejectionReason.push({
+            userId: userData.id,
+            reason: "Story has been paused by admin"
+        });
+
+        await story.save();
+
+        //send message to success page
+        return successPagefun(req, res, "Story Permision Changed",
+            `
+                ${story.storyTitle}'s has been paused successfully and will not be shown on the website.
+            `
+        );
+
+    } catch (error) {
+        console.log(error);
+        globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+    }
 
 };
 
@@ -526,7 +619,15 @@ exports.queryStories = async function (req, res, next) {
     try {
 
         // Query stories
-        const stories = await queryStoriesPagination(query,language,ranking,page,limit);       
+        const stories = await queryStoriesPagination(query,language,ranking,page,limit);    
+        
+        
+        //get users role 
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);
+
+        // Check if the user is logged in
+        let role = null;
+        if (userActive) role = userData.role;             
         
         if (stories) {
             return res.status(200).json({
@@ -534,7 +635,8 @@ exports.queryStories = async function (req, res, next) {
                 stories: stories.stories,
                 totalStories: stories.totalStories,
                 top5Stories: stories.top5Stories,
-                languagesArray: stories.languagesArray
+                languagesArray: stories.languagesArray,
+                UserRole: role
             });
         } else {
             return res.status(500).json({
