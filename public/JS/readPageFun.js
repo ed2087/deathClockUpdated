@@ -23,12 +23,18 @@ const upvoteFetch = async () => {
     //check if status is ok
     if (data.status === "ok") {
         //update upvote count
-        id_("upvoteCounter").innerHTML = data.message;
+        const upvoteCounter = queryAll_(".upvoteCounter");
+        //loop through all .upvoteCounter
+        for (let i = 0; i < upvoteCounter.length; i++) {
+            //update .upvoteCounter
+            upvoteCounter[i].innerHTML = data.message;
+        }
+
         // disable upvote button
         id_("upVote").disabled = true;
         //alert user
         //title, message
-        globalMessage("Upvote", data.message, null);
+        globalMessage("Upvote", "Thank you for voting!", null);
     }else{         
         globalMessage("Upvote", data.message, null);
         // disable upvote button

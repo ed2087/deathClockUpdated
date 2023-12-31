@@ -7,11 +7,44 @@ let language = 'English';
 let totalStories_available = 0;
 let timer;
 
+
+
+/////////////////////////////////////////////////
+// admin Functions
+/////////////////////////////////////////////////
+
+
+const deleteStory = async (slug) => {
+    try {
+        // Confirm deletion with the user
+        const shouldDelete = confirm('Are you sure you want to delete this story?');
+        
+        if (!shouldDelete) return;
+
+        // Send a POST request to delete the story
+        const url = `/terrorTales/deleteStory/${slug}`;
+        await fetch(url, {
+            method: 'POST',
+        });
+
+        // Redirect to another page or handle UI updates as needed
+    } catch (error) {
+        console.error('An error occurred while deleting the story:', error.message);
+        // Handle the error, maybe show a user-friendly message
+    }
+};
+
+
+
+
+
+
+
 /////////////////////////////////////////////////
 // Template Functions
 /////////////////////////////////////////////////
 
-const CommonStoryTemplates = (data) => {
+const CommonStoryTemplates = (data,UserRole) => {    
    
     const { createdAt, comments, extraTags, categories } = data;
     const date = new Date(createdAt);
@@ -22,6 +55,40 @@ const CommonStoryTemplates = (data) => {
     const extraTags_categories = [...extraTags, ...categories].map(renderStoryTag).join('');
 
 
+    const csrfToken =  id_('csrf').value;
+
+    let adminButtons = '';
+    
+    //if admin allow edit, delete, suspend story
+    if (UserRole === 'admin') {
+        adminButtons = `
+            <div class="story_buttons_wrap">
+                <form id="deleteStoryForm" action="/terrorTales/deleteStory" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this story?');">Delete Story</button>
+                </form>
+                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>
+                </form>
+            </div>
+        `;
+    }
+
+    //if moderator only allow suspend or edit story
+    if(UserRole === 'moderator'){
+        adminButtons = `
+            <div class="story_buttons_wrap">
+                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>
+                </form>
+            </div>
+        `;
+    }
 
     return `
 
@@ -71,6 +138,8 @@ const CommonStoryTemplates = (data) => {
                     <div class="storyTags_wrap">
                         ${extraTags_categories}
                     </div>
+                    
+                    ${adminButtons}                    
                     
                     <a class="read_story_button" href="/terrorTales/horrorStory/${data.slug}">Read Story</a>
 
@@ -204,7 +273,7 @@ const query_fetch = async () => {
         } else {
             
             data.stories.forEach((data_) => {
-                storyListWrap.innerHTML += CommonStoryTemplates(data_);
+                storyListWrap.innerHTML += CommonStoryTemplates(data_, data.UserRole);
                 totalStories_available++;
             });
         }
