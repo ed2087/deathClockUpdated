@@ -78,7 +78,7 @@ const loadMoreGraves = () => {
 id_("loadMore").addEventListener("click", loadMoreGraves);
 
 fetchGraveyards();
-updateClock();
+//updateClock();
 
 
 // create a timer that will update the clock every 30 seconds to check if there is a new clock

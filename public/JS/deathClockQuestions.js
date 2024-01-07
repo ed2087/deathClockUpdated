@@ -16,35 +16,6 @@ const addToJson = (json, id, value) => {
     }
 };
 
-function breakApartDecimal(decimalNumber) {
-    const integerPart = Math.floor(decimalNumber);
-    const fractionalPart = Math.round((decimalNumber - integerPart) * 100);
-    return { integerPart, fractionalPart };
-}
-
-function calculateBMI(weight_lbs, height_feet) {
-
-    if (height_feet % 1 !== 0) {
-        const { integerPart, fractionalPart } = breakApartDecimal(height_feet);
-
-        const height_inches = integerPart * 12 + fractionalPart;
-        const height_meters = height_inches * 0.0254;
-
-        const weight_kg = weight_lbs * 0.453592;
-        const bmi = weight_kg / Math.pow(height_meters, 2);
-        
-        return bmi;
-    }
-
-    const height_inches = height_feet * 12;
-    const height_meters = height_inches * 0.0254;
-
-    const weight_kg = weight_lbs * 0.453592;
-    const bmi = weight_kg / Math.pow(height_meters, 2);
-    
-    return bmi;
-}
-
 /////////////////////////////////////////
 //value checks
 /////////////////////////////////////////
@@ -55,8 +26,8 @@ const SPECIAL_CHARACTERS = ['{', '}', '[', ']', '(', ')', '<', '>', '/', '\\', '
 // function
 const checkQ1 = (e) => {
     e.preventDefault();
-    const q1 = id_('q1');
-    const q1Value = q1.value;
+    let q1 = id_('q1');
+    let q1Value = q1.value;
 
     // validate length
     if (q1Value.length > Q1_MAX_LENGTH) {
@@ -71,6 +42,112 @@ const checkQ1 = (e) => {
     q1.value = sanitizedQ1Value;
     q1.style.color = 'white';
 }
+
+
+function calculateBMIMetric(weight, heightInMeters) {
+    return weight / Math.pow(heightInMeters, 2);
+}
+
+// Function for standard BMI calculation
+function calculateBMIStandard(weight, heightInInches) {
+    return (weight * 703) / Math.pow(heightInInches, 2);
+}
+
+// Function to convert feet and inches to inches
+function convertToInches(feet, inches) {
+    return (feet * 12) + inches;
+}
+
+// Main function to determine which calculation to use based on the weight type
+function calculateBMI_() {
+    const weightInput = document.getElementById('q23_');
+    const heightInput = document.getElementById('q24_');
+
+    const weight = parseFloat(weightInput.value);
+    const heightValue = heightInput.value.split('.'); // Splitting the value into feet and inches
+    const feet = parseFloat(heightValue[0]);
+    const inches = parseFloat(heightValue[1] || 0); // If no inches provided, default to 0
+
+    if (isNaN(weight) || isNaN(feet) || isNaN(inches) || weight <= 0 || feet <= 0 || inches < 0) {
+        return 'Invalid Input';
+    }
+
+    const weightType = "standard";
+    let bmi;
+    
+
+    if (weightType === 'metric') {
+        // Convert feet and inches to meters
+        const totalInches = convertToInches(feet, inches);
+        const heightMeters = totalInches * 0.0254;
+    
+        // Convert pounds to kilograms
+        const weightKg = weight * 0.453592; 
+    
+        bmi = calculateBMIMetric(weightKg, heightMeters);
+        
+    } else {
+        const heightInInches = convertToInches(feet, inches); // Convert feet and inches to total inches for standard calculation
+        bmi = calculateBMIStandard(weight, heightInInches);
+    }
+
+    return bmi.toFixed(2); // Just the BMI value
+}
+
+
+/////////////////////////////////////////
+//convert standard to metric
+/////////////////////////////////////////
+const convertToMetric = (e) => {
+    console.log('convertToMetric()');
+    e.preventDefault();
+
+    let weightInput = id_('q23_');
+    let heightInput = id_('q24_');
+
+    let weight = parseFloat(weightInput.value);
+    let heightValue = heightInput.value.split('.'); // Splitting the value into feet and inches
+    let feet = parseFloat(heightValue[0]);
+    let inches = parseFloat(heightValue[1] || 0); // If no inches provided, default to 0
+
+    if (isNaN(inches) || weight <= 0 || feet <= 0 || inches < 0) {
+        return;
+    }
+
+    // Convert feet and inches to meters
+    const totalInches = convertToInches(feet, inches);
+    let heightMeters = totalInches * 0.0254;
+
+    // Convert pounds to kilograms
+    let weightKg = weight * 0.453592;
+
+
+    //check if its empty or NaN add 0.0
+    if (isNaN(weightKg)) {
+        weightKg = 0.0;
+    }
+
+    if (isNaN(heightMeters)) {
+        heightMeters = 0.0;
+    }
+
+
+    id_("metric_height").innerHTML = `${heightMeters.toFixed(2)} M`;
+    id_("metric_weight").innerHTML = `${weightKg.toFixed(2)} KG`;
+    
+};
+
+// listen for q23_ and q24_ on change event
+if (id_('q23_')) {
+    id_('q23_').addEventListener('change', convertToMetric);
+}
+
+if (id_('q24_')) {
+    id_('q24_').addEventListener('change', convertToMetric);
+}
+
+
+
 
 // helper function
 const sanitizeInput = (input) => {
@@ -147,33 +224,12 @@ const checkAll = async (e) => {
     }
 
     const weightInput = id_('q23_').value;
-    const weightMetric = id_('q23').value;
-    const heightInput = id_('q24_').value;
-    const heightMetric = id_('q24').value;
+    const heightInput = id_('q24_').value; 
 
-    let weightPounds = 0;
-    let heightFeet = 0;
+    addToJson(json, 'q23', weightInput);
+    addToJson(json, 'q24', heightInput);
 
-    if (weightMetric === 'kg') {
-        weightPounds = parseFloat(weightInput) * 2.20462;
-    } else if (weightMetric === 'lbs') {
-        weightPounds = parseFloat(weightInput);
-    } else {
-        console.log('Invalid weight unit');
-    }
-
-    if (heightMetric === 'cm') {
-        heightFeet = parseFloat(heightInput) * 0.0328084;
-    } else if (heightMetric === 'ft') {
-        heightFeet = parseFloat(heightInput);
-    } else {
-        console.log('Invalid height unit');
-    }
-
-    addToJson(json, 'q23', weightPounds);
-    addToJson(json, 'q24', heightFeet);
-
-    const bmi = calculateBMI(weightPounds, heightFeet);
+    const bmi = calculateBMI_();
     addToJson(json, 'q25', bmi);
 
     const userPermission = {
@@ -190,8 +246,7 @@ const checkAll = async (e) => {
     };
 
     json.push(totalPoints, userPermission, csrf);
-    console.log(json);
-        
+    
     // Send json to /questionsAPI
     const data = await sendJson('/questionsAPI', 'POST', json);
 

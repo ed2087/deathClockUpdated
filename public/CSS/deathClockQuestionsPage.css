@@ -1,5 +1,5 @@
 #header{
-    min-height: 50vh;
+    min-height: 60vh;
 }
 
 #main{
@@ -164,4 +164,11 @@
         #top_title_wrap h2{
             font-size: 2.8rem;
         }
+}
+
+
+
+
+#metric_height,#metric_weight{
+    font-size: 1.2rem;
 }
