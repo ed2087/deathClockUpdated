@@ -73,33 +73,42 @@
                         <option value="More than 6 hours">More than 6 hours</option>
                     </select>
                 </div>
+
                 <!-- this is question 23 ask for weight and type kilos or punds -->
                 <div>
-                    <label for="q23">💀 What is your weight?</label>
+                    <label for="q23">💀 What is your weight? (Pounds)</label>
+                    <input type="number" step="any" id="q23_" name="weight" required placeholder="Weight in pounds?">
+                </div>
+
+
+                <div>
+                    <label for="covertor">💀 Metric - Weight Conversion</label>
 
                     <div class="specialWrap">
-                        <input type="number" step="any" id="q23_" name="weight" required placeholder="Weight?">
-                        <select id="q23" name="weightType" required>
-                            <option value="lbs">lbs</option>
-                            <option value="kg">Kilograms</option>                            
-                        </select>
+                        <output id="metric_weight">0.0 M</output>
                     </div>
 
                 </div>
+                
 
                 <!-- create one for height -->
                 <div>
-                    <label for="q24">💀 What is your height?</label>
+                    <label for="q24">💀 What is your height? (Feet)</label>
 
-                    <div class="specialWrap">
-                        <input type="number" step="any" id="q24_" name="height" required placeholder="Height?">
-                        <select id="q24" name="heightType" required>
-                            <option value="ft">Feet</option>
-                            <option value="cm">Centimeters</option>                            
-                        </select>
+                    <div>
+                        <input type="number" step="any" id="q24_" name="height" required placeholder="Height in feet?">                        
                     </div>
 
                 </div>
+
+                <div>
+                    <label for="covertor">💀 Metric - Height Conversion</label>
+
+                    <div class="specialWrap">
+                        <output id="metric_height">0.0 KG</output>
+                    </div>
+                </div>                
+
             </fieldset>
         
             <!-- Health History Section -->
