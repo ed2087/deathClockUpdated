@@ -62,7 +62,7 @@
                     <!-- csrf -->
                     <input type="hidden" id="csrf" value="<%= csrfToken %>">
                     <!-- post id hiddent -->
-                    <input type="hidden" id="postId" value="<%= story._id %>">
+                    <input type="hidden" id="postId" value="<%= story.slug %>">
 
                     <div class="story_actions_list" id="story_actions_upvote">
                         <button class="upvote_butons" id="upVote" onclick="upvoteFetch()">
@@ -94,13 +94,13 @@
                     <h4>
                         Did enjoy? Share it with your friends!
                     </h4>
-                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&quote=<%= story.storyTitle %>" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="../../../IMAGES/social/Facebook.webp" /></a></li>
-                    <li><a href="https://twitter.com/intent/tweet?source=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&text=<%= story.storyTitle %>:%20https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>" target="_blank" title="Tweet"><img alt="Tweet" src="../../../IMAGES/social/Twitter.webp" /></a></li>
-                    <li><a href="http://www.tumblr.com/share?v=3&u=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&quote=<%= story.storyTitle %>&s=" target="_blank" title="Post to Tumblr"><img alt="Post to Tumblr" src="../../../IMAGES/social/Tumblr.webp" /></a></li>
-                    <li><a href="http://pinterest.com/pin/create/button/?url=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&media=https://terrorhub-fef1e79d918b.herokuapp.com/IMAGES/logos/logo1.webp&description=<%= story.storySummary %>" target="_blank" title="Pin it"><img alt="Pin it" src="../../../IMAGES/social/Pinterest.webp" /></a></li>
-                    <li><a href="http://www.reddit.com/submit?url=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&title=<%= story.storyTitle %>" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="../../../IMAGES/social/Reddit.webp" /></a></li>
-                    <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>&title=<%= story.storyTitle %>&summary=<%= story.storySummary %>&source=https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>" target="_blank" title="Share on LinkedIn"><img alt="Share on LinkedIn" src="../../../IMAGES/social/LinkedIn.webp" /></a></li>
-                    <li><a href="mailto:?subject=<%= story.storyTitle %>&body=<%= story.storySummary %>:%20https://www.terrorhub.com/terrorTales/horrorStory/?id=<%= story._id %>" target="_blank" title="Send email"><img alt="Send email" src="../../../IMAGES/social/Email.webp"></a></li>
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&quote=<%= story.storyTitle %>" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="../../../IMAGES/social/Facebook.webp" /></a></li>
+                    <li><a href="https://twitter.com/intent/tweet?source=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&text=<%= story.storyTitle %>:%20https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Tweet"><img alt="Tweet" src="../../../IMAGES/social/Twitter.webp" /></a></li>
+                    <li><a href="http://www.tumblr.com/share?v=3&u=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&quote=<%= story.storyTitle %>&s=" target="_blank" title="Post to Tumblr"><img alt="Post to Tumblr" src="../../../IMAGES/social/Tumblr.webp" /></a></li>
+                    <li><a href="http://pinterest.com/pin/create/button/?url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&media=https://terrorhub-fef1e79d918b.herokuapp.com/IMAGES/logos/logo1.webp&description=<%= story.storySummary %>" target="_blank" title="Pin it"><img alt="Pin it" src="../../../IMAGES/social/Pinterest.webp" /></a></li>
+                    <li><a href="http://www.reddit.com/submit?url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&title=<%= story.storyTitle %>" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="../../../IMAGES/social/Reddit.webp" /></a></li>
+                    <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&title=<%= story.storyTitle %>&summary=<%= story.storySummary %>&source=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Share on LinkedIn"><img alt="Share on LinkedIn" src="../../../IMAGES/social/LinkedIn.webp" /></a></li>
+                    <li><a href="mailto:?subject=<%= story.storyTitle %>&body=<%= story.storySummary %>:%20https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Send email"><img alt="Send email" src="../../../IMAGES/social/Email.webp"></a></li>
                 </ul>
 
             </div>
