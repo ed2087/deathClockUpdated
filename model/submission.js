@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify'); // Make sure to install this package using `npm install slugify`
 
 const storySchema = new mongoose.Schema({
   legalName: {
@@ -14,6 +15,12 @@ const storySchema = new mongoose.Schema({
   storyTitle: {
     type: String,
     required: true,
+  },
+  // create a slug for the story title
+  slug: {
+    type: String,
+    required: true,
+    unique: true,
   },
   storySummary: {
     type: String,
@@ -56,11 +63,10 @@ const storySchema = new mongoose.Schema({
   },
   upvotes: [
     {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the user who upvoted
-        required: true,
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the user who upvoted
+      required: true,
+      
     },
   ],
   upvoteCount: {
@@ -98,8 +104,45 @@ const storySchema = new mongoose.Schema({
         required: true,
       },
       reason: String, // Optional: You can specify a reason for the report
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
+  // Moderation system
+  isApproved: {
+    type: Boolean,
+    default: true
+  },
+  //reason for rejection and user who rejected
+  rejectionReason: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // You can create a User model for tracking who rejected the story
+        required: true,
+      },
+      reason: String, // Optional: You can specify a reason for the rejection
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  // update get time and user who updated
+  updateDetails: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ], 
   // date of creation
   createdAt: {
     type: Date,
@@ -107,11 +150,35 @@ const storySchema = new mongoose.Schema({
   },
 });
 
+// Middleware to create a slug before saving the story
+storySchema.pre('save', function (next) {
+  if (!this.isModified('storyTitle')) {
+    return next();
+  }
+
+  this.slug = slugify(this.storyTitle, { lower: true });
+  next();
+});
+
+// ... (your existing code)
+
 const Story = mongoose.model('Story', storySchema);
 
 module.exports = Story;
 
+// create a text index
+storySchema.index({
+  legalName: 'text',
+  creditingName: 'text',
+  storyTitle: 'text',
+  storySummary: 'text',
+  tags: 'text',
+  storyText: 'text',
+  categories: 'text',
+  extraTags: 'text',
+  slug: 'text', // Include slug in text index
+});
 
 
-//create a text index
-storySchema.index({legalName: 'text', creditingName: 'text', storyTitle: 'text', storySummary: 'text', tags: 'text', storyText: 'text', categories: 'text', extraTags: 'text'});
+
+

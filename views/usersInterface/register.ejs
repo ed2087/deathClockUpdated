@@ -18,14 +18,16 @@
 
             <% if(message) {%>
                 <div class="message"><%= message %></div>
+            <% }else{ %>
+                <div class="message" id="message_alert"></div>
             <% } %>
 
             <!-- register form -->
             <form action="/user/register" method="POST">
 
-                <input type="text" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
+                <input type="text" id="userName" name="username" placeholder="username" required value="<%= body != null ? body.username : ''  %>">
                 <input type="email" name="email" placeholder="email" required value="<%= body != null ? body.email : ''  %>">
-                <input type="date" id="date" name="age"  required value="" min="1950-01-01" max="2018-12-31">
+                <input type="date" id="date" name="age" required value="1990-01-01" min="1950-01-01" max="2018-12-31">
                 <input type="password" name="password" placeholder="password" required value="<%= body != null ? body.password : ''  %>">
                 <input type="password" name="confirmPassword" placeholder="confirm password" required value="<%= body != null ? body.confirmPassword : ''  %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -38,18 +40,21 @@
 
                 <!-- User input for the answer -->
                 <h2 id="captcha_title">
-                    Only the worthy can register
+                    Bot Test!
                 </h2>
                 <label id="captcha_label" for="captcha_input"></label>
                 <input type="text" id="captcha_input" placeholder="Your Answer" required>
 
-                <button class="call_to_action_yellow" type="submit"  onclick="allowRegestry(event)">Register</button>
+                <button class="call_to_action_yellow" id="register_button" type="submit"  onclick="allowRegestry(event)">Register</button>
 
             </form>
 
         </div>
 
     </div>  
+
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
 
 
     <script>            
@@ -58,12 +63,13 @@
             function refreshCaptcha() {
 
                 const darkRiddles = [
-                        "I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?",
-                        "The more you take, the more you leave behind. What am I?",
-                        "I have keys but open no locks. I have space but no room. You can enter, but you can't go inside. What am I?",
-                        "What has a heart that doesn't beat?",
-                        "I am always hungry, I must always be fed. The finger I lick will soon turn red. What am I?"
-                ];
+                        "What is 1x1?",
+                        "What is 1+1?",
+                        "What is 1-1?",
+                        "What is 1/1?",
+                        "What is 100x0?",
+                        "What is 0+0?"                        
+                    ];
 
 
                 const randomDarkRiddle = darkRiddles[Math.floor(Math.random() * darkRiddles.length)];
@@ -80,12 +86,12 @@
                     e.preventDefault();
 
                     const riddlesAnswers = [
-                        "an echo",
-                        "footsteps",
-                        "a keyboard",
-                        "an artichoke",
-                        "a fire",
-                        "x"
+                        "1",
+                        "2",
+                        "0",
+                        "1",
+                        "0",
+                        "0"
                     ];
 
                     const input = document.getElementById('captcha_input').value.trim().toLowerCase();
@@ -134,6 +140,6 @@
 
     <!-- script -->
     <script src="../../JS/master.js"></script> 
-    
+    <script src="../../JS/userInterface.js"></script> 
 </body>
 </html>
