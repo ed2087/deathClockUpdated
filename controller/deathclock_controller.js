@@ -38,7 +38,7 @@ exports.deathclockResults = async function (req, res, next) {
       // render deathclockResults
       res.status(200).render("../views/deathclock/mortality_results", {
         path: `/deathClock/results/${id}`,
-        title: "The Time Ticker: How Long Have You Go",
+        title: `The Time Ticker: ${user.name}'s Death Clock Results`,
         headerTitle: `${user.name}'s Death Clock Results`,
         csrfToken: res.locals.csrfToken,
         user: user,
