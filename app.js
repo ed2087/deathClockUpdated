@@ -16,7 +16,7 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
-
+const forceHttps = require('express-force-https');
 //utils modules
 const {registerValidation,globalErrorHandler} = require("./utils/errorHandlers.js");
 
@@ -39,6 +39,8 @@ const DB = process.env.DB_URL;
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 
+// Enforce HTTPS (uncomment if you want to enforce HTTPS)
+app.use(forceHttps);
 
 app.use(flash());
 
