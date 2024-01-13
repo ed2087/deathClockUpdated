@@ -44,6 +44,7 @@ exports.deathclockResults = async function (req, res, next) {
         user: user,
         userActive,
         userName,
+        shortId: id,
       });
       
     } else {
