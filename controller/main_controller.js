@@ -42,7 +42,7 @@ exports.index = async function (req, res, next) {
 
   res.status(200).render("index", {
     path: "/",
-    title: "home page",
+    title: `TerrorHub - Home`,
     csrfToken: res.locals.csrfToken,
     userActive,
     userName,
