@@ -62,7 +62,7 @@
                     <!-- csrf -->
                     <input type="hidden" id="csrf" value="<%= csrfToken %>">
                     <!-- post id hiddent -->
-                    <input type="hidden" id="postId" value="<%= story.slug %>">
+                    <input type="hidden" id="postId" value="<%= story._id %>">
 
                     <div class="story_actions_list" id="story_actions_upvote">
                         <button class="upvote_butons" id="upVote" onclick="upvoteFetch()">
