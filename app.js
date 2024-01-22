@@ -32,6 +32,18 @@ const UserRoutes = require("./routes/user_routes.js");
 // Create Express app
 const app = express();
 
+
+//redirect to https://wwww
+
+
+app.use((req, res, next) => {
+  if (req.headers.host === 'terrorhub.com') {
+    res.redirect(301, 'https://www.terrorhub.com' + req.url);
+  } else {
+    next();
+  }
+});
+
 // Connect to MongoDB
 const DB = process.env.DB_URL;
 
