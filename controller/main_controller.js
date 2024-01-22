@@ -136,17 +136,17 @@ exports.sitemap = async (req, res, next) => {
 
       //get all storys for sitemap
       const stories = await Story.find({}).select("slug");     
-
-      // Static URLs
-      const staticUrls = [
-        'https://terrorhub.com/',
-        'https://terrorhub.com/deathClock',
-        'https://terrorhub.com/deathClock/graveyard',
-        'https://terrorhub.com/terrorTales',
-        'https://terrorhub.com/disclaimer',
-        'https://terrorhub.com/faq',
-        'https://terrorhub.com/termsConditions'
-      ];
+// Static URLs with 'www'
+const staticUrls = [
+    'https://www.terrorhub.com/',
+    'https://www.terrorhub.com/deathClock',
+    'https://www.terrorhub.com/deathClock/graveyard',
+    'https://www.terrorhub.com/terrorTales',
+    'https://www.terrorhub.com/disclaimer',
+    'https://www.terrorhub.com/faq',
+    'https://www.terrorhub.com/termsConditions'
+];
+    
 
       var root = xmlbuilder.create({
           urlset: {
@@ -166,7 +166,7 @@ exports.sitemap = async (req, res, next) => {
 
       // Add URLs for each post by /terrorTales/horrorStory/slug
       stories.forEach(story => {
-        const storyUrl = `https://terrorhub.com/terrorTales/horrorStory/${story.slug}`;
+        const storyUrl = `https://www.terrorhub.com/terrorTales/horrorStory/${story.slug}`;
         var u = root.ele('url');
         u.ele('loc', storyUrl);
         u.ele('changefreq', 'daily');
