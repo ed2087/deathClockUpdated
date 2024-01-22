@@ -50,7 +50,7 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 
 // Enforce HTTPS (uncomment if you want to enforce HTTPS)
-app.use(forceHttps);
+//app.use(forceHttps);
 
 app.use(flash());
 
