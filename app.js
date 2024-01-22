@@ -34,15 +34,16 @@ const app = express();
 
 
 //redirect to https://wwww
-
-
 app.use((req, res, next) => {
-  if (req.headers.host === 'terrorhub.com') {
-    res.redirect(301, 'https://www.terrorhub.com' + req.url);
+  if (req.headers.host !== 'www.terrorhub.com') {
+    res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
   } else {
     next();
   }
 });
+
+
+
 
 // Connect to MongoDB
 const DB = process.env.DB_URL;
