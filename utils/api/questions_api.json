@@ -1,7 +1,7 @@
 {
   "questions": [
     {
-      "id": 1,
+      "id": "q1",
       "eleName": "name",
       "category": "Basic Information",
       "question": "What is your full name?",
@@ -12,7 +12,7 @@
       }
     },
     {
-      "id": 2,
+      "id": "q2",
       "eleName": "dob",
       "category": "Basic Information",
       "question": "What is your date of birth?",
@@ -23,18 +23,18 @@
       }
     },
     {
-      "id": 3,
+      "id": "q3",
       "eleName": "gender",
       "category": "Basic Information",
       "question": "What is your gender?",
       "answer_options": [
         {
           "option": "Male",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "Female",
-          "scores": [10]
+          "scores": [5]
         },
         {
           "option": "Other",
@@ -47,7 +47,7 @@
       }
     },
     {
-      "id": 4,
+      "id": "q4",
       "eleName": "education",
       "category": "Basic Information",
       "question": "What is your highest level of education completed?",
@@ -58,38 +58,39 @@
         },
         {
           "option": "High school graduate",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Some college or vocational training",
-          "scores": [7]
+          "scores": [3]
         },
         {
           "option": "Bachelor's degree",
-          "scores": [8]
+          "scores": [4]
         },
         {
           "option": "Postgraduate degree (e.g., Master's, Ph.D.)",
-          "scores": [10]
+          "scores": [5]
         }
       ],
       "user": {
         "points": "",
         "userAnswer": ""
       }
-    },{
-      "id": 5,
+    },
+    {
+      "id": "q5",
       "eleName": "sitting",  
       "category": "Lifestyle",
       "question": "How much time do you spend sitting per day (in hours)?",
       "answer_options": [
         {
           "option": "Less than 1 hour",
-          "scores": [8]
+          "scores": [5]
         },
         {
           "option": "1-2 hours",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "2-4 hours",
@@ -110,7 +111,7 @@
       }
     },
     {
-      "id": 6,
+      "id": "q6",
       "eleName": "medical",
       "category": "Health History",
       "question": "Do you have any chronic medical conditions (e.g., diabetes, heart disease)?",
@@ -121,7 +122,7 @@
         },
         {
           "option": "No",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -130,7 +131,7 @@
       }
     },
     {
-      "id": 7,
+      "id": "q7",
       "eleName": "cancer",
       "category": "Health History",
       "question": "Have you ever been diagnosed with cancer?",
@@ -140,8 +141,12 @@
           "scores": [-20]
         },
         {
+          "option": "Safe",
+          "scores": [5]
+        },
+        {
           "option": "No",
-          "scores": [10]
+          "scores": [2]
         }
       ],
       "user":{
@@ -150,7 +155,7 @@
       }
     },
     {
-      "id": 8,
+      "id": "q8",
       "eleName": "smoke",
       "category": "Lifestyle",
       "question": "Do you smoke tobacco products?",
@@ -173,7 +178,7 @@
         },
         {
           "option": "No, I don't smoke",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -182,18 +187,18 @@
       }
     },
     {
-      "id": 9,
+      "id": "q9",
       "eleName": "exercise",
       "category": "Lifestyle",
       "question": "How often do you exercise?",
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [6]
+          "scores": [5]
         },
         {
           "option": "Weekly",
-          "scores": [5]
+          "scores": [4]
         },
         {
           "option": "Monthly",
@@ -201,7 +206,7 @@
         },
         {
           "option": "Rarely",
-          "scores": [1]
+          "scores": [0]
         },
         {
           "option": "Never",
@@ -214,7 +219,7 @@
       }
     },
     {
-      "id": 10,
+      "id": "q10",
       "eleName": "stroke",
       "category": "Family History",
       "question": "Has anyone in your immediate family had a stroke or heart attack before the age of 60?",
@@ -225,7 +230,7 @@
         },
         {
           "option": "No",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -234,7 +239,7 @@
       }
     },
     {
-      "id": 11,
+      "id": "q11",
       "eleName": "hereditary",
       "category": "Family History",
       "question": "Do you have a family history of certain hereditary diseases?",
@@ -253,15 +258,15 @@
         },
         {
           "option": "Cancer",
-          "scores": [-15]
+          "scores": [-10]
         },
         {
           "option": "Diabetes & Hypertension",
-          "scores": [-12]
+          "scores": [-5]
         },        
         {
           "option": "None",
-          "scores": [5]
+          "scores": [0]
         }
       ],
       "user":{
@@ -270,14 +275,14 @@
       }
     },
     {
-      "id": 12,
+      "id": "q12",
       "eleName": "cholesterol",
       "category": "Medical Tests",
       "question": "When was your last cholesterol test, and what were the results?",
       "answer_options": [
         {
           "option": "Within the normal range",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "High",
@@ -294,22 +299,22 @@
       }
     },
     {
-      "id": 13,
+      "id": "q13",
       "eleName": "bloodPressure",
       "category": "Medical Tests",
       "question": "Have you had a recent blood pressure measurement?",
       "answer_options": [
         {
           "option": "Within the normal range",
-          "scores": [5]
+          "scores": [0]
         },
         {
           "option": "High",
-          "scores": [-10]
+          "scores": [-5]
         },
         {
           "option": "No",
-          "scores": [0]
+          "scores": [-2]
         }
       ],
       "user":{
@@ -318,22 +323,22 @@
       }
     },
     {
-      "id": 14,
+      "id": "q14",
       "eleName": "vegetables",
       "category": "Diet",
       "question": "How often do you consume fruits and vegetables?",
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [5]
-        },
-        {
-          "option": "Weekly",
           "scores": [3]
         },
         {
-          "option": "Monthly",
+          "option": "Weekly",
           "scores": [2]
+        },
+        {
+          "option": "Monthly",
+          "scores": [1]
         },
         {
           "option": "Rarely",
@@ -350,7 +355,7 @@
       }
     },
     {
-      "id": 15,
+      "id": "q15",
       "eleName": "alcohol",
       "category": "Alcohol Consumption",
       "question": "How often do you consume alcohol?",
@@ -369,11 +374,11 @@
         },
         {
           "option": "Rarely",
-          "scores": [2]
+          "scores": [0]
         },
         {
           "option": "Never",
-          "scores": [5]
+          "scores": [2]
         }
       ],
       "user":{
@@ -382,22 +387,22 @@
       }
     },
     {
-      "id": 16,
+      "id": "q16",
       "eleName": "stress",
       "category": "Stress",
       "question": "How do you typically manage stress?",
       "answer_options": [
         {
           "option": "Exercise",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Meditation",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Talk to a therapist",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "Ignore it",
@@ -414,18 +419,18 @@
       }
     },
     {
-      "id": 17,
+      "id": "q17",
       "eleName": "occupation",
       "category": "Occupation",
       "question": "Is your occupation physically demanding?",
       "answer_options": [
         {
           "option": "Yes",
-          "scores": [5]
+          "scores": [-5]
         },
         {
           "option": "No",
-          "scores": [-5]
+          "scores": [0]
         }
       ],
       "user":{
@@ -434,35 +439,23 @@
       }
     },    
     {
-      "id": 18,
-      "eleName": "travel",
-      "category": "Travel",      
-      "question": "How frequently do you travel?",
+      "id": "q18",
+      "eleName": "checkup",
+      "category": "Medical Tests",
+      "question": "How often do you get health checkups or screenings (e.g. cancer, heart disease)?",
       "answer_options": [
-        {
-          "option": "Frequently",
-          "scores": [8]
-        },
-        {
-          "option": "Occasionally",
-          "scores": [5]
-        },
-        {
-          "option": "Rarely",
-          "scores": [2]
-        },
-        {
-          "option": "Never",
-          "scores": [0]
-        }
+        {"option": "annually", "scores": [3]},
+        {"option": "every 2-3 years", "scores": [0]}, 
+        {"option": "only when symptomatic", "scores": [-5]},
+        {"option": "never", "scores": [-10]}
       ],
-      "user":{
-          "points": "",
-          "userAnswer":""
+      "user": {
+        "points": "",
+        "userAnswer": "" 
       }
     },
     {
-      "id": 19,
+      "id": "q19",
       "eleName": "sleep",
       "category": "Sleep",
       "question": "How many hours of sleep do you typically get per night?",
@@ -473,11 +466,11 @@
         },
         {
           "option": "5-7 hours",
-          "scores": [3]
+          "scores": [2]
         },
         {
           "option": "7-9 hours",
-          "scores": [5]
+          "scores": [3]
         },
         {
           "option": "More than 9 hours",
@@ -490,49 +483,29 @@
       }
     },
     {
-      "id": 20,
+      "id": "q20",
       "eleName": "social",
       "category": "Social Life",
       "question": "How often do you engage in social activities or spend time with friends and family?",
       "answer_options": [
         {
           "option": "Daily",
-          "scores": [6]
+          "scores": [3]
         },
         {
           "option": "Weekly",
-          "scores": [4]
-        },
-        {
-          "option": "Monthly",
           "scores": [2]
         },
         {
+          "option": "Monthly",
+          "scores": [1]
+        },
+        {
           "option": "Rarely",
-          "scores": [-5]
+          "scores": [-2]
         },
         {
           "option": "Never",
-          "scores": [-10]
-        }
-      ],
-      "user":{
-          "points": "",
-          "userAnswer":""
-      }
-    },
-    {
-      "id": 21,
-      "eleName": "sun",
-      "category": "Sun Exposure",
-      "question": "Do you get regular sun exposure?",
-      "answer_options": [
-        {
-          "option": "Yes",
-          "scores": [5]
-        },
-        {
-          "option": "No",
           "scores": [-5]
         }
       ],
@@ -542,20 +515,66 @@
       }
     },
     {
-      "id": 22,
+      "id": "q21",
+      "question": "Have you received vaccinations recommended for your age (flu, pneumonia, shingles, etc.)?",  
+      "answer_options": [
+        {"option": "up-to-date", "scores": [2]},
+        {"option": "some", "scores": [1]},
+        {"option": "none", "scores": [-10]}
+      ],
+      "user": {
+        "points": "",
+        "userAnswer": ""
+      } 
+    },
+    {
+      "id": "q22",
       "eleName": "supplements",
       "category": "Supplements",
       "question": "Do you take any dietary supplements or vitamins regularly?",
       "answer_options": [
         {
           "option": "Yes",
-          "scores": [5]
+          "scores": [2]
         },
         {
           "option": "No",
-          "scores": [-5]
+          "scores": [-2]
         }
       ],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": "q23",
+      "eleName": "weight",
+      "category": "Weight",
+      "question": "What is your weight?",
+      "answer_options": [],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": "q24",
+      "eleName": "height",
+      "category": "Height",
+      "question": "What is your height?",
+      "answer_options": [],
+      "user":{
+          "points": "",
+          "userAnswer":""
+      }
+    },
+    {
+      "id": "q25",
+      "eleName": "bmi",
+      "category": "BMI",
+      "question": "What is your BMI?",
+      "answer_options": [],      
       "user":{
           "points": "",
           "userAnswer":""

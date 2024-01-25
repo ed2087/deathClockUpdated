@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // Define the User Schema
 const userSchema = new mongoose.Schema({
+  legalName: {
+    type: String,
+    default: null,
+  },
   username: {
     type: String,
     required: true,
@@ -29,13 +33,22 @@ const userSchema = new mongoose.Schema({
   },
   activateToken : String,
   passwordResetToken: String,
+  //we need to tract times password reset and date
+  passwordResetTokenTimes: {
+    type: Number,
+    default: 0
+  },
+  passwordResetTokenDate: {
+    type: Date,
+    default: Date.now
+  },
   birthdate: {
     type: Date,
     required: false,
   },
   role: {
     type: String,
-    enum: ["user", "admin", "superadmin", "moderator", "writter"],
+    enum: ["user", "admin", "moderator", "writter"],
     default: "user",
   },
   contributions: {
@@ -95,6 +108,19 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // books user has read
+  booksRead: [
+    {
+      bookId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book"
+      },
+      booksReadCount: {
+        type: Number,
+        default: 0
+      }
+    }
+  ],
 
 });
 

@@ -29,7 +29,14 @@
     
                     </nav>
 
-                <% }%>
+                <% }else{%>
+                    <!-- become writer -->
+                    <nav id="innerStory_nav">
+                        <h2>Become a writer</h2>
+                        <p>Share your stories with the world</p>
+                        <a href="/terrorTales/submission">Become a writer</a>
+                    </nav>
+                <% } %>
 
                 <form id="search_stories">
 
@@ -82,6 +89,9 @@
         </section> -->
 
     </main>  
+
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
 
     <!-- script -->
     <script src="../../JS/master.js"></script>  

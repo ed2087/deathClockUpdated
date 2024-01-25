@@ -22,11 +22,7 @@ const registerValidation =  (req) => {
 
 const globalErrorHandler = (req, res, statusCode, message, error) => {
 
-        console.log({
-            error: error.status,
-            message: error.message,
-            stack: error.stack,
-        })
+        
 
         // 404 error-  page not found
         if(statusCode === 404) return displayError(req, res, statusCode, message);  
@@ -60,7 +56,7 @@ const globalErrorHandler = (req, res, statusCode, message, error) => {
 
 
 const displayError = (req, res, statusCode, message) => {
-
+    
     const {userName, userActive} = req.session;
 
     res.status(statusCode).render("errorHandler", {

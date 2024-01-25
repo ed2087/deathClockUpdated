@@ -1,16 +1,8 @@
 <!-- head include -->
 <%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="../../../CSS/deathPredictions.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-    #charts_ {
-        width: 50%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
 </head>
 <body>
 
@@ -25,20 +17,19 @@
 
         <section class="section_wrap">
 
-            <div class="section_container">
+            <div class="section_container_header">
                 
-                <h1><%= userName %> DEATH PREDICTION</h1>
+                <h2><span class="special_yellow_text">DEATH PREDICTION</span></h2>
 
                 <!-- SHARE BUTTONS -->
-                <div id="shareLinks_wrap">
-                    <h3>Share your results</h3>
+                <div id="shareLinks_wrap">                    
                     <div id="shareLinks">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.deathclock.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://twitter.com/intent/tweet?text=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock%20https://www.deathclock.com/" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.deathclock.com/&title=Death%20Clock&summary=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock&source=https://www.deathclock.com/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.pinterest.com/pin/create/button/?url=https://www.deathclock.com/&media=&description=I%20just%20took%20the%20Death%20Test%20and%20got%20%23deathclock" target="_blank"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.terrorhub.com/deathClock/results/<%= shortId  %>" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/intent/tweet?text=https://www.terrorhub.com/deathClock/results/<%= shortId  %>" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.terrorhub.com/deathClock/results/<%= shortId  %>" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.reddit.com/submit?url=https://www.terrorhub.com/deathClock/results/<%= shortId  %>" target="_blank"><i class="fab fa-reddit-alien"></i></a>
                     </div>
-                    <p>Share With Your Freinds</p>
+                    <h3>Share your results</h3>
                 </div>                    
 
             </div>
@@ -49,56 +40,60 @@
         <section class="section_wrap">
 
             <div class="inner_sectionHeader_wrap">
-                <h2>YOU HAVE APPROXIMATELY:</h2>
+                <h2>YOU HAVE APPROXIMATELY</h2>
             </div>
 
 
-            <!-- left and right divs -->
-            <ul class="left">
+            <div id="inner_sectionWrap_1">
 
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">YEARS LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="yearsLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">MONTHS LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="monthsLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">WEEKS LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="weeksLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">DAYS LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="daysLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">HOURS LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="hrsLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">MINUTES LEFT</h3>
-                    <p class="deathInfo loading_dotts" id="minLeft"></p>
-                </li>
-                <li class="userDeath_info_cards">
-                    <h3 class="card_header">SECONDS LEFT</h3>
-                    <p class="deathInfo loading_dotts"  id="secLeft"></p>
-                </li>
+                <!-- left and right divs -->
+                <ul class="deathInfo_wrap_ul">
 
-            </ul>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">YEARS LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="yearsLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">MONTHS LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="monthsLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">WEEKS LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="weeksLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">DAYS LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="daysLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">HOURS LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="hrsLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">MINUTES LEFT</h3>
+                        <p class="deathInfo loading_dotts" id="minLeft"></p>
+                    </li>
+                    <li class="userDeath_info_cards">
+                        <h3 class="card_header">SECONDS LEFT</h3>
+                        <p class="deathInfo loading_dotts"  id="secLeft"></p>
+                    </li>
 
-            <div class="right">
+                </ul>
 
-                <!-- GRAVE IMAGE -->
-                <img src="../../../IMAGES/utils/Grave.webp" alt="grave">
+                <div class="grave_wrap">
 
-                <!-- USER INFO -->
-                <div class="user_info">
-                    <h3>IN LOVING MEMORY</h3>
-                    <h4>TAKEN FROM US ON</h4>
-                    <p id="deathYear" class="loading_dotts"></p>
-                    <h5>REST IN PEACE</h5>
-                </div> 
+                    <!-- GRAVE IMAGE -->
+                    <!-- <img src="../../../IMAGES/utils/Grave.webp" alt="grave"> -->
+
+                    <!-- USER INFO -->
+                    <div class="user_info">
+                        <h3>IN LOVING MEMORY</h3>
+                        <h4>TAKEN FROM US ON</h4>
+                        <p id="deathYear" class="loading_dotts"></p>
+                        <h5>REST IN PEACE</h5>
+                    </div> 
+
+                </div>
 
             </div>
 
@@ -107,7 +102,7 @@
         <section class="section_wrap" id="stats">
 
             <div class="inner_sectionHeader_wrap">
-                <h2>YOUR DEATH CLOCK</h2>
+                <h2>HOW DO YOU COMPARE WITH ALL <span class="special_yellow_text">OTHERS?</span></h2>
             </div>
 
             <div id="charts_">
@@ -121,12 +116,12 @@
         <section class="section_wrap">
 
             <div class="inner_sectionHeader_wrap">
-                <h2>YOU HAVE LIVED FOR:</h2>
+                <h2>YOU HAVE LIVED</h2>
             </div>
 
 
             <!-- left and right divs -->
-            <ul class="left">
+            <ul class="deathInfo_wrap_ul" id="lived_stats_ul">
 
                 <li class="userDeath_info_cards">
                     <h3 class="card_header">YEARS LIVED</h3>
@@ -162,9 +157,54 @@
         </section>
 
 
+        <section class="section_wrap">
+
+            <div class="inner_sectionHeader_wrap">
+                <!-- icon -->
+                <h2>YOUR DEATH CLOCK <span class="special_yellow_text">RESULTS EXPLAINED</span></h2>
+                <p>
+                    Congratulations on discovering your estimated lifespan with the Death Clock. Now, let's delve into what these results mean and how they were calculated.
+                </p>
+            </div>
+
+            <ul id="cards__wrap_explain">
+
+                <li class="explain_cards">
+                    <img src="../../../IMAGES/Icons/anti-age.webp" alt="icon">
+                    <h3 class="explainded_h3">Age:</h3>
+                    <p class="explainded_p" id="age_Content"></p>
+                </li>
+                <li class="explain_cards">
+                    <img src="../../../IMAGES/Icons/daily-health-app.webp" alt="icon">
+                    <h3 class="explainded_h3">Lifestyle / BMI:</h3>
+                    <p class="explainded_p" id="lifestyle_Content"></p>
+                </li>
+                <li class="explain_cards">
+                    <img src="../../../IMAGES/Icons/family.webp" alt="icon">
+                    <h3 class="explainded_h3">Family Medical History:</h3>
+                    <p class="explainded_p">
+                        Understanding your family's medical history is essential. It can have a significant impact on your estimated lifespan, influencing your overall life expectancy and health. Knowing these factors allows you to take proactive steps towards maintaining your well-being.
+                    </p>
+                </li>
+                
+                <li class="explain_cards">
+                    <img src="../../../IMAGES/Icons/yoga.webp" alt="icon">
+                    <h3 class="explainded_h3">Physical Activity:</h3>
+                    <p class="explainded_p">
+                        Staying physically active is crucial for your well-being. Regular exercise not only contributes to a healthier lifestyle but also plays a significant role in increasing life expectancy. Incorporate activities you enjoy into your routine to promote overall health and longevity.
+                    </p>
+                </li>
+
+            </ul>
+
+
+        </section>
+
+
     </main>
 
-    
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
 
     <!-- script -->
     <script>

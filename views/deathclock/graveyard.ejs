@@ -12,18 +12,24 @@
     <%- include('../includes/secHeader.ejs') %>
 
 
-    <main id="main">
+    <main id="main">        
 
         <!-- title -->
         <div id="top_title_wrap">
             <h2 id="topTitle">
                 TERROR HUB'S GRAVEYARD
             </h2>
+            <!-- number of tumbstones -->
+            <p id="graveyard_count">
+                SOUL POPULATION <br>
+                <span id="graveyard_count_num"><%= totalItems.toLocaleString() %></span>
+            </p>
+        
+
             <p id="article">
-                
+                                
             </p>
         </div>
-
 
         <section id="graveyard">
 
@@ -36,6 +42,9 @@
         
 
     </main>
+
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
     
     <script src="../../JS/master.js"></script> 
     <script src="../../JS/graveyardApp.js"></script> 

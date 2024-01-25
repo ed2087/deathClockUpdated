@@ -28,7 +28,7 @@ exports.deathclockResults = async function (req, res, next) {
   try {
     // get user data
     const user = await DeathClockModel.findOne({ shortId: id });
-    // get all users' death
+    // get all users' death    
 
     if (user) {
 
@@ -37,13 +37,14 @@ exports.deathclockResults = async function (req, res, next) {
 
       // render deathclockResults
       res.status(200).render("../views/deathclock/mortality_results", {
-        path: "/mortality_results",
-        title: "The Time Ticker: How Long Have You Go",
-        headerTitle: `${user.name}'s Death Clock Results`,
+        path: `/deathClock/results/${id}`,
+        title: `The Time Ticker: ${user.name}'s Death Clock Results`,
+        headerTitle: `${user.name}'s Death Clock`,
         csrfToken: res.locals.csrfToken,
         user: user,
         userActive,
         userName,
+        shortId: id
       });
       
     } else {
@@ -63,10 +64,13 @@ exports.graveyard = async function (req, res, next) {
 
     // Get the latest 10 users that are allowed using aggregation
     const users = await DeathClockModel.find({ allowed: true })
-      .sort({ updatedAt: -1 })
-      .limit(10)
-      .exec();
+    .sort({ updatedAt: -1 })
+    .limit(10)
+    .exec();
 
+    const totalItems = await DeathClockModel.countDocuments({ allowed: true });
+
+    
     // Extract relevant user information
     const package_ = users.map((user) => ({
       userName: user.name,
@@ -86,6 +90,7 @@ exports.graveyard = async function (req, res, next) {
       users: package_,
       userActive,
       userName,
+      totalItems,
     });
 
   } catch (error) {
@@ -190,6 +195,12 @@ exports.updateUserClock = async function (req, res, next) {
       { $group: { _id: null, min: { $min: "$clock.predictedDeathYear" } } },
     ]);
 
+    // get current users' death clock.predictedDeathYear use aggregate to get averages
+    const userAvg = await DeathClockModel.aggregate([
+      { $match: { shortId: body.shortId } },
+      { $group: { _id: null, avg: { $avg: "$clock.predictedDeathYear" } } },
+    ]);
+
     // update users clock
     user.clock.predictedDeathYear = pYear;
     user.clock.yearsLeft = pYear;
@@ -216,6 +227,8 @@ exports.updateUserClock = async function (req, res, next) {
           usersAvg,
           usersMax,
           usersMin,
+          userAvg,
+          name: updated.name,
         },
       });
     } else {

@@ -1,4 +1,5 @@
 // Check CSRF utils globally
+const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 
 const csrf = require('csrf');
 
@@ -7,7 +8,7 @@ const tokens = new csrf();
 module.exports.checkCsrf = function (req, res, next, manualCSRF) {
     // Get token from req
     const token = req.body._csrf || manualCSRF;
-    console.log(token);
+   
     // Check if token is valid
     const valid = tokens.verify(process.env.SESSION_SECRET, token);
 
@@ -46,3 +47,20 @@ module.exports.checkCsrfToken = function (req, res, next) {
 
     next();
 };
+
+
+
+
+//check csrf token in the route
+module.exports.csrfCheckRoute = (req, res, next) => {
+    const clientToken = req.body._csrf || req.query._csrf || req.headers['x-csrf-token'];
+    const sessionToken = process.env.SESSION_SECRET; // Adjust this based on your session setup
+
+    if (!tokens.verify(sessionToken, clientToken)) {
+        // send user globalErrorHandler
+        return globalErrorHandler(req, res, next, 'CSRF Token is invalid.');
+    }
+    console.log('valid csrf');
+    next();
+}
+

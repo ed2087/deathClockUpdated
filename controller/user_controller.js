@@ -28,9 +28,6 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 }));
 
 
-
-
-
 //log in page
 exports.loginPage = async (req, res, next) => {
 
@@ -39,6 +36,7 @@ exports.loginPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/login",{
         title: "Login",
+        path: "/user/login",
         message: null,
         field: null,
         body: null,
@@ -56,6 +54,7 @@ exports.registerPage = async (req, res, next) => {
 
     res.render("../views/usersInterface/register",{
         title: "Register",
+        path: "/user/register",
         message: null,
         field: null,
         body: null,
@@ -68,8 +67,79 @@ exports.registerPage = async (req, res, next) => {
 };
 
 
-//post login
+exports.checkUserName = async (req, res, next) => {
+    try {
+        const { userName } = req.query;
 
+        // NAMES NOT ALLOWED TO USE BECAUSE THEY ARE FOR THE WEBSITE/ADMIN
+        const namesNotAllowed =[
+            "terrorhub",
+            "terrorhubadmin",
+            "terrorhubadministrator",
+            "terrorhubadminstrator",
+            "terrorhubadminstrators",
+            "terrorhubadmins",
+            "admin",
+            "administrator",
+            "administrators",
+            "admins",
+            "moderator",
+            "moderators",
+            "mod",
+            "mods",
+            "developer",
+            "developers",
+            "dev",
+            "devs",
+            "terrorhubdev",
+            "terrorhubdeveloper",
+            "terrorhubdevelopers",
+            "deathclock",
+            "clock",
+            "death",
+            "terror",
+            "hub",
+            "terrorhubclock",
+            "terrorhubdeath",
+        ]
+
+
+        // Check if username is in the namesNotAllowed array
+        if (namesNotAllowed.includes(userName.toLowerCase())) {
+            return res.status(200).json({
+                status: true,
+                message: "Username exists"
+            });
+        }
+
+        // Check if username exists (case-insensitive)
+        const userExist = await User.findOne({ username: userName.toLowerCase() });
+
+        if (userExist) {
+            return res.status(200).json({
+                status: true,
+                message: "Username exists"
+            });
+        } else {
+            return res.status(200).json({
+                status: false,
+                message: "Username does not exist"
+            });
+        }
+    } catch (error) {
+        // Handle errors appropriately
+        console.error(error);
+        return res.status(500).json({
+            status: "error",
+            message: "Internal Server Error"
+        });
+    }
+};
+
+
+
+
+//post login
 exports.postLogin = async (req, res, next) => {
    try {
 
@@ -78,26 +148,26 @@ exports.postLogin = async (req, res, next) => {
             //validate
             const validate_ = registerValidation(req);
 
-            if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", validate_[0].msg, validate_[0].field, req.body)
+            if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", validate_[0].msg, validate_[0].field, req.body)
 
             //check if user exist
             const user = await User.findOne({email: email});
             
             if(!user){
                 //there is no user with that email
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Invalid Email or Password", "email", req.body);
             }
 
             //check if user is verified
             if(!user.userVerified){
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Please activate your account", "email", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Please activate your account", "email", req.body);
             }
 
             //check password
             const validPassword = await bcrypt.compare(password, user.password);
 
             if(!validPassword){
-                return handlingFlashError(res,req,next, "../views/usersInterface/login", "Login", "Invalid Email or Password", "password", req.body);
+                return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Invalid Email or Password", "password", req.body);
             }
 
             //create session
@@ -107,6 +177,7 @@ exports.postLogin = async (req, res, next) => {
             //i only need username,id,email,role
             const userSession = {
                 username: user.username,
+                legalName: user.legalName,
                 id: user._id,
                 email: user.email,
                 role: user.role,
@@ -141,22 +212,26 @@ exports.postLogin = async (req, res, next) => {
 exports.postRegister = async (req, res, next) => {
 
     try {
-        const {username,email,age,password} = req.body;        
+        let {username,email,age,password} = req.body;        
         
         const currentYear = new Date();
-        const userAge = new Date(age);
+        const userAge = new Date(age);        
+
+        //username to lower case
+        username = username.toLowerCase().trim();
+
         //user age
         const age_ = currentYear.getFullYear() - userAge.getFullYear();
 
         //check if user is 13 years old
-        if(age_ < 13) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "You must be 13 years old to register", "age", req.body);
+        if(age_ < 13) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register", "Register", "You must be 13 years old to register", "age", req.body);
 
         //validate
         const validate_ = registerValidation(req);
 
         console.log(validate_);
 
-        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", validate_[0].msg, validate_[0].field, req.body)
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register",  "Register", validate_[0].msg, validate_[0].field, req.body)
 
         
         //incript password
@@ -166,7 +241,7 @@ exports.postRegister = async (req, res, next) => {
         //check if user exist
         const userExist = await User.findOne({email: email});
 
-        if(userExist) return handlingFlashError(res,req,next, "../views/usersInterface/register", "Register", "Email already exist", "email", req.body);
+        if(userExist) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register", "Register", "Email already exist", "email", req.body);
         
 
         //create user
@@ -261,103 +336,343 @@ exports.activateAccount = async (req, res, next) => {
 
 };
 
-//verification Page
+
+//email verification Page
 
 exports.verificationPage = async (req, res, next) => {
 
-        //get id query
-        const {id,activateToken} = req.query;
-        let {userName, userActive} = await someUserInfo(req, res, next);
+    //get id query
+    const {id,activateToken} = req.query;
+    let {userName, userActive} = await someUserInfo(req, res, next);
 
-        try {
+    try {
 
-            //check if user exist
-            const user = await User.findById(id);
+        //check if user exist
+        const user = await User.findById(id);
 
-            //check if user exist not redirect to login page
-            if(!user) return res.redirect("/user/login");
+        //check if user exist not redirect to login page
+        if(!user) return res.redirect("/user/login");
 
-            //check if user is verified
-            if(user.userVerified) return res.redirect("/user/login");
+        //check if user is verified
+        if(user.userVerified) return res.redirect("/user/login");
 
-            res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
-                title: "Resend Activation Link",
-                message: null,
-                field: null,
-                id: id,
-                activateToken: activateToken,
-                userActive
-            });
+        res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
+            title: "Resend Activation Link",
+            path: "/user/verificationPage",
+            message: null,
+            field: null,
+            id: id,
+            activateToken: activateToken,
+            userActive
+        });
 
-            
-        } catch (error) {
-            //send to globalErrorHandler        
-            globalErrorHandler(req, res, 500, "Internal Server Error", error); 
-        }
+        
+    } catch (error) {
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
+    }
 
 
 };
 
 //resent activation link post
 exports.resendVerification = async (req, res, next) => {
-        try {
-            const {id} = req.params;
-            
-            //get user
-            const user = await User.findById(id);
+    try {
+        const {id} = req.params;
+        
+        //get user
+        const user = await User.findById(id);
 
-            //check if user exist not redirect to login page
-            if(!user) return res.redirect("/user/login");
+        //check if user exist not redirect to login page
+        if(!user) return res.redirect("/user/login");
 
-            //check if user is verified
-            if(user.userVerified) return res.redirect("/user/login");
+        //check if user is verified
+        if(user.userVerified) return res.redirect("/user/login");
+
+        //get website url
+        const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
+        //send email
+
+        const html = htmlTemplate(
+            `
+                <h2>Verify your TerrorHub email</h2>
+                <p>Click on the link below to verify your email address and complete your TerrorHub registration:</p>
+                <a href="${websiteUrl}/user/activate/${user.activateToken}">Verify your email</a>
+            `
+        );
+        
+
+        //check if user has sent 2 verifications
+        if(req.session.verificationSent >= 2){
+            //global error handler
+            return globalErrorHandler(req, res, 404, "You have reached the maximum number of verifications per day");
+        }
+
+
+        //send verification email
+        const email = await sendEmail(user.email, "TerrorHub verification", html);
+
+
+        if(email){ 
+
+                //add number of verifcations sent per day to user it must be a max of 2 perday save to user session
+                req.session.verificationSent = 1 + req.session.verificationSent;
+
+                //redirect to /user/verificationPage  add id and token to query
+                return res.redirect(`/user/verificationPage?id=${user._id}&activateToken=${user.activateToken}`);
+
+        }else{
+            //redirect to login page
+            globalErrorHandler(req, res, 404, "Your verification email could not be sent");
+        }
+
+
+    } catch (error) {
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
+    }
+
+};
+
+
+
+// reset password 
+exports.resetPasswordRequestPage = async (req, res, next) => {
+
+    try {
+
+        //check if user is logged in
+        let {userName, userActive} = await someUserInfo(req, res, next);
+        
+
+        res.render("../views/usersInterface/resetPasswordRequest.ejs",{
+            title: "Reset Password",
+            path: "/user/resetPasswordRequest",
+            message: null,
+            field: null,
+            body: null,
+            userActive
+        });
+        
+    } catch (error) {
+
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
+        
+    }
+
+}
+
+
+
+//send reset password email
+exports.sendResetLinkToEmail = async (req, res, next) => {
+
+    try {
+
+        const {email} = req.body;
+
+        //validate
+        const validate_ = registerValidation(req);
+
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/resetPasswordRequest", "/user/resetPasswordRequest", "Reset Password", validate_[0].msg, validate_[0].field, req.body)
+
+        //check if user exist
+        const user = await User.findOne({email: email});
+
+        if(!user) return handlingFlashError(res,req,next, "../views/usersInterface/resetPasswordRequest", "/user/resetPasswordRequest", "Reset Password", "Email does not exist", "email", req.body);
+
+
+
+        //check if user has requested 2
+        const currentDate = new Date();
+        const userDate = new Date(user.passwordResetTokenDate);
+
+
+        //if there date is not the same reset the count to 0
+        if(currentDate.getDate() !== userDate.getDate()){
+            user.passwordResetTokenTimes = 0;
+            user.passwordResetTokenDate = currentDate;
+        }
+
+        //check if user has requested 2 times per day
+        if(currentDate.getDate() === userDate.getDate() && user.passwordResetTokenTimes >= 2){
+            //redirect to login page
+            return handlingFlashError(res,req,next, "../views/usersInterface/resetPasswordRequest", "/user/resetPasswordRequest", "Reset Password", "You have reached the maximum number of password reset per day", "email", req.body);
+        } 
+
+        //generate token
+        const token = uuidv4();
+        //update user
+        user.passwordResetToken = token;
+        //add requestCount only 2 per day
+        user.passwordResetTokenTimes = 1 + user.passwordResetTokenTimes;
+
+
+        //save user
+        const userSaved = await user.save();
+
+        if(userSaved){
 
             //get website url
             const websiteUrl = `${req.protocol}://${req.get("host")}`;
 
             //send email
-
             const html = htmlTemplate(
                 `
-                    <h2>Verify your TerrorHub email</h2>
-                    <p>Click on the link below to verify your email address and complete your TerrorHub registration:</p>
-                    <a href="${websiteUrl}/user/activate/${user.activateToken}">Verify your email</a>
+                    <h2>Reset your TerrorHub password</h2>
+                    <p>Click on the link below to reset your password:</p>
+                    <a href="${websiteUrl}/user/resetPassword?token=${token}&id=${user._id}">Reset your password</a>
+                    
                 `
             );
-            
-
-            //check if user has sent 2 verifications
-            if(req.session.verificationSent >= 2){
-                //global error handler
-                return globalErrorHandler(req, res, 404, "You have reached the maximum number of verifications per day");
-            }
-
 
             //send verification email
-            const email = await sendEmail(user.email, "TerrorHub verification", html);
+            const email = await sendEmail(user.email, "TerrorHub Reset Password", html);
 
+            if(email){
 
-            if(email){ 
+                //redirect to login page
+                res.redirect("/user/login");
 
-                    //add number of verifcations sent per day to user it must be a max of 2 perday save to user session
-                    req.session.verificationSent = 1 + req.session.verificationSent;
-
-                    //redirect to /user/verificationPage  add id and token to query
-                    return res.redirect(`/user/verificationPage?id=${user._id}&activateToken=${user.activateToken}`);
-    
             }else{
+
                 //redirect to login page
                 globalErrorHandler(req, res, 404, "Your verification email could not be sent");
+
             }
 
 
-        } catch (error) {
-            //send to globalErrorHandler        
-            globalErrorHandler(req, res, 500, "Internal Server Error", error); 
+        }else{
+
+            //redirect to login page
+            globalErrorHandler(req, res, 404, "Oops something went wrong!");
+
         }
+
+    
+    } catch (error) {
+            
+            //send to globalErrorHandler        
+            globalErrorHandler(req, res, 500, "Internal Server Error", error);
+            
+    }
+
 
 };
 
+
+exports.resetPasswordPage = async (req, res, next) => {   
+       
+    try {
+
+
+        const {token,id} = req.query;
+
+        //check if user is logged in
+        let {userName, userActive} = await someUserInfo(req, res, next);
+
+
+        //check if user exist and token exist
+        const userExist = await User.findOne({passwordResetToken: token, _id: id});
+
+
+        if(!userExist){
+            // redirect to login page
+            return res.redirect("/user/login");
+        }  
+        
+
+        res.render("../views/usersInterface/resetPassword.ejs",{
+            title: "Reset Password",
+            path: "/user/resetPassword",
+            message: null,
+            field: null,
+            body: null,
+            userActive,
+            userID: id,
+        });
+        
+    } catch (error) {
+        console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
+        
+    }
+
+
+};
+
+
+
+//reset password post
+exports.resetPassword = async (req, res, next) => {
+    try {
+
+        const {password, id} = req.body;
+
+        //validate
+        const validate_ = registerValidation(req);
+
+        if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/resetPassword", "/user/resetPassword", "Reset Password", validate_[0].msg, validate_[0].field, req.body)
+
+        //check if user exist
+        const user = await User.findOne({_id: id});
+
+        if(!user) return handlingFlashError(res,req,next, "../views/usersInterface/resetPassword", "/user/resetPassword", "Reset Password", "Email does not exist", "email", req.body);
+
+        //incript password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        //update user
+        user.password = hashedPassword;
+
+
+        //reset token
+        user.passwordResetToken = null;
+        //reset request count
+        user.passwordResetTokenTimes = 0;
+        user.passwordResetTokenDate = null;
+
+        //save user
+        const userSaved = await user.save();
+
+        if(userSaved){
+
+
+            //get website url
+            const websiteUrl = `${req.protocol}://${req.get("host")}`;
+
+            //send email
+            const html = htmlTemplate(
+
+                `
+                    <h2>
+                        Your password has been reset successfully
+                    </h2>
+                    <p>Your password has been reset successfully</p>
+                    <a href="${websiteUrl}/user/login">Login</a>
+
+                `
+            );
+
+            //send verification email
+            const email = await sendEmail(user.email, "TerrorHub Reset Password", html);
+
+            res.redirect("/user/login");
+
+            
+        }
+        
+    } catch (error) {
+        console.log(error);
+        //send to globalErrorHandler        
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
+        
+    }
+};
 
 // Logout
 exports.logout = async (req, res, next) => {
@@ -392,7 +707,54 @@ exports.logout = async (req, res, next) => {
 
 
 
-async function handlingFlashError (res,req,next, urlPath, title, msg, path, body) {
+
+// user profile page
+
+exports.userProfilePage = async (req, res, next) => {
+
+
+    // get user
+    const { userName, userActive, userData } = await someUserInfo(req, res, next);
+
+    try {
+
+        //check if user exist
+        const user = await User.findById(userData.id);
+
+        if(!user) return globalErrorHandler(req, res, 404, "User not found");
+
+        //send user to profile page
+        res.render("../views/usersInterface/profilePage.ejs",{
+            title: "Profile",
+            path: "/user/profile",
+            message: null,
+            field: null,
+            body: null,
+            userActive,
+            userName,
+            user: user
+        });
+
+        
+    } catch (error) {
+        //send to globalErrorHandler       
+        console.log(error); 
+        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
+        
+    }
+
+
+};
+
+
+
+
+
+
+
+
+
+async function handlingFlashError (res,req,next, urlPath, title, path, msg, path, body) {
 
     //check if user is logged in
     let {userName, userActive} = await someUserInfo(req, res, next);
@@ -404,13 +766,19 @@ async function handlingFlashError (res,req,next, urlPath, title, msg, path, body
 
     res.render(urlPath, {
         title: title,
+        path: path,
         message: msg,
         field: path,
         body: body,
         userActive
     });
 
-}
+};
+
+
+
+
+
 
 
 //passworD2087

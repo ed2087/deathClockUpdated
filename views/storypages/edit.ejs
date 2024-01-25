@@ -1,0 +1,124 @@
+    <!-- head include -->
+    <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="../../CSS/submissionPage.css">
+</head>
+<body>
+
+
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
+
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
+
+    <div id="submisson_form_wrap">           
+
+            <!-- action="/terrorTales/submission" method="POST" -->
+            <form id="submission_form" action="/terrorTales/editStory" method="POST">
+                
+                <div class="form_group" id="legalNameGroup">
+                    <label for="legalName">Legal Name (Will not be shared with the public)*</label>
+                    <input value="<%= story.legalName %>" type="text" id="legalName" name="legalName" required placeholder="Enter Full Legal Name">                    
+                </div>
+
+                <!-- choose language story will be written -->
+                <div class="form_group" id="languageGroup">
+                    <label for="language">Language*</label>
+                    <select id="language" name="language">
+                        <option value="English" <%= story.language === 'English' ? 'selected' : '' %>>English</option>
+                        <option value="Spanish" <%= story.language === 'Spanish' ? 'selected' : '' %>>Spanish</option>
+                        <option value="French" <%= story.language === 'French' ? 'selected' : '' %>>French</option>
+                        <option value="German" <%= story.language === 'German' ? 'selected' : '' %>>German</option>
+                        <option value="Italian" <%= story.language === 'Italian' ? 'selected' : '' %>>Italian</option>
+                        <option value="Portuguese" <%= story.language === 'Portuguese' ? 'selected' : '' %>>Portuguese</option>
+                        <option value="Russian" <%= story.language === 'Russian' ? 'selected' : '' %>>Russian</option>
+                        <option value="Japanese" <%= story.language === 'Japanese' ? 'selected' : '' %>>Japanese</option>
+                        <option value="Chinese" <%= story.language === 'Chinese' ? 'selected' : '' %>>Chinese</option>
+                        <option value="Korean" <%= story.language === 'Korean' ? 'selected' : '' %>>Korean</option>
+                        <option value="Arabic" <%= story.language === 'Arabic' ? 'selected' : '' %>>Arabic</option> 
+                        <option value="Hindi" <%= story.language === 'Hindi' ? 'selected' : '' %>>Hindi</option>
+                        <option value="Bengali" <%= story.language === 'Bengali' ? 'selected' : '' %>>Bengali</option>
+                        <option value="Punjabi" <%= story.language === 'Punjabi' ? 'selected' : '' %>>Punjabi</option>
+                        <option value="Telugu" <%= story.language === 'Telugu' ? 'selected' : '' %>>Telugu</option>
+                        <option value="Marathi" <%= story.language === 'Marathi' ? 'selected' : '' %>>Marathi</option>
+                        <option value="Tamil" <%= story.language === 'Tamil' ? 'selected' : '' %>>Tamil</option>
+                        <option value="Turkish" <%= story.language === 'Turkish' ? 'selected' : '' %>>Turkish</option>
+                        <option value="Vietnamese" <%= story.language === 'Vietnamese' ? 'selected' : '' %>>Vietnamese</option>
+                        <option value="Urdu" <%= story.language === 'Urdu' ? 'selected' : '' %>>Urdu</option>
+                        <option value="Javanese" <%= story.language === 'Javanese' ? 'selected' : '' %>>Javanese</option>
+                    </select>
+                </div>
+                
+                <div class="form_group" id="socialMediaGroup">
+                    <label for="socialMedia">Social Media Links</label>
+                    <div class="inner_formGroup">                        
+                        <% const socialMediaInputs = [
+                            'Facebook', 'Twitter', 'Instagram', 'LinkedIn', 'Pinterest', 'YouTube'
+                        ]; %>
+
+                        <% socialMediaInputs.forEach((platform, index) => { %>
+                            <% const matchingMedia = story.socialMedia.find(media => media.name.toLowerCase() === platform.toLowerCase()); %>
+                            <input type="text" id="socialMedia<%= index + 1 %>" name="socialMedia" value="<%= matchingMedia ? matchingMedia.link : '' %>" placeholder="<%= platform %>">
+                        <% }); %>
+                    </div>
+                </div>
+                
+
+                <div class="form_group" id="websiteGroup">
+                    <label for="website">Website</label>
+                    <input type="text" id="website" name="website" value="<%= story.website ? story.website : '' %>" placeholder="Enter your Secure website URL">
+                </div>
+
+                <!-- add a youtube video link to this story -->
+                <div class="form_group" id="youtubeGroup">
+                    <label for="youtube">Youtube Story Link</label>
+                    <input type="text" id="youtube" name="youtube" value="<%= story.youtubeLink ? story.youtubeLink : '' %>" placeholder="Enter your Youtube Story Link">
+                </div>
+                
+
+                <div class="form_group" id="storyTitleGroup">
+                    <label for="storyTitle">Story Title*</label>
+                    <input type="text" id="storyTitle" name="storyTitle" value="<%= story.storyTitle ? story.storyTitle : '' %>" required placeholder="Enter your story title">
+                </div>
+                
+
+                <div class="form_group" id="storySummaryGroup">
+                    <label for="storySummary">Story Summary*</label>
+                    <textarea id="storySummary" name="storySummary" required placeholder="Enter a summary of your story"><%- story.storySummary ? story.storySummary : '' %></textarea>
+                </div>
+                
+
+                <div class="form_group" id="tagsGroup">
+                    <label for="tags">Tags (separated by commas)*</label>
+                    <input type="text" id="tags" name="tags" value="<%= story.tags ? story.tags.join(', ') : '' %>" placeholder="Enter tags separated by commas">
+                </div>
+                
+
+                <div class="form_group" id="storyTextGroup">
+                    <label for="storyText">Write Your Story*</label>
+                    <textarea id="storyText" name="storyText" required placeholder="Enter the text of your story"><%- story.storyText ? story.storyText : '' %></textarea>
+                </div>
+
+                <!-- add extra tags -->
+                <div class="form_group" id="extraTagsGroup">
+                    <label for="extraTags">Extra Tags (separated by commas):</label>
+                    <input type="text" id="extraTags" name="extraTags" value="<%= story.extraTags ? story.extraTags.join(', ') : '' %>" placeholder="Enter extra tags separated by commas">
+                </div>
+                
+
+                <!-- You can add more fields for rating and reporting here --->
+                <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">
+                <!-- book id -->
+                <input type="hidden" id="storyId" name="storyId" value="<%= story._id %>">
+                <input id="storySubmit_form" class="call_to_action_yellow" type="submit" value="Submit">
+            </form>
+
+    </div>
+
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
+    
+    <script src="../../JS/master.js"></script> 
+
+</body>
+</html>

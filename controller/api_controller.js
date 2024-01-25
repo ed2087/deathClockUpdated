@@ -37,9 +37,8 @@ exports.questionsAPI = async function (req, res, next) {
 // Receive JSON data from deathClock_questions.js
 exports.getApiJson = async function (req, res, next) {
   try {
-    const jsonData = req.body;
+    const jsonData = req.body;    
     
-    const userPermission = jsonData[jsonData.length - 2].userPermision;
     const csrf = jsonData[jsonData.length - 1]._csrf;
 
     // Check CSRF
@@ -47,6 +46,12 @@ exports.getApiJson = async function (req, res, next) {
 
     // Generate a short user ID
     const shortId = uuidv4().slice(0, 8);
+
+    // Find the object with id "userPermission" in jsonData
+    const userPermissionObject = jsonData.find((question) => question.id === "userPermission");
+
+    // Check if the object exists and if userPermission is "true"
+    const userPermission = userPermissionObject && userPermissionObject.userPermission === "true";   
 
     const userDeathClock = {
       shortId: shortId,

@@ -1,0 +1,174 @@
+    <!-- head include -->
+    <%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="../../../CSS/readPage.css">
+</head>
+<body>
+
+
+    <!-- nav include -->
+    <%- include('../includes/nav.ejs') %>
+
+    <!-- header include -->
+    <%- include('../includes/secHeader.ejs') %>
+
+    <!-- do not allow to refresh -->
+
+    <main id="master_wrap">                   
+            
+        <section class="story_secs" id="story_info">
+
+            <!-- created date, upvotes, views, comments -->
+            <div id="story_info_wrap">
+                <div class="story_info_list" id="story_info_date">
+                    <img src="../../IMAGES/Icons/white_calendary.webp" alt="pen" />
+                    <p><%= new Date(story.createdAt).toLocaleDateString('en-US') %></p>
+                </div>
+                <div class="story_info_list" id="story_info_upvotes">
+                    <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
+                    <p class="upvoteCounter"><%= story.upvotes.length  %></p>
+                </div>
+                <div  class="story_info_list"id="story_info_views">
+                    <img src="../../IMAGES/Icons/view.webp" alt="pen" />
+                    <p><%= story.readCount %></p>
+                </div>
+                <div class="story_info_list" id="story_info_comments">
+                    <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
+                    <p><%= story.comments.length  %></p>
+                </div>
+            </div>
+            
+            <div id="user_info_wrap">
+                <div id="userAvatar_wrap">
+                    <h2><%= story.creditingName.charAt(0) %></h2>
+                </div>
+                <div id="user_name">
+                    <p> <span style="font-weight: 600;">Written By</span> <span class="specialCharacter">@</span><%= story.creditingName %></p>
+                </div>
+            </div>            
+
+        </section>
+
+        <section class="story_secs" id="story_wrap_sec">
+            
+
+            <div id="story_wrap">                
+
+                <!-- back home wrap -->
+                <div id="back_home_wrap">
+                    <a href="/terrorTales">
+                        <span>&larr;</span> Back                        
+                    </a>
+                </div>        
+                
+                <% if (story.socialMedia.length > 0) { %>
+                    <ul class="socialWrap_icons" id="follow_user_links">                        
+                                              
+                        <% story.socialMedia.forEach(social => { %>
+                            <li><a href="<%= social.link %>" title="Follow on <%= social.name %>" target="_blank"><img alt="Follow on <%= social.name %>" src="../../../IMAGES/social/<%= social.name.charAt(0).toUpperCase() + social.name.slice(1) %>.webp" /></a></li>
+                        <% }); %>
+
+                        <!-- title -->
+                        <h4>Follow <span class="specialCharacter">@</span><%= story.creditingName %> on social media!</h4>
+                          
+                        
+                    </ul>
+                <% } %>
+
+                <div id="story">
+                    <p><%- story.storyText %></p>
+                </div>
+
+                <!-- youtube video -->
+                <% if(story.youtubeLink){ %>
+                    <div id="youtube_frame">
+                        <iframe src="<%= story.youtubeLink %>" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                <% } %>
+
+                <!-- upvote downvote and report -->
+                <div id="story_actions"> 
+                    
+                    <!-- csrf -->
+                    <input type="hidden" id="csrf" value="<%= csrfToken %>">
+                    <!-- post id hiddent -->
+                    <input type="hidden" id="postId" value="<%= story._id %>">
+
+                    <div class="story_actions_list" id="story_actions_upvote">
+                        <button class="upvote_butons" id="upVote" onclick="upvoteFetch()">
+                            <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />    
+                            <p> <strong class="upvoteCounter"><%= story.upvotes.length  %></strong> upvote </p>
+                        </button>
+                    </div>
+
+                    <!-- <div class="story_actions_list" id="story_actions_downvote">
+                        <button class="upvote_butons" id="downVote" onclick="upvoteFetch()">
+                            <img src="../../IMAGES/Icons/down-arrow.webp" alt="pen" />
+                            <p>Downvote</p>
+                        </button>
+                    </div> -->
+
+                    <div class="story_actions_list" id="story_actions_report">
+                        <button id="report" onclick="reportFun()">
+                            <img src="../../IMAGES/Icons/flag.webp" alt="pen" />
+                            <p>Report</p>
+                        </button>
+                    </div>
+
+                </div> 
+                
+                <!-- share buttons -->
+
+                <ul class="socialWrap_icons">
+                    <!-- title -->
+                    <h4>
+                        Did enjoy? Share it with your friends!
+                    </h4>
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&quote=<%= story.storyTitle %>" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="../../../IMAGES/social/Facebook.webp" /></a></li>
+                    <li><a href="https://twitter.com/intent/tweet?source=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&text=<%= story.storyTitle %>:%20https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Tweet"><img alt="Tweet" src="../../../IMAGES/social/Twitter.webp" /></a></li>
+                    <li><a href="http://www.tumblr.com/share?v=3&u=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&quote=<%= story.storyTitle %>&s=" target="_blank" title="Post to Tumblr"><img alt="Post to Tumblr" src="../../../IMAGES/social/Tumblr.webp" /></a></li>
+                    <li><a href="http://pinterest.com/pin/create/button/?url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&media=https://terrorhub-fef1e79d918b.herokuapp.com/IMAGES/logos/logo1.webp&description=<%= story.storySummary %>" target="_blank" title="Pin it"><img alt="Pin it" src="../../../IMAGES/social/Pinterest.webp" /></a></li>
+                    <li><a href="http://www.reddit.com/submit?url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&title=<%= story.storyTitle %>" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="../../../IMAGES/social/Reddit.webp" /></a></li>
+                    <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>&title=<%= story.storyTitle %>&summary=<%= story.storySummary %>&source=https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Share on LinkedIn"><img alt="Share on LinkedIn" src="../../../IMAGES/social/LinkedIn.webp" /></a></li>
+                    <li><a href="mailto:?subject=<%= story.storyTitle %>&body=<%= story.storySummary %>:%20https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>" target="_blank" title="Send email"><img alt="Send email" src="../../../IMAGES/social/Email.webp"></a></li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- display top related stories top5Stories make wraped in a link to story  -->
+        <section class="story_secs" id="related_stories_wrap">
+
+            <div id="related_stories">
+                <h2>Related Stories</h2>
+                <div id="related_stories_list">
+                    <% top5Stories.forEach(story_ => { %>
+                        <div class="related_stories_list_item">
+                            <a href="/terrorTales/horrorStory/<%= story_.slug %>">
+                                <div class="related_stories_list_item_img">
+                                    <h3><%= story_.storyTitle %></h3>
+                                </div>
+                                <div class="related_stories_list_item_info">
+                                    <p><%- story_.storySummary.length > 300 ? story_.storySummary.slice(0, 350) + '<span class="readMoreLink">Read More. . .</span>' : story_.storySummary + '<span class="readMoreLink">Read More. . .</span>' %></p>
+                                    
+                                </div>
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+
+        </section>
+        
+
+    </main>  
+
+    <!-- footer include -->
+    <%- include('../includes/footer.ejs') %>
+
+    <!-- script -->
+    <script src="../../JS/master.js"></script>  
+    <script src="../../JS/readPageFun.js"></script>  
+</body>
+</html>
