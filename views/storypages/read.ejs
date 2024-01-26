@@ -76,14 +76,15 @@
 
                 <div id="story">
                     <p><%- story.storyText %></p>
-                </div>
-
-                <!-- youtube video -->
-                <% if(story.youtubeLink){ %>
-                    <div id="youtube_frame">
-                        <iframe src="<%= story.youtubeLink %>" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                <% } %>
+                    <!-- youtube video -->
+                    <% if(story.youtubeLink){ %>
+                        <div id="youtube_frame">
+                            <iframe src="<%= story.youtubeLink %>" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    <% } %>
+                    <!-- buy me a coffee include-->
+                    <%- include('../includes/buyMeACoffee.ejs') %>
+                </div>                
 
                 <!-- upvote downvote and report -->
                 <div id="story_actions"> 
