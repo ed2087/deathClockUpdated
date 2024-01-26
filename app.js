@@ -36,16 +36,14 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 //check if not www.terrorhub
-// app.use((req, res, next) => {
+app.use((req, res, next) => {
 
-//   console.log(PORT);
-
-//   if (req.headers.host !== 'www.terrorhub.com') {
-//     res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
-//   } else {
-//     next();
-//   }
-// });
+  if (req.headers.host !== 'www.terrorhub.com') {
+    res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
+  } else {
+    next();
+  }
+});
 
 
 // Connect to MongoDB
