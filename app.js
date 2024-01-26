@@ -16,7 +16,6 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const mongoDBstore = require("connect-mongodb-session")(session);
-const forceHttps = require('express-force-https');
 //utils modules
 const {registerValidation,globalErrorHandler} = require("./utils/errorHandlers.js");
 
@@ -32,14 +31,21 @@ const UserRoutes = require("./routes/user_routes.js");
 // Create Express app
 const app = express();
 
+
+// Start server
+const PORT = process.env.PORT || 3001;
+
 //check if not www.terrorhub
-app.use((req, res, next) => {
-  if (req.headers.host !== 'www.terrorhub.com') {
-    res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
-  } else {
-    next();
-  }
-});
+// app.use((req, res, next) => {
+
+//   console.log(PORT);
+
+//   if (req.headers.host !== 'www.terrorhub.com') {
+//     res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
+//   } else {
+//     next();
+//   }
+// });
 
 
 // Connect to MongoDB
@@ -120,9 +126,6 @@ app.use("*", (req,res,next)=>{
   
 });
 
-
-// Start server
-const PORT = process.env.PORT || 3001;
 
 const db_connect = async () => {
   try {
