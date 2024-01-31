@@ -139,7 +139,7 @@ exports.sitemap = async (req, res, next) => {
       // Static URLs with 'www'
       const staticUrls = [
           'https://www.terrorhub.com/',
-          'https://www.terrorhub.com/deathClock',
+          'https://www.terrorhub.com/deathClock/questions',
           'https://www.terrorhub.com/deathClock/graveyard',
           'https://www.terrorhub.com/terrorTales',
           'https://www.terrorhub.com/disclaimer',
