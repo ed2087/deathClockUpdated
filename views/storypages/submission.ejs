@@ -145,6 +145,25 @@
                     </p>
                 </div>
 
+                <!-- Add link for story background (must be from Imgur) -->
+                <div class="form_group" id="backgroundLink">
+                    <label for="backgroundUrl">Background Image Link (Imgur):</label>
+                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link">
+                    <!-- Provide brief guidance to users -->
+                    <p class="input_info">
+                        For optimal performance and visual appeal, we recommend using a horizontal background image with the following specifications:
+                    </p>
+                    <ul>
+                        <li><strong>Orientation:</strong> Horizontal (landscape)</li>
+                        <li><strong>Recommended Size:</strong> 1200 x 630 pixels</li>
+                    </ul>
+                    <p class="input_info">
+                        To use an Imgur image as your story background, simply copy the image link from Imgur and paste it here. Ensure the image is in a horizontal format for the best display. For detailed instructions, check our <a class="special_red_text" href="/faq#imgur" target="_blank">FAQ</a>.
+                    </p>
+                </div>
+
+
+
                 <div class="form_group" id="storyTitleGroup">
                     <label for="storyTitle">Story Title*</label>
                     <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter your story title">
@@ -172,9 +191,10 @@
 
                 <div class="form_group" id="storyTextGroup">
                     <label for="storyText">Write Your Story*</label>
-                    <textarea id="storyText" name="storyText" required placeholder="Enter the text of your story"></textarea>
+                    <textarea id="storyText" name="storyText" required placeholder="Write your story here (max 3000 W) - (. ! ?) will be used to split the story into paragraphs"></textarea>
                     <p class="input_info">
                         <p class="input_info">
+
                             By submitting my story via this online form, I grant <span class="special_red_text">www.terrorhub.com</span> non-exclusive rights to publish my original work. I affirm that I possess all necessary rights and have not plagiarized or borrowed content.
                         
                             <br><br>

@@ -2,20 +2,22 @@
 
     <!-- title -->
     <h2 class="about_title">
-        LATEST CREEPYPASTA <span class="special_yellow_text" style="display: inline;">STORIES</span>
+        TRENDING <span class="special_yellow_text" style="display: inline;">STORIES</span>
     </h2>
-
+    
 
     <!-- content -->
     <div id="latestStories_inner_wrap">
 
         <div id="topStory_wrap">
-        
-            <div class="title_wrap">
-                <h2>
-                    <%= topStoryByUpvotes.storyTitle  %>
-                </h2>
-            </div>
+
+            <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes.slug  %>" style="display: contents;">
+                <div class="title_wrap">
+                    <h2>
+                        <%- topStoryByUpvotes.storyTitle  %>
+                    </h2>
+                </div>
+            </a>
 
             <div class="storyInfo_wrap">
                 <div class="storyInfo_item">
@@ -59,7 +61,7 @@
 
                         <div class="title_wrap">
                             <h2>
-                                <%= topStorys[i].storyTitle  %>
+                                <%- topStorys[i].storyTitle  %>
                             </h2>
                         </div>
                         

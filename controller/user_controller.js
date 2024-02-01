@@ -675,34 +675,28 @@ exports.resetPassword = async (req, res, next) => {
 };
 
 // Logout
-exports.logout = async (req, res, next) => {
-    try {             
+exports.logout = async (req, res) => {
+    try {
+        // Save user online status
+        const userSaved = await User.findByIdAndUpdate(req.session.user.id, { userOnline: false });
 
-        //save user
-        const userSaved = await User.updateOne({_id: req.session.user.id}, {userOnline: false});
-
-
-        if(!userSaved) return globalErrorHandler(req, res, 404, "Oops something went wrong!");
-
-        //set user online to false
-        req.session.user.userOnline = false;
-
-        //save session
-        req.session.save((err) => {
-            if(err) console.log(err);
-        });
+        if (!userSaved) {
+            return globalErrorHandler(req, res, 404, "Oops, something went wrong!");
+        }
 
         // Destroy the session
-        req.session.destroy();
+        req.session.destroy((err) => {
+            if (err) {
+                return globalErrorHandler(req, res, 500, "Internal Server Error", err);
+            }
 
-        // Redirect to the login page
-        res.redirect("/");
-
+            // Redirect to the login page or perform other actions
+            res.redirect("/");
+        });
     } catch (error) {
-        //send to globalErrorHandler        
-        globalErrorHandler(req, res, 500, "Internal Server Error", error); 
+        // Send to globalErrorHandler
+        globalErrorHandler(req, res, 500, "Internal Server Error", error);
     }
-
 };
 
 

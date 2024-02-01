@@ -15,28 +15,12 @@ exports.index = async function (req, res, next) {
   let {userName, userActive} = await someUserInfo(req, res, next);
 
 
-  //get back top 5 storys from class GetStories
-  const topStorys = await new GetStories().getTopStorys(5);
+  
   let topStoryByUpvotes = await new GetStories().getTopStorysByUpvotes(1);
 
-  
-  //make sure that topStorysByUpvotes is not empty if it is get getTopStorysByReads
-  if (topStoryByUpvotes.length === 0) {
-      const topStorysByReads = await new GetStories().getTopStorysByReads(1);
-      topStoryByUpvotes.push(topStorysByReads[0]);
-  }
-
-
-  //check if topStorysByUpvotes is not in topStorys if its is remove it
-  topStorys.forEach((story, index) => {
-      if (story._id.toString() === topStoryByUpvotes[0]._id.toString()) {
-          topStorys.splice(index, 1);
-      }
-  });
-  //only allow 3 storys to be displayed from topStorys
-  topStorys.splice(3, 2); 
-
-  topStoryByUpvotes = topStoryByUpvotes[0];  
+  //get id of topStoryByUpvotes
+  const topStoryByUpvotesId = topStoryByUpvotes[0]._id;
+  const topStorys = await new GetStories().getTopStorysExcept(topStoryByUpvotesId, 3);
 
   const file = await readFileAPI("questions_api.json");
 
@@ -47,7 +31,7 @@ exports.index = async function (req, res, next) {
     userActive,
     userName,
     topStorys,
-    topStoryByUpvotes,
+    topStoryByUpvotes : topStoryByUpvotes[0],
   });
     
   } catch (error) {

@@ -59,11 +59,6 @@ function isValidLinkfun(link) {
 
 
 
-
-
-
-
-
 // Home page
 exports.terrorTalesPage = async (req, res, next) => {
 
@@ -204,6 +199,7 @@ exports.submissionPost = async function (req, res, next) {
             socialMedia,
             website,
             youtube,
+            backgroundUrl,
             storyTitle,
             storySummary,
             tags,
@@ -276,6 +272,7 @@ exports.submissionPost = async function (req, res, next) {
             socialMedia : getSocialMediaArray,
             website,
             youtubeLink : youtubeLink_,
+            backgroundUrl,
             storyTitle,
             slug: slug,
             storySummary,
@@ -359,7 +356,7 @@ exports.submissionPost = async function (req, res, next) {
 exports.upvote = async (req, res, next) => {
     try {
         const { storyID, token } = req.query;
-        console.log(storyID, token);
+        
 
         const { userName, userActive } = await someUserInfo(req, res, next);
 
@@ -622,6 +619,7 @@ exports.updateStoryPost = async (req, res, next) => {
         socialMedia,
         website,
         youtube,
+        backgroundUrl,
         storyTitle,
         storySummary,
         tags,
@@ -672,6 +670,7 @@ exports.updateStoryPost = async (req, res, next) => {
         story.socialMedia = socialMedia_;
         story.website = website;
         story.youtubeLink = replaceYouTubeLink(youtube);
+        story.backgroundUrl = backgroundUrl;
         story.storyTitle = storyTitle;
         story.slug = slug;
         story.storySummary = storySummary;

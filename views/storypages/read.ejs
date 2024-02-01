@@ -7,9 +7,18 @@
 
     <!-- nav include -->
     <%- include('../includes/nav.ejs') %>
+    
+    <header id="header" style="min-height: 80vh; background-image: url('<%= story.backgroundUrl || '../../IMAGES/backgrounds/headerBG1.webp' %>');">
+        <!-- invisible padding 200px -->
+        <div id="header_padding"></div>
 
-    <!-- header include -->
-    <%- include('../includes/secHeader.ejs') %>
+        <div id="header_inner_wrap">
+            <h1 id="heroTitle">
+                <span class="h1_inner"><%- headerTitle %></span>
+            </h1>
+        </div>
+    </header>
+
 
     <!-- do not allow to refresh -->
 
@@ -39,7 +48,7 @@
             
             <div id="user_info_wrap">
                 <div id="userAvatar_wrap">
-                    <h2><%= story.creditingName.charAt(0) %></h2>
+                    <h2><%- story.creditingName.charAt(0) %></h2>
                 </div>
                 <div id="user_name">
                     <p> <span style="font-weight: 600;">Written By</span> <span class="specialCharacter">@</span><%= story.creditingName %></p>
@@ -148,7 +157,7 @@
                         <div class="related_stories_list_item">
                             <a href="/terrorTales/horrorStory/<%= story_.slug %>">
                                 <div class="related_stories_list_item_img">
-                                    <h3><%= story_.storyTitle %></h3>
+                                    <h3><%- story_.storyTitle %></h3>
                                 </div>
                                 <div class="related_stories_list_item_info">
                                     <p><%- story_.storySummary.length > 300 ? story_.storySummary.slice(0, 350) + '<span class="readMoreLink">Read More. . .</span>' : story_.storySummary + '<span class="readMoreLink">Read More. . .</span>' %></p>

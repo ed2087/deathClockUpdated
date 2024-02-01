@@ -53,6 +53,7 @@ class GetStories {
         this.allStorys = [];
         this.topStoryByUpvotes = [];
         this.bookByTitle = [];
+        this.getTopStiesExcept = [];
     }
 
     async getTopStorys(limit) {
@@ -129,6 +130,12 @@ class GetStories {
     async getStoryByTitle(title) {
         this.bookByTitle = await Storys.find({ title: title, isApproved: true });
         return this.bookByTitle;
+    }
+
+    // Find all stories except the one with the given id get top storys set a limit and star from best to worst by checking the upvoteCount and readCount
+    async getTopStorysExcept(id, limit) {
+        this.getTopStiesExcept = await Storys.find({ _id: { $ne: id }, isApproved: true }).sort({ upvoteCount: -1, readCount: -1 }).limit(limit);
+        return this.getTopStiesExcept;
     }
     
 

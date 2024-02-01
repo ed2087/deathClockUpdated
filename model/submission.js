@@ -150,7 +150,8 @@ const storySchema = new mongoose.Schema({
   },
   // youtube video link
   youtubeLink: String,
-
+  //link for background image
+  backgroundUrl: String,
   
 });
 

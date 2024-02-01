@@ -31,18 +31,16 @@ const UserRoutes = require("./routes/user_routes.js");
 // Create Express app
 const app = express();
 
-
-// Start server
-const PORT = process.env.PORT || 3001;
-
 //check if not www.terrorhub
 app.use((req, res, next) => {
+  const isLocalhost = req.headers.host.includes('localhost');
 
-  if (req.headers.host !== 'www.terrorhub.com') {
+  if (!isLocalhost && req.headers.host !== 'www.terrorhub.com') {
     res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
   } else {
     next();
   }
+  
 });
 
 
@@ -124,6 +122,9 @@ app.use("*", (req,res,next)=>{
   
 });
 
+
+// Start server
+const PORT = process.env.PORT || 3001;
 
 const db_connect = async () => {
   try {
