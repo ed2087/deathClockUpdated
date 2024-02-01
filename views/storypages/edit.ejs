@@ -78,7 +78,7 @@
                 <!-- Add link for story background (must be from Imgur) -->
                 <div class="form_group" id="backgroundLink">
                     <label for="backgroundUrl">Background Image Link (Imgur):</label>
-                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link">
+                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link" value="<%= story.backgroundUrl ? story.backgroundUrl : '' %>">
                 </div>
                 
 
