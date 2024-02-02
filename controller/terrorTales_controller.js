@@ -317,8 +317,9 @@ exports.submissionPost = async function (req, res, next) {
             const bodyContent = `
                 <h2>Thank you for submitting your story</h2>
                 <p>Dear ${user.username},</p>
-                <p>Your story has been submitted successfully.</p>
-                <p>pleease allow 24 hours for your story to be reviewed.</p>
+                <p>
+                    Congratulations! Your story has been successfully submitted and is now live on the website. However, please note that it will undergo a review by our team to ensure it aligns with our guidelines.
+                </p>
                 <p>Thank you for your contribution.</p>
                 <p>Best regards,</p>
                 <p>TerrorHub Team</p>
@@ -328,6 +329,26 @@ exports.submissionPost = async function (req, res, next) {
             const html = htmlTemplate(bodyContent);
 
             const emailSent = await sendEmail(email, subject, html);
+
+
+            //send email to all admin and moderator
+            const adminModeratorQuery = { $or: [{ role: "admin" }, { role: "moderator" }] };
+            const admins = await User.find(adminModeratorQuery);
+
+            const emailToAdminModerator = async (admin) => {
+                const bodyContent = `
+                    <h2>New Story Submission</h2>
+                    <p>Dear ${admin.username},</p>
+                    <p>${userName} has submitted a new story titled ${storyTitle}. Please review the story at your earliest convenience.</p>
+                    <p>Best regards,</p>
+                    <p>TerrorHub Team</p>
+                    <a href="${websiteUrl}/terrorTales/horrorStory/${submission.slug}">${submission.storyTitle}</a>
+                `;
+                const html = htmlTemplate(bodyContent);
+                await sendEmail(admin.email, "New Story Submission", html);
+            };
+
+            await Promise.all(admins.map(emailToAdminModerator));
 
             //later on we must send to success page*********************
             return res.status(200).json({
@@ -416,103 +437,106 @@ exports.upvote = async (req, res, next) => {
 
 
 // report
-exports.report = async (req, res, next) =>{
+const sendReportEmail = async (to, subject, bodyContent) => {
+    const html = htmlTemplate(bodyContent);
+    await sendEmail(to, subject, html);
+};
 
-    try{
-
+exports.report = async (req, res, next) => {
+    try {
         const { storyID, token, reason } = req.query;
 
-        console.log(storyID, token, reason);
-
         const story = await Story.findById(storyID);
-
         const { userName, userActive } = await someUserInfo(req, res, next);
 
-
-        //check if user is logged in
-        if (!userActive) {
+        if (!userActive || !checkCsrf(req, res, next, token)) {
             return res.status(401).json({
                 status: "fail",
                 message: "You must be logged in to report"
             });
         }
 
-        // Check CSRF token
-        const csrfValid = checkCsrf(req, res, next, token);
+        const userReported = story.reports.some(report => report.userId.toString() === req.session.userId.toString());
 
-        if (!csrfValid) {
+        if (userReported) {
             return res.status(401).json({
                 status: "fail",
-                message: "You must be logged in to report"
+                message: `You have already reported this story for the following reason: ${story.reports[0].reason}`
             });
         }
 
-
-        // check if user has already reported
-        const report = story.reports.find(report_ => report_.userId.toString() === req.session.userId.toString());
-
-        if (report) {
-            return res.status(401).json({
-                status: "fail",
-                message: `You have already reported this story for the following reason: ${report.reason}`
-            });
-        }
-
-        // add report to story
         story.reports.push({
             userId: req.session.userId,
             reason: reason
         });
 
-        // save story
         await story.save();
 
-
-        // send email to admin
-        const adminEmail = process.env.HELP_EMAIL;
-        //get website url
         const websiteUrl = `${req.protocol}://${req.get("host")}`;
-
         const subject = `${story.storyTitle} has been reported`;
 
-        const bodyContent = `
+        const adminModeratorQuery = { $or: [{ role: "admin" }, { role: "moderator" }] };
+        const admins = await User.find(adminModeratorQuery);
+
+        const emailToAdminModerator = async (admin) => {
+            const bodyContent = `
+                <h2>${story.storyTitle} has been reported</h2>
+                <p>Dear Admin,</p>
+                <p>${userName} has reported ${story.storyTitle} for the following reason:</p>
+                <p>${reason}</p>
+                <p>Please review the report at your earliest convenience.</p>
+                <p>Best regards,</p>
+                <p>TerrorHub Team</p>
+                <a href="${websiteUrl}/terrorTales/horrorStory/${story.slug}">${story.storyTitle}</a>
+            `;
+
+            await sendReportEmail(admin.email, subject, bodyContent);
+        };
+
+        await Promise.all(admins.map(emailToAdminModerator));
+
+        const owner = await User.findById(story.owner);
+        const storyOwnerEmail = owner.email;
+
+        const ownerBodyContent = `
             <h2>${story.storyTitle} has been reported</h2>
-            <p>Dear Admin,</p>
-            <p>${userName} has reported ${story.storyTitle} for the following reason:</p>
+            <p>Dear ${owner.username},</p>
+            <p>${story.storyTitle} has been reported for the following reason:</p>
             <p>${reason}</p>
+            <p>The story will be reviewed as soon as possible. If you believe this is a mistake, please contact us at help.terrorhub@gmail.com</p>
             <p>Best regards,</p>
             <p>TerrorHub Team</p>
             <a href="${websiteUrl}/terrorTales/horrorStory/${story.slug}">${story.storyTitle}</a>
         `;
 
-        const html = htmlTemplate(bodyContent);
+        await sendReportEmail(storyOwnerEmail, subject, ownerBodyContent);
 
-        //send email to all admins and moderators
-        //find all admins and moderators
-        const admins = await User.find({ $or: [{ role: "admin" }, { role: "moderator" }] });
+        const user = await User.findById(req.session.userId);
+        const userBodyContent = `
+            <h2>Thank you for reporting ${story.storyTitle}</h2>
+            <p>Dear ${userName},</p>
+            <p>Thank you for reporting ${story.storyTitle}. We will review it as soon as possible.</p>
+            <p>Best regards,</p>
+            <p>TerrorHub Team</p>
+            <a href="${websiteUrl}/terrorTales/horrorStory/${story.slug}">${story.storyTitle}</a>
+        `;
 
-        admins.forEach(async (admin) => {
-            await sendEmail(admin.email, subject, html);
-        });
-
-        //and one to adminEmail
-        await sendEmail(adminEmail, subject, html);
+        await sendReportEmail(user.email, subject, userBodyContent);
 
         return res.status(200).json({
             status: "ok",
             message: `Thank you for reporting this story. We will review it as soon as possible.`,
         });
 
-
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             status: 500,
             message: "Something went wrong"
         });
     }
-
 };
+
 
 
 //checkBookTitle
