@@ -44,6 +44,8 @@ function getValidSocialMediaArray(socialMedia) {
         { name: "linkedin", link: socialMedia[3] },
         { name: "pinterest", link: socialMedia[4] },
         { name: "youtube", link: socialMedia[5] },
+        { name: "tiktok", link: socialMedia[6] },
+        { name: "reddit", link: socialMedia[7] },
     ];
 
     // Create a new array with only valid links
