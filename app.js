@@ -32,15 +32,21 @@ const UserRoutes = require("./routes/user_routes.js");
 const app = express();
 
 //check if not www.terrorhub
+//check if not www.terrorhub
 app.use((req, res, next) => {
+  
   const isLocalhost = req.headers.host.includes('localhost');
 
   if (!isLocalhost && req.headers.host !== 'www.terrorhub.com') {
-    res.redirect(301, 'https://www.terrorhub.com' + req.originalUrl);
+    const secureUrl = `https://www.terrorhub.com${req.originalUrl}`;
+    res.redirect(301, secureUrl);
+  } else if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+    // Redirect to HTTPS if not already using it in production
+    const secureUrl = `https://${req.headers.host}${req.originalUrl}`;
+    res.redirect(301, secureUrl);
   } else {
     next();
   }
-  
 });
 
 
