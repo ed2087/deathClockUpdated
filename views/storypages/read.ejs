@@ -8,8 +8,7 @@
     <!-- nav include -->
     <%- include('../includes/nav.ejs') %>
     
-    <header id="header" style="min-height: 80vh; background-image: url('<%= story.backgroundUrl || '../../IMAGES/backgrounds/headerBG1.webp' %>');">
-        <!-- invisible padding 200px -->
+    <header id="header" style="min-height: 80vh; background-image: url('<%= story.backgroundUrl || '../../IMAGES/backgrounds/headerBG1.webp' %>'); background-size: cover; background-position: center; background-repeat: no-repeat;"> 
         <div id="header_padding"></div>
 
         <div id="header_inner_wrap">
@@ -24,7 +23,7 @@
 
     <main id="master_wrap">                   
             
-        <section class="story_secs" id="story_info">
+        <article class="story_secs" id="story_info">
 
             <!-- created date, upvotes, views, comments -->
             <div id="story_info_wrap">
@@ -55,9 +54,9 @@
                 </div>
             </div>            
 
-        </section>
+        </article>
 
-        <section class="story_secs" id="story_wrap_sec">
+        <article class="story_secs" id="story_wrap_sec">
             
 
             <div id="story_wrap">                
@@ -144,11 +143,11 @@
 
             </div>
 
-        </section>
+        </article>
 
 
         <!-- display top related stories top5Stories make wraped in a link to story  -->
-        <section class="story_secs" id="related_stories_wrap">
+        <article class="story_secs" id="related_stories_wrap">
 
             <div id="related_stories">
                 <h2>Related Stories</h2>
@@ -169,7 +168,7 @@
                 </div>
             </div>
 
-        </section>
+        </article>
         
 
     </main>  
@@ -179,6 +178,8 @@
 
     <!-- script -->
     <script src="../../JS/master.js"></script>  
-    <script src="../../JS/readPageFun.js"></script>  
+    <script src="../../JS/readPageFun.js"></script>      
+
+
 </body>
 </html>
