@@ -145,6 +145,35 @@
 
         </article>
 
+        <!-- check if userData -->
+        <div id="master_commentWrap">
+
+                <% if(userData){ %>
+                    <div id="topLevel_comments_wrap">
+                        <form id="commentForm"> 
+                            <label for="commentText">Comment:</label>
+                            <textarea id="commentText" name="commentText" required placeholder="Write your comment here. . ."></textarea>
+                            <input type="hidden" id="storyId_cooments" value="<%= story._id %>">
+                            <input type="hidden" id="userId_cooments" value="<%= userData.id %>" name="userId">
+                            <input type="hidden" id="csrf_comments" value="<%= csrfToken %>" name="csrf">
+                            <button type="submit">Comment</button>
+                        </form>
+                    </div>
+                <%}else{%>
+                    <div id="topLevel_comments_wrap">
+                        <input type="hidden" id="storyId_cooments" value="<%= story._id %>">
+                        <input type="hidden" id="userId_cooments" value="" name="userId">
+                        <input type="hidden" id="csrf_comments" value="<%= csrfToken %>" name="csrf">
+                        <a class="call_to_action_red" id="logInToComment_BTN" href="/user/login">Login to comment</a>
+                    </div>
+                <% } %>
+                    
+                <!-- Display Comments -->
+                <div id="comments"> 
+                </div>
+
+        </div>
+
 
         <!-- display top related stories top5Stories make wraped in a link to story  -->
         <article class="story_secs" id="related_stories_wrap">
@@ -172,13 +201,16 @@
         
 
     </main>  
+   
 
     <!-- footer include -->
     <%- include('../includes/footer.ejs') %>
 
     <!-- script -->
     <script src="../../JS/master.js"></script>  
-    <script src="../../JS/readPageFun.js"></script>      
+    <script src="../../JS/readPageFun.js"></script>  
+    <script src="../../JS/storyComments_handler.js"></script>
+    
 
 
 </body>

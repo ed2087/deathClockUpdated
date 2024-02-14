@@ -7,7 +7,7 @@ const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 const {successPagefun} = require("../utils/successPageHandler.js");
 const {isToxic} = require("../utils/toxicity_tensorflow.js");
-const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
+const {someUserInfo, calculateReadingTime,GetStories} = require("../utils/utils_fun.js");
 const nlp = require('compromise');
 //packages
 const { checkCsrf } = require("../utils/csrf.js");
@@ -66,7 +66,7 @@ exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive, userData } = await someUserInfo(req, res, next);
+      const { userName, userActive, userData } = await someUserInfo(req, res, next);      
       
 
       res.status(200).render("../views/storypages/terrorTales", {
@@ -75,7 +75,7 @@ exports.terrorTalesPage = async (req, res, next) => {
         headerTitle: "TERROR TALES",
         userActive,
         userName,
-        userData
+        userData,
       });
 
     } catch (error) {
@@ -955,7 +955,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                                 $regex: query,
                                 $options: "i",
                             },
-                        },
+                        }
 
                     ],
                 },
@@ -1046,6 +1046,7 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
                     readCount: 1,
                     unicUrlTitle: 1,
                     slug: 1,
+                    backgroundUrl: 1,
                 },
             },
         ];
