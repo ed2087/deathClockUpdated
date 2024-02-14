@@ -24,9 +24,11 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 
 
 //alert user when a new comment is added to their story
-const alertUser = async (req,res,userId, storyId, commentText) => {
+const alertUser = async (req,res, storyId, commentText) => {
    try {
-      const userEmail = await User.findById(userId).select("email");
+    //get story owner email
+      const userid = await Story.findById(storyId).select("owner");
+      const userEmail = await User.findById(userid).select("email");
       const story = await Story.findById(storyId);
       const websiteUrl = `${req.protocol}://${req.get("host")}`;
 
@@ -96,7 +98,7 @@ exports.addComment =  async (req, res, next) => {
     await updateCommentCount(storyId, userId);
 
     //alert user when a new comment is added to their story
-    alertUser(req, res, userId, storyId, commentText);
+    alertUser(req, res, storyId, commentText);
 
     res.status(201).json(data);
 
@@ -133,7 +135,7 @@ exports.addReply = async (req, res, next) => {
     await updateCommentCount(storyId, userId);
 
     //alert user when a new comment is added to their story
-    alertUser(req, res, userId, storyId, replyText);
+    alertUser(req, res, storyId, replyText);
       
 
     res.status(201).json(updatedStory);
