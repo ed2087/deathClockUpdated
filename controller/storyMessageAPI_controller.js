@@ -27,8 +27,9 @@ const transporter = _nodemailer.createTransport(_sendgridtransport({
 const alertUser = async (req,res, storyId, commentText) => {
    try {
     //get story owner email
-      const userid = await Story.findById(storyId).select("owner");
-      const userEmail = await User.findById(userid).select("email");
+      const storyData = await Story.findById(storyId);
+      const storyOwner = storyData.owner;
+      const userEmail = await User.findById(storyOwner).select("email");
       const story = await Story.findById(storyId);
       const websiteUrl = `${req.protocol}://${req.get("host")}`;
 
