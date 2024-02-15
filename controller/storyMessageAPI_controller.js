@@ -3,32 +3,31 @@ const Message = require('../model/storyComments.js');
 const Story = require("../model/submission.js");
 const User = require("../model/user.js");
 
-
+const {someUserInfo, calculateReadingTime,GetStories} = require("../utils/utils_fun.js");
 const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 //later on stoies model and users model to add comment count and reply count
 const _nodemailer = require("nodemailer");
 const _sendgridtransport = require("nodemailer-sendgrid-transport");
 
-//csrf token from session
-
-
-const transporter = _nodemailer.createTransport(_sendgridtransport({
-
-   auth : {
-      api_key : `${process.env.SENDGRID_KEY}`
-   }
-
-}));
-
-
 
 //alert user when a new comment is added to their story
-const alertUser = async (req,res, storyId, commentText) => {
+const alertUser = async (req,res,next, storyId, commentText) => {
    try {
+
+    const { userName, userActive, userData } = await someUserInfo(req, res, next);
+
+
     //get story owner email
       const storyData = await Story.findById(storyId);
       const storyOwner = storyData.owner;
+
+      //if user is the story owner, do not send email
+      if (storyOwner.equals(userData.id)) {
+        console.log("user is the story owner");
+        return;
+      }
+
       const userEmail = await User.findById(storyOwner).select("email");
       const story = await Story.findById(storyId);
       const websiteUrl = `${req.protocol}://${req.get("host")}`;
@@ -54,12 +53,12 @@ const alertUser = async (req,res, storyId, commentText) => {
 };
 
 //update story comment count on comments
-const updateCommentCount = async (storyId, userId) => {
+const updateCommentCount = async (storyId, userId, commentID) => {
    //update story comment count on comments
    const story = await Story.findById(storyId);
 
    //add user id to the story comment array
-   story.comments.push(userId);
+   story.comments.push(commentID);
 
    //update story comment count
    story.commentCount = story.comments.length + 1;
@@ -95,11 +94,11 @@ exports.addComment =  async (req, res, next) => {
 
     const data = await newComment.save();  
 
-    //update story comment count on comments
-    await updateCommentCount(storyId, userId);
+    //update story comment count on comments add comment id
+    await updateCommentCount(storyId, userId, data._id);
 
     //alert user when a new comment is added to their story
-    alertUser(req, res, storyId, commentText);
+    alertUser(req, res,next, storyId, commentText);
 
     res.status(201).json(data);
 
@@ -133,10 +132,10 @@ exports.addReply = async (req, res, next) => {
     const updatedStory = await newComment.save();
 
     //update story comment count on comments
-    await updateCommentCount(storyId, userId);
+    await updateCommentCount(storyId, userId, updatedStory._id);
 
     //alert user when a new comment is added to their story
-    alertUser(req, res, storyId, replyText);
+    alertUser(req, res, next, storyId, replyText);
       
 
     res.status(201).json(updatedStory);
@@ -162,3 +161,67 @@ exports.getComments = async (req, res, next) => {
   }
 };
 
+
+
+
+
+
+// ...
+
+
+
+//updat Story comment count
+const removeCommentFromStory = async (storyId, commentId) => {
+  try {
+
+
+    const story = await Story.findById(storyId);
+    const commentIndex = story.comments.indexOf(commentId);
+    story.comments.splice(commentIndex, 1);
+    story.commentCount = story.comments.length;
+    await story.save();
+
+
+    
+  } catch (error) {
+    console.log(error);
+    globalErrorHandler(req, res, 500, "Internal server error", error);
+    
+  }
+
+};
+
+
+// Delete a comment or reply
+exports.deleteMessage = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const messageId = req.params.messageId;
+
+    // Check if the message is a top-level comment or a reply
+    const message = await Message.findById(messageId);
+    
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    if (!message.parentCommentId) {
+      // Top-level comment, delete the comment and its replies
+      await Message.deleteMany({ $or: [{ _id: messageId }, { parentCommentId: messageId }] });
+      //remove comment from story
+      await removeCommentFromStory(message.storyId, messageId);
+      return res.status(204).json({ message: "Comment and its replies deleted successfully" });
+    } else {
+      // Reply, delete the reply
+      await Message.findByIdAndDelete(messageId);
+      //remove comment from story
+      await removeCommentFromStory(message.storyId, messageId);
+      return res.status(204).json({ message: "Reply deleted successfully" });
+    }
+  } catch (error) {
+    console.error('Error deleting comment or reply:', error.message);
+    globalErrorHandler(req, res, 500, "Internal server error", error);
+  }
+};
+
+// ...

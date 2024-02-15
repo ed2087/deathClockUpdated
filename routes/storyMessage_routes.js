@@ -5,7 +5,7 @@ const { check, body } = require("express-validator");
 const { isAuthenticated } = require("../utils/auth.js");
 //csrf
 const { checkCsrf, checkCsrfToken } = require("../utils/csrf.js");
-const { addComment, addReply, getComments} = require('../controller/storyMessageAPI_controller.js');
+const { addComment, addReply, getComments, deleteMessage} = require('../controller/storyMessageAPI_controller.js');
 
 // Add a comment to a story
 router.post(
@@ -24,6 +24,13 @@ router.post(
     body("replyText").trim().isLength({ min: 1 }).withMessage("Comment text cannot be empty."),
   ],
   addReply
+);
+
+// Delete a comment or reply
+router.delete(
+  "/storyMessage/:messageId",
+  isAuthenticated,
+  deleteMessage
 );
 
 // Get all comments for a story

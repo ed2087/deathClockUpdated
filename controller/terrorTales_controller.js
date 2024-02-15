@@ -584,15 +584,6 @@ exports.checkBookTitle = async (req, res, next) => {
 };
 
 
-// comments
-exports.comments = async (req, res, next) => {
-
-    
-    // not sure if im adding this maybe later
-
-};
-
-
 // update story
 exports.updateStoryPage = async (req, res, next) => {
 
@@ -962,8 +953,18 @@ async function queryStoriesPagination(query, language, ranking, page, limit) {
             });
         }
 
-        // Get the count of total stories that match the query
-        const totalCount = await Story.aggregate(countPipeline).count("totalStories");
+        // Get the count of total stories that match the query but dont count the ones that are not isApproved
+        const totalCount = await Story.aggregate([
+            ...countPipeline, // Reuse the count pipeline
+            {
+                $match: {
+                    isApproved: true, // Filter out stories that are not approved
+                },
+            },
+            {
+                $count: "totalStories",
+            },
+        ]);
 
         //get higest upvote count using countPipeline get top 5 posts
         const top5Stories = await Story.aggregate([
