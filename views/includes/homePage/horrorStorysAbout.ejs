@@ -6,9 +6,58 @@
         <!-- Creepy Pasta Section -->
         <div id="creepyPastaAbout" class="about_article_wrap">
 
-            <div class="deathARC_inner" id="creepyPastaImg">                
-                <img src="../../IMAGES/backgrounds/crepyPastaAbout.webp" alt="creepy pasta">
+            <div class="deathARC_inner" id="creepyPastaContainer" style="position: relative;">
+                <!-- Use a placeholder image for the initial state -->
+                <img src="../../IMAGES/backgrounds/crepyPastaAbout.webp" alt="creepy pasta" id="creepyPastaImage">
+            
+                <!-- Add a play button over the image -->
+                <button id="playButton">
+                    <img src="../../IMAGES/Icons/playIcon.png" alt="Play" width="70" height="70">
+                </button>
+            
+                <!-- Replace the video element with an iframe for the YouTube video -->
+                <iframe id="creepyPastaVideo" style="display: none; width: 100%; height: 100%;" src="https://www.youtube.com/embed/jTnz3GbGyaw" frameborder="0" allowfullscreen></iframe>
             </div>
+            
+            <!-- Your existing HTML and JavaScript code -->
+            
+            <script>
+                // Get references to the image, video, and play button elements
+                const imageElement = document.getElementById("creepyPastaImage");
+                const videoElement = document.getElementById("creepyPastaVideo");
+                const playButton = document.getElementById("playButton");
+            
+                // Add a click event listener to the container
+                const containerElement = document.getElementById("creepyPastaContainer");
+                containerElement.addEventListener("click", function () {
+                    toggleImageVideo();
+                });
+            
+                // Add a click event listener to the play button
+                playButton.addEventListener("click", function (event) {
+                    event.stopPropagation(); // Prevent container click event from firing
+                    toggleImageVideo();
+                });
+            
+                // Function to toggle between displaying the image and the video
+                function toggleImageVideo() {
+                    if (imageElement.style.display !== "none") {
+                        // hide button
+                        playButton.style.display = "none";
+                        imageElement.style.display = "none";
+                        videoElement.style.display = "block";
+                    } else {
+                        // show button
+                        playButton.style.display = "block";
+                        imageElement.style.display = "block";
+                        videoElement.style.display = "none";
+                        videoElement.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                    }
+                }
+            </script>
+            
+
+            
 
             <article class="deathARC_inner" id="creepyPasta_article">
 
@@ -31,6 +80,13 @@
                 <p class="about_ptag">
                     Feeling inspired? No matter your expertise or language, you're invited to craft and share your own bone-chilling narratives on our Story Forums.
                 </p>
+
+                <!-- Thank You Message -->
+                <p class="about_ptag">
+                    Special thanks to <a href="https://youtube.com/@Mr.Sleepless" target="_blank" class="readMoreLink" style="display: inline;">Mr. Sleepless</a> for the awesome video! Your contribution is appreciated, and we're thrilled to have you in our Creepy Pasta community.
+                </p>
+
+
 
                 <!-- buttons -->
                 <div id="buttons_wrap_special">
