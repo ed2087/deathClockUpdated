@@ -1,6 +1,7 @@
 // if user active get some info
 const Storys = require("../model/submission.js");
 const User = require("../model/user.js");
+const FuzzySearch = require('fuzzy-search');
 
 const someUserInfo = async (req, res, next) => {
 
@@ -54,6 +55,7 @@ class GetStories {
         this.topStoryByUpvotes = [];
         this.bookByTitle = [];
         this.getTopStiesExcept = [];
+        this.getTopByLimitUpvoteCommentsAndByQuery_ = [];
     }
 
     async getTopStorys(limit) {
@@ -137,7 +139,186 @@ class GetStories {
         this.getTopStiesExcept = await Storys.find({ _id: { $ne: id }, isApproved: true }).sort({ upvoteCount: -1, readCount: -1 }).limit(limit);
         return this.getTopStiesExcept;
     }
-    
+
+    // Find all stories by limit, upvoteCount and comments and by query if quey is empty return top storys 
+    async getTopByLimitUpvoteCommentsAndByQuery(limit, query) {
+        console.log(query);
+        if (query === "") {
+            this.getTopByLimitUpvoteCommentsAndByQuery = await Storys.find({ isApproved: true }).sort({ upvoteCount: -1, comments: -1 }).limit(limit);
+        } else {
+            this.getTopByLimitUpvoteCommentsAndByQuery = await Storys.find({ $text: { $search: query }, isApproved: true }).sort({ upvoteCount: -1, comments: -1 }).limit(limit);
+        }
+        return this.getTopByLimitUpvoteCommentsAndByQuery;
+    }
+
+    async queryStoriesPagination_(query, language, ranking, page, limit) {
+        try {
+            // Convert page and limit to numbers and provide default values
+            const page_ = page * 1 || 1;
+            const limit_ = limit * 1 || 16;
+
+            // Calculate the number of documents to skip for pagination
+            const skip = (page_ - 1) * limit_;
+
+            // Default language is English unless specified
+            if (!language) {
+                language = "English";
+            }
+
+            // Check if the query is empty
+            const queryIsEmpty = !query || query.trim() === "";
+
+            // Define the aggregation pipeline for counting total stories
+            const countPipeline = [
+                {
+                    $match: {
+                        language: language,
+                    },
+                },
+            ];
+
+            if (!queryIsEmpty) {
+                // If the query is not empty, add the $or conditions for searching
+                const fuzzyQueryConditions = [
+                    { legalName: new RegExp(query, 'i') },
+                    { creditingName: new RegExp(query, 'i') },
+                    { storyTitle: new RegExp(query, 'i') },
+                    { tags: new RegExp(query, 'i') },
+                    { categories: { $regex: query.split(/\s+/).join('.*'), $options: "i" } }, // Handle separated words in categories
+                    { slug: new RegExp(query, 'i') },
+                ];
+
+                // Include fuzzy search conditions
+                const searcher = new FuzzySearch(this.getFuzzyData(), Object.keys(this.getFuzzyFields()));
+                const fuzzyConditions = searcher.search(query).map(field => ({ [field]: new RegExp(query, 'i') }));
+
+                fuzzyQueryConditions.push(...fuzzyConditions);
+
+                countPipeline.unshift({
+                    $match: {
+                        $or: fuzzyQueryConditions,
+                    },
+                });
+            }
+
+            // Get the count of total stories that match the query but don't count the ones that are not isApproved
+            const totalCount = await Storys.aggregate([
+                ...countPipeline, // Reuse the count pipeline
+                {
+                    $match: {
+                        isApproved: true, // Filter out stories that are not approved
+                    },
+                },
+                {
+                    $count: "totalStories",
+                },
+            ]);
+
+            // get languages available
+            const languages = await Storys.aggregate([
+                {
+                    $group: {
+                        _id: "$language",
+                    }
+                }
+            ]);
+
+            // add values to array
+            let languagesArray = [];
+            languages.forEach((language_) => {
+                languagesArray.push(language_._id);
+            });
+
+            // Define the aggregation pipeline for fetching paginated stories
+            const pipeline = [
+                ...countPipeline, // Reuse the count pipeline
+                {
+                    $match: {
+                        isApproved: true, // Filter out stories that are not approved
+                    },
+                },
+                {
+                    $sort: {
+                        createdAt: -1, // Sort by createdAt field in descending order
+                    },
+                },
+                {
+                    $skip: skip,
+                },
+                {
+                    $limit: limit_,
+                },
+                // get most newest to oldest
+                {
+                    $sort: {
+                        createdAt: -1,
+                    },
+                },
+                {
+                    $project: this.projectedFields(),
+                },
+            ];
+
+            // Fetch stories using the aggregation pipeline
+            const stories = await Storys.aggregate(pipeline);
+
+            return {
+                stories,
+                totalStories: totalCount[0] ? totalCount[0].totalStories : 0,
+                languagesArray,
+            };
+
+        } catch (error) {
+            console.error(error);
+            throw new Error("An error occurred while fetching stories with pagination.");
+        }
+    }
+
+    // ... (existing methods)
+
+    getFuzzyFields() {
+        return {
+            legalName: 1,
+            creditingName: 1,
+            storyTitle: 1,
+            tags: 1,
+            categories: 1,
+            slug: 1,
+            // Add other fields that should be considered for fuzzy search
+        };
+    }
+
+    getFuzzyData() {
+        // Add data for fuzzy search (e.g., fields with string values)
+        const data = [];
+        // Add entries based on the fields you want to include in the fuzzy search
+        // Example: data.push({ legalName: 'someValue', creditingName: 'someValue', ... });
+        return data;
+    }   
+
+    projectedFields() {
+        return {
+            // Include fields you want to retrieve
+            legalName: 1,
+            creditingName: 1,
+            storyTitle: 1,
+            storySummary: 1,
+            tags: 1,
+            storyText: 1,
+            categories: 1,
+            language: 1,
+            extraTags: 1,
+            upvoteCount: 1,
+            createdAt: 1,
+            readingTime: 1,
+            comments: 1,
+            readCount: 1, 
+            unicUrlTitle: 1,
+            slug: 1,
+            backgroundUrl: 1,
+        }
+    }
+
 
 }
 

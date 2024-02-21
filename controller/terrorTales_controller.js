@@ -7,7 +7,7 @@ const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 const {successPagefun} = require("../utils/successPageHandler.js");
 const {isToxic} = require("../utils/toxicity_tensorflow.js");
-const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
+const {someUserInfo, calculateReadingTime , GetStories} = require("../utils/utils_fun.js");
 const nlp = require('compromise');
 //packages
 const { checkCsrf } = require("../utils/csrf.js");
@@ -60,22 +60,51 @@ function isValidLinkfun(link) {
 }
 
 
+//separate top 1 story and get the other 4 stories
+async function getTopAndOtherStories(limit,query) {
+    try {
+        const topStories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(limit, query);
+
+        // Remove the first story from the top 5 stories
+        const top1Story = topStories.shift();
+
+        return {
+            top1Story,
+            topStories: topStories
+        };
+
+    } catch (error) {
+        return null;
+    }
+
+};
+
 
 // Home page
 exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive, userData } = await someUserInfo(req, res, next);
+      const { userName, userActive, userData } = await someUserInfo(req, res, next);      
       
 
+      //get top 5 stories
+      const stories = await getTopAndOtherStories(4, '');
+
+      const topStoryByUpvotes = stories.top1Story;
+
+      const topStorys = stories.topStories;
+    
+      
       res.status(200).render("../views/storypages/terrorTales", {
         title: "Terror Tales",
         path: "/terrorTales",
-        headerTitle: "TERROR TALES",
+        headerTitle: "Unleashing Original Horror Stories Creepshow Central",
         userActive,
         userName,
-        userData
+        userData,
+        topStoryByUpvotes,
+        topStorys
       });
 
     } catch (error) {
@@ -104,8 +133,12 @@ exports.readPage = async (req, res, next) => {
             return globalErrorHandler(req, res, 404, "Story not found");
         }
 
+
+        //choose a random story categories
+        const randomTag = story.categories[Math.floor(Math.random() * story.categories.length)];
+
         // get top 5 stories using this story language and tags
-        const top5Stories = await getTop6Stories(story);
+        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
 
         // Check if the user is logged in
         if (userActive) {
@@ -584,15 +617,6 @@ exports.checkBookTitle = async (req, res, next) => {
 };
 
 
-// comments
-exports.comments = async (req, res, next) => {
-
-    
-    // not sure if im adding this maybe later
-
-};
-
-
 // update story
 exports.updateStoryPage = async (req, res, next) => {
 
@@ -847,15 +871,17 @@ exports.changeStoryPermision = async (req, res, next) => {
 
 
 
+
+
 // query for stories 
 exports.queryStories = async function (req, res, next) {
 
     const {query,language,ranking,page,limit} = req.query;    
 
-    try {
+    try {  
 
         // Query stories
-        const stories = await queryStoriesPagination(query,language,ranking,page,limit);
+        const stories = await new GetStories().queryStoriesPagination_(query,language,ranking,page,limit);
        
         //get users role 
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
@@ -886,235 +912,6 @@ exports.queryStories = async function (req, res, next) {
     }
 
 };
-
-
-// Get paginated stories and total count based on query, language, ranking, page, and limit
-async function queryStoriesPagination(query, language, ranking, page, limit) {
-    try {
-        // Convert page and limit to numbers and provide default values
-        const page_ = page * 1 || 1;
-        const limit_ = limit * 1 || 8;
-
-        // Calculate the number of documents to skip for pagination
-        const skip = (page_ - 1) * limit_;
-
-        // Default language is English unless specified
-        if (!language) {
-            language = "English";
-        }
-
-        // Check if the query is empty
-        const queryIsEmpty = !query || query.trim() === "";
-
-        // Define the aggregation pipeline for counting total stories
-        const countPipeline = [
-            {
-                $match: {
-                    language: language,
-                },
-            },
-        ];
-
-        if (!queryIsEmpty) {
-            // If the query is not empty, add the $or conditions for searching
-            countPipeline.unshift({
-                $match: {
-                    $or: [
-                        {
-                            legalName: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            creditingName: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            storyTitle: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            tags: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            categories: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            slug: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-
-                    ],
-                },
-            });
-        }
-
-        // Get the count of total stories that match the query
-        const totalCount = await Story.aggregate(countPipeline).count("totalStories");
-
-        //get higest upvote count using countPipeline get top 5 posts
-        const top5Stories = await Story.aggregate([
-            {
-                $match: {
-                    language: language,
-                },
-            },
-            {
-                $sort: {
-                    upvoteCount: -1
-                }
-            },
-            {
-                $limit: 5
-            }
-        ]);
-
-
-
-        //get languages abalable
-        const languages = await Story.aggregate([
-            {
-                $group: {
-                    _id: "$language"
-                }
-            }
-        ]);
-
-        //add values to array
-        let languagesArray = [];
-        languages.forEach((language_) => {
-            languagesArray.push(language_._id);
-        });
-
-
-
-        // Define the aggregation pipeline for fetching paginated stories
-        const pipeline = [
-            ...countPipeline, // Reuse the count pipeline
-            {
-                $match: {
-                    isApproved: true, // Filter out stories that are not approved
-                },
-            },            
-            {
-                $sort: {
-                    createdAt: -1, // Sort by createdAt field in descending order
-                },
-            },
-            {
-                $skip: skip,
-            },
-            {
-                $limit: limit_,
-            },
-            //get most newes to oldest
-            {
-                $sort: {
-                    createdAt: -1
-                }
-            },
-
-            {
-                $project: {
-                    // Include fields you want to retrieve
-                    legalName: 1,
-                    creditingName: 1,
-                    storyTitle: 1,
-                    storySummary: 1,
-                    tags: 1,
-                    storyText: 1,
-                    categories: 1,
-                    language: 1,
-                    extraTags: 1,
-                    upvoteCount: 1,
-                    createdAt: 1,
-                    readingTime: 1,
-                    comments: 1,
-                    readCount: 1,
-                    unicUrlTitle: 1,
-                    slug: 1,
-                },
-            },
-        ];
-
-        // Fetch stories using the aggregation pipeline
-        const stories = await Story.aggregate(pipeline);
-
-        return {
-            stories,
-            totalStories: totalCount[0] ? totalCount[0].totalStories : 0,
-            top5Stories,
-            languagesArray
-        };
-
-    } catch (error) {
-        console.error(error);
-        throw new Error("An error occurred while fetching stories with pagination.");
-    }
-}
-
-
-
-// getTop5Stories function to get top 5 stories using this story language and tags
-async function getTop6Stories(story) {
-    try {
-        const top5Stories = await Story.aggregate([
-            {
-                $match: {
-                    isApproved: true, // Filter out stories that are not approved
-                },
-            },
-            {
-                $match: {
-                    $and: [
-                        {
-                            _id: { $ne: story._id } // Exclude the current story
-                        },
-                        {
-                            $or: [
-                                {
-                                    tags: {
-                                        $in: story.tags
-                                    }
-                                },
-                                {
-                                    language: story.language
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                $sort: {
-                    upvoteCount: -1
-                }
-            },
-            {
-                $limit: 6
-            }
-        ]);
-
-        return top5Stories;
-    } catch (error) {
-        console.error("Error in getTop5Stories:", error);
-        throw error; // Propagate the error for handling by the calling code
-    }
-}
-
 
 
 

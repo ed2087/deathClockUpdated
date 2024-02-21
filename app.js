@@ -26,12 +26,12 @@ const ApiRoutes = require('./routes/api_routes.js');
 const DethClockRoutes = require('./routes/deathclock_routes.js');
 const terrorTalesRoutes = require('./routes/terrortales_routes.js');
 const UserRoutes = require("./routes/user_routes.js");
+const StoryMessageRoutes = require("./routes/storyMessage_routes.js");
 
 
 // Create Express app
 const app = express();
 
-//check if not www.terrorhub
 //check if not www.terrorhub
 app.use((req, res, next) => {
   
@@ -48,6 +48,7 @@ app.use((req, res, next) => {
     next();
   }
 });
+
 
 
 // Connect to MongoDB
@@ -111,6 +112,7 @@ app.use((req, res, next) => {
 
 
 // Routes
+app.use(StoryMessageRoutes);
 app.use("/user", UserRoutes);
 app.use(ApiRoutes);
 app.use("/deathClock", DethClockRoutes);

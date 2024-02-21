@@ -85,6 +85,9 @@
                 <!-- choose language story will be written -->
                 <div class="form_group" id="languageGroup">
                     <label for="language">Language*</label>
+                    <p class="input_info">
+                        Please choose the language in which your story is written. If your preferred language isn't listed, please contact the admin to request its addition to the options.
+                    </p>
                     <select id="language" name="language">
                         <option value="English">English</option>
                         <option value="Spanish">Spanish</option>
@@ -106,14 +109,14 @@
                         <option value="Tamil">Tamil</option>
                         <option value="Turkish">Turkish</option>
                         <option value="Vietnamese">Vietnamese</option>
-                    </select>
-                    <p class="input_info">
-                        Please choose the language in which your story is written. If your preferred language isn't listed, please contact the admin to request its addition to the options.
-                    </p>
+                    </select>                    
                 </div>                
                 
                 <div class="form_group" id="socialMediaGroup">
                     <label for="socialMedia">Social Media Links</label>
+                    <p class="input_info">
+                        Please enter the URLs of any social media accounts you'd like to share with our readers. If you don't have any social media accounts, you can leave this field blank.
+                    </p>
                     <div class="inner_formGroup">
                         <input type="text" id="facebookInput" name="socialMedia" placeholder="Facebook">
                         <input type="text" id="twitterInput" name="socialMedia" placeholder="Twitter">
@@ -123,94 +126,99 @@
                         <input type="text" id="youtubeInput" name="socialMedia" placeholder="YouTube Channel">
                         <input type="text" id="tiktokInput" name="socialMedia" placeholder="TikTok">
                         <input type="text" id="redditInput" name="socialMedia" placeholder="Reddit">
-                    </div>
-                    <p class="input_info">
-                        Please enter the URLs of any social media accounts you'd like to share with our readers. If you don't have any social media accounts, you can leave this field blank.
-                    </p>
+                    </div>                    
                 </div>
 
                 <div class="form_group" id="websiteGroup">
                     <label for="website">Website</label>
-                    <input type="text" id="website" name="website" placeholder="Enter your Secure website URL ">
                     <p class="input_info">
                         Enter your secure website URL using (https://). This link can be a great way to promote your website, book, or other content. If you don't have a secure website, feel free to leave this field blank.
                     </p>
+                    <input type="text" id="website" name="website" placeholder="Enter your Secure website URL ">
+                    
                 </div>
 
                 <!-- add a youtube video link to this story -->
                 <div class="form_group" id="youtubeGroup">
                     <label for="youtube">Youtube Story Link</label>
-                    <input type="text" id="youtube" name="youtube" placeholder="Enter your youtube story link">
                     <!-- this link will be used to display video in the -->
                     <p class="input_info">
                         Please enter the URL of your YouTube video. This link will be used to display the video in the story's Page. If you don't have a YouTube video, feel free to leave this field blank.
                     </p>
+                    <input type="text" id="youtube" name="youtube" placeholder="Enter your youtube story link">
+                    
                 </div>
 
                 <!-- Add link for story background (must be from Imgur) -->
                 <div class="form_group" id="backgroundLink">
                     <label for="backgroundUrl">Background Image Link (Imgur):</label>
-                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link">
                     <!-- Provide brief guidance to users -->
                     <p class="input_info">
                         For optimal performance and visual appeal, we recommend using a horizontal background image with the following specifications:
                     </p>
                     <ul>
+                        <!-- url link must end with .jpg or png -->
+                        <li><strong>Link Format:</strong> Must end with .jpeg, .jpg, .png or .gif</li>
                         <li><strong>Orientation:</strong> Horizontal (landscape)</li>
                         <li><strong>Recommended Size:</strong> 1200 x 630 pixels</li>
                     </ul>
                     <p class="input_info">
                         To use an Imgur image as your story background, simply copy the image link from Imgur and paste it here. Ensure the image is in a horizontal format for the best display. For detailed instructions, check our <a class="special_red_text" href="/faq#imgur" target="_blank">FAQ</a>.
                     </p>
+                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link - Must end with .jpeg, .jpg, .png or .gif">
+                    
                 </div>
 
 
 
                 <div class="form_group" id="storyTitleGroup">
                     <label for="storyTitle">Story Title*</label>
-                    <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter your story title">
                     <p class="input_info">
-                        Please enter your story title exactly as you would like it to appear on the site if your story is published. (max 80 characters)
+                        Please enter your story title exactly as you would like it to appear on the site if your story is published. (max 50 characters)
                     </p>
+                    <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter your story title">
+                    
                 </div>
 
                 <div class="form_group" id="storySummaryGroup">
                     <label for="storySummary">Story Summary*</label>
-                    <textarea id="storySummary" name="storySummary" required placeholder="Enter a summary of your story"></textarea>
                     <p class="input_info">
                         Please enter a brief summary of your story. This summary will be used to help readers decide whether or not to read your story, so make it as compelling as possible!
                         (max 400 characters)
                     </p>
+                    <textarea id="storySummary" name="storySummary" required placeholder="Enter a summary of your story"></textarea>
+                    
                 </div>
 
                 <div class="form_group" id="tagsGroup">
                     <label for="tags">Tags (separated by commas)*</label>
-                    <input type="text" id="tags" name="tags" placeholder="Enter tags separated by commas">
                     <p class="input_info">
                         Please enter a list of tags that describe your story. Separate tags with commas. These tags will be used to help readers find your story, so include relevant keywords like (haunted house, ghosts, paranormal, horror) etc.
                     </p>
+                    <input type="text" id="tags" name="tags" placeholder="Enter tags separated by commas">
+                    
                 </div>
 
                 <div class="form_group" id="storyTextGroup">
                     <label for="storyText">Write Your Story*</label>
                     <textarea id="storyText" name="storyText" required placeholder="Write your story here (max 3000 W) - (. ! ?) will be used to split the story into paragraphs"></textarea>
+                    
                     <p class="input_info">
-                        <p class="input_info">
 
-                            By submitting my story via this online form, I grant <span class="special_red_text">www.terrorhub.com</span> non-exclusive rights to publish my original work. I affirm that I possess all necessary rights and have not plagiarized or borrowed content.
-                        
-                            <br><br>
-                        
-                            As the copyright holder, I retain ownership of my story. I can license it or use it as I choose. I understand that <span class="special_red_text">www.terrorhub.com</span> only claims rights to publish my story and does not own it beyond that.
-                        
-                            <br><br>
-                        
-                            I agree not to receive any compensation from <span class="special_red_text">www.terrorhub.com</span> for publishing my story. I acknowledge that I have no claim to profits from advertising or donations on the site.
-                        
-                            <br><br>
-                        
-                            If I wish to request takedown or edits, I can contact the site’s administrators directly.
-                        </p>
+                        By submitting my story via this online form, I grant <span class="special_red_text">www.terrorhub.com</span> non-exclusive rights to publish my original work. I affirm that I possess all necessary rights and have not plagiarized or borrowed content.
+                    
+                        <br><br>
+                    
+                        As the copyright holder, I retain ownership of my story. I can license it or use it as I choose. I understand that <span class="special_red_text">www.terrorhub.com</span> only claims rights to publish my story and does not own it beyond that.
+                    
+                        <br><br>
+                    
+                        I agree not to receive any compensation from <span class="special_red_text">www.terrorhub.com</span> for publishing my story. I acknowledge that I have no claim to profits from advertising or donations on the site.
+                    
+                        <br><br>
+                    
+                        If I wish to request takedown or edits, I can contact the site’s administrators directly.
+                    </p>
                         
                 </div>
 
@@ -459,10 +467,11 @@
                 <!-- add extra tags -->
                 <div class="form_group" id="extraTagsGroup">
                     <label for="extraTags">Extra Categories (separated by commas):</label>
-                    <input type="text" id="extraTags" name="extraTags" placeholder="Enter extra tags separated by commas">
                     <p class="input_info">
                         Please enter any additional tags or keywords that would best describe the topics and themes your story is concerned with, in order to help us make it easier for interested readers to find your story with a keyword search. Multiple tags or keywords should be separated by a comma.
                     </p>
+                    <input type="text" id="extraTags" name="extraTags" placeholder="Enter extra tags separated by commas">
+                    
                 </div>
 
 

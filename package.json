@@ -32,6 +32,8 @@
     "express-session": "^1.17.3",
     "express-session-sequelize": "^2.3.0",
     "express-validator": "^7.0.1",
+    "fuzz": "^0.0.3",
+    "fuzzy-search": "^3.2.1",
     "googletrans": "^1.0.4",
     "helmet": "^7.0.0",
     "json-autotranslate": "^1.12.2",

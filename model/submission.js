@@ -72,28 +72,22 @@ const storySchema = new mongoose.Schema({
   upvoteCount: {
     type: Number,
     default: 0,
-  },  
-  //add comments from users
-  comments : [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the user who commented
-        required: true,
-      },
-      comment: {
-        type: String,
-        required: true,
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },      
-    },
-  ],
+  }, 
   readingTime: {
     type: Number,
     required: true,
+  },
+  // Comments get number of comments only
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Message', // Reference to the user who commented
+      required: true,
+    },
+  ],
+  commentCount: {
+    type: Number,
+    default: 0,
   },
   // Reporting system
   reports: [
