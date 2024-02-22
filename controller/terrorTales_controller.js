@@ -143,6 +143,9 @@ exports.readPage = async (req, res, next) => {
                 randomTag = "horror";
         } 
 
+        // get top 5 stories using this story language and tags
+        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag); 
+
         // Check if the user is logged in
         if (userActive) {
             const user = await User.findById(req.session.userId);
