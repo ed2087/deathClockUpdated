@@ -134,11 +134,14 @@ exports.readPage = async (req, res, next) => {
         }
 
 
-        //choose a random story categories
-        const randomTag = story.categories[Math.floor(Math.random() * story.categories.length)];
+        //conbine extraTags and story.categories
+        const categories = story.categories.concat(story.extraTags);
+        let randomTag = categories[Math.floor(Math.random() * categories.length)];
 
-        // get top 5 stories using this story language and tags
-        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
+        //if randomTag is undefined then use default tag
+        if (!randomTag) {
+                randomTag = "horror";
+        } 
 
         // Check if the user is logged in
         if (userActive) {
