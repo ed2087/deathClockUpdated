@@ -142,7 +142,7 @@ class GetStories {
 
     // Find all stories by limit, upvoteCount and comments and by query if quey is empty return top storys 
     async getTopByLimitUpvoteCommentsAndByQuery(limit, query) {
-        console.log(query);
+        console.log(query, "query");
         if (query === "") {
             this.getTopByLimitUpvoteCommentsAndByQuery = await Storys.find({ isApproved: true }).sort({ upvoteCount: -1, comments: -1 }).limit(limit);
         } else {

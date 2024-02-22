@@ -12,8 +12,9 @@ exports.deathclockQuestions = async function (req, res, next) {
 
   res.status(200).render("../views/deathclock/mortality_questions", {
     path: "/deathclockQuestions",
-    title: "The Time Ticker: How Long Have You Go",
-    headerTitle: "Death Clock",
+    title: "Death Clock - How Long Will You Live - The Time Ticker",
+    headerTitle: "How Long Will You Live?",
+    description: "The Death Clock is a simple application that estimates your day of death. It is based on your life expectancy and the average life expectancy of your country. The Death Clock is the internet's friendly reminder that life is slipping away...",
     csrfToken: res.locals.csrfToken,
     userActive,
     userName,
@@ -40,6 +41,7 @@ exports.deathclockResults = async function (req, res, next) {
         path: `/deathClock/results/${id}`,
         title: `The Time Ticker: ${user.name}'s Death Clock Results`,
         headerTitle: `${user.name}'s Death Clock`,
+        description: `See The Time Countdown To ${user.name}'s Death`,
         csrfToken: res.locals.csrfToken,
         user: user,
         userActive,
@@ -84,8 +86,9 @@ exports.graveyard = async function (req, res, next) {
     // Render deathclockResults
     res.status(200).render("../views/deathclock/graveyard", {
       path: "/graveyard",
-      title: "The Time Ticker: How Long Have You Go",
-      headerTitle: "Graveyard",
+      title: "Join the Graveyard - On Death Clock",
+      headerTitle: "Join the Graveyard",
+      description: "Add Tumbsotne To The Graveyard - And Let The Time Ticker Count Down To Your Death",
       csrfToken: res.locals.csrfToken,
       users: package_,
       userActive,

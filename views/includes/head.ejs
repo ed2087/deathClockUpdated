@@ -21,8 +21,11 @@
     <% }else{ %>
 
             <!-- Meta Description -->
-            <meta name="description" content="Explore chilling horror stories, mysterious Creepy Pastas, and predict your lifespan with the Death Clock. Join the terror at TerrorHub - Your portal to the unknown.">
-
+            <% if (description) { %>
+                <meta name="description" content="<%= description %>">
+            <% } else { %>
+                <meta name="description" content="Explore chilling horror stories, mysterious Creepy Pastas, and predict your lifespan with the Death Clock. Join the terror at TerrorHub - Your portal to the unknown.">
+            <% } %>
             
             <!-- Social Media Meta Tags -->
             <meta property="og:title" content="<%= title %>">

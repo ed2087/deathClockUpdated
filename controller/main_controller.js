@@ -26,7 +26,8 @@ exports.index = async function (req, res, next) {
 
   res.status(200).render("index", {
     path: "/",
-    title: `TerrorHub - Home`,
+    title: `TerrorHub - Home To Death clock, Horror Stories Creepy Pasta & More`,
+    description: "TerrorHub is a community of horror enthusiasts who share their horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
     csrfToken: res.locals.csrfToken,
     userActive,
     userName,
@@ -76,8 +77,9 @@ exports.disclaimer = async function (req, res, next) {
 
     res.status(200).render("disclaimer", {
       path: "/disclaimer",
-      title: "Disclaimer",
+      title: "TerrorHub - Disclaimer",
       headerTitle: "Disclaimer",
+      description: "TerrorHub - Disclaimer",
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,
@@ -101,6 +103,7 @@ exports.termsConditions = async function (req, res, next) {
       path: "/termsConditions",
       title: "Terms & Conditions",
       headerTitle: "Terms & Conditions",
+      description: "TerrorHub - Terms & Conditions",
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,

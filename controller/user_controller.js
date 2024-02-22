@@ -35,8 +35,9 @@ exports.loginPage = async (req, res, next) => {
     let {userName, userActive} = await someUserInfo(req, res, next);
 
     res.render("../views/usersInterface/login",{
-        title: "Login",
+        title: "Login to TerrorHub - And Share Your Horror Stories",
         path: "/user/login",
+        description: "Login to your TerrorHub account - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: null,
         field: null,
         body: null,
@@ -55,6 +56,7 @@ exports.registerPage = async (req, res, next) => {
     res.render("../views/usersInterface/register",{
         title: "Register",
         path: "/user/register",
+        description: "Register to TerrorHub - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: null,
         field: null,
         body: null,
@@ -449,6 +451,7 @@ exports.resetPasswordRequestPage = async (req, res, next) => {
         res.render("../views/usersInterface/resetPasswordRequest.ejs",{
             title: "Reset Password",
             path: "/user/resetPasswordRequest",
+            description: "Reset your TerrorHub password",
             message: null,
             field: null,
             body: null,
@@ -587,6 +590,7 @@ exports.resetPasswordPage = async (req, res, next) => {
         res.render("../views/usersInterface/resetPassword.ejs",{
             title: "Reset Password",
             path: "/user/resetPassword",
+            description: "Reset your TerrorHub password",
             message: null,
             field: null,
             body: null,
@@ -721,6 +725,7 @@ exports.userProfilePage = async (req, res, next) => {
         res.render("../views/usersInterface/profilePage.ejs",{
             title: "Profile",
             path: "/user/profile",
+            description: "Your TerrorHub profile",
             message: null,
             field: null,
             body: null,

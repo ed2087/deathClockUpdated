@@ -97,9 +97,10 @@ exports.terrorTalesPage = async (req, res, next) => {
     
       
       res.status(200).render("../views/storypages/terrorTales", {
-        title: "Terror Tales",
+        title: "Creepypasta - Explore Scary Stories and Original Horror Fiction, Dive into Captivating Short Tales",
         path: "/terrorTales",
-        headerTitle: "Unleashing Original Horror Stories Creepshow Central",
+        headerTitle: "Unleashing Original Horror Stories Creepypasta Central",
+        description: "Share your original horror stories, creepy pasta, and other horror-related content. Read and write horror stories, and explore the best horror fiction on the internet.",
         userActive,
         userName,
         userData,
@@ -124,6 +125,8 @@ exports.readPage = async (req, res, next) => {
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
         const slug = req.params.slug;
 
+        console.log(slug);
+
         // Get the story by title
         const story = await Story.findOne({ slug: slug });   
 
@@ -131,8 +134,7 @@ exports.readPage = async (req, res, next) => {
         // add or story not isApproved = false
         if (!story || !story.isApproved) {
             return globalErrorHandler(req, res, 404, "Story not found");
-        }
-
+        }       
 
         //conbine extraTags and story.categories
         const categories = story.categories.concat(story.extraTags);
@@ -141,10 +143,10 @@ exports.readPage = async (req, res, next) => {
         //if randomTag is undefined then use default tag
         if (!randomTag) {
                 randomTag = "horror";
-        } 
+        }        
 
         // get top 5 stories using this story language and tags
-        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag); 
+        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
 
         // Check if the user is logged in
         if (userActive) {
@@ -185,6 +187,7 @@ exports.readPage = async (req, res, next) => {
             title: story.storyTitle,
             path: `/terrorTales/horrorStory/${slug}`,
             headerTitle: `${story.storyTitle}`,
+            description: null,
             userActive,
             userName,
             story,
@@ -212,9 +215,10 @@ exports.submission = async  (req, res, next) => {
     console.log(legalName);
 
     res.render("../views/storypages/submission", {
-      title: "Submission",
+      title: "Submit Your Pasta - Original Horror Story Submissions - Creepypasta Central",
       path: "/submission",
-      headerTitle: "SUBMIT YOUR STORY",
+      headerTitle: "Submit Your Horror Story Up The World",
+      description: "Submit your original horror stories, creepy pasta, and other horror-related content. Share your horror stories and explore the best horror fiction on the internet.",
       userActive,
       userName,
       legalName,
@@ -651,6 +655,7 @@ exports.updateStoryPage = async (req, res, next) => {
             title: "Edit Story",
             path: "/editStory",
             headerTitle: "EDIT STORY",
+            description: "Edit your story",
             userActive,
             userName,
             story
