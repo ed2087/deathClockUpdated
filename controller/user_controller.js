@@ -361,6 +361,7 @@ exports.verificationPage = async (req, res, next) => {
         res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
             title: "Resend Activation Link",
             path: "/user/verificationPage",
+            description: "Resend your TerrorHub email verification",
             message: null,
             field: null,
             id: id,
@@ -766,6 +767,7 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
     res.render(urlPath, {
         title: title,
         path: path,
+        description : "Register to TerrorHub - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: msg,
         field: path,
         body: body,
@@ -776,11 +778,3 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 
-
-
-
-
-//passworD2087
-//http://localhost:3000/user/activate/9e210301-23d9-45d6-bae9-bce2322e23d9
-
-//http://localhost:3001/user/verificationPage?id=6569eab199a4b8078107ae01&activateToken=40629eb4-4e66-4e30-b379-3da46e5ffbb6
