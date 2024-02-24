@@ -11,11 +11,12 @@
     <main id="main_wrap">
         <div id="verify_wrap">
 
-            <h2>Verification Link Sent</h2>
-            <p>We've sent a verification link to your email.</p>
+            <h2>Verification Link Sent to <br> <span class="special_yellow_text"><%= email %></span></h2>
+            <p style="color: whitesmoke;">We've sent a verification link to your email, If you don't see it, please check your spam folder.</p>
+            
             
             <!-- Didn't get the email? -->
-            <a class="call_to_action_red" href="/user/resendVerificationLink/<%= id %>">Resend Verification.</a>
+            <a class="call_to_action_red" href="/user/resenverificationLink/<%= id %>">Resend Verification.</a>
         </div>  
     </main>
 
