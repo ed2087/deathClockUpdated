@@ -116,6 +116,43 @@ exports.terrorTalesPage = async (req, res, next) => {
 };
 
 
+// spanish version to lapding page
+exports.cuentosDeTerror = async (req, res, next) => {
+    
+        try {
+    
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);      
+        
+    
+        //get top 5 stories
+        const stories = await getTopAndOtherStories(4, '');
+    
+        const topStoryByUpvotes = stories.top1Story;
+    
+        const topStorys = stories.topStories;
+        
+        //this is a spanish version of the landing page
+        res.status(200).render("../views/storypages/spanishTerrorTales", {
+            title: "Creepypasta - Explora Historias de Terror y Ficción de Horror Original, Sumérgete en Cuentos Cortos Fascinantes",
+            path: "/terrorTales",
+            headerTitle: "Desatando Historias de Terror Originales en Creepypasta Central",
+            description: "Comparte tus historias de terror originales, creepy pasta y otro contenido relacionado con el horror. Lee y escribe historias de terror, y explora la mejor ficción de horror en internet.",
+            userActive,
+            userName,
+            userData,
+            topStoryByUpvotes,
+            topStorys
+        });
+        
+    
+        } catch (error) {
+            console.error("Error in terrorTalesPage:", error);
+            globalErrorHandler(req, res, 500, "Something went wrong");
+        }
+    
+    }
+
+
 
 // Read page
 exports.readPage = async (req, res, next) => {
@@ -883,17 +920,37 @@ exports.changeStoryPermision = async (req, res, next) => {
 
 
 
+//if breakdown users query to find related stories NLP
+
+const breakdownQuery = (query) => {
+    // Break down the query into individual words
+    const words = query.split(" ");
+    // Remove any empty strings
+    const filteredWords = words.filter(word => word !== "");
+    // Remove any words that are less than 3 characters
+    const filteredWords2 = filteredWords.filter(word => word.length > 2);
+    // Remove any duplicate words
+    const uniqueWords = [...new Set(filteredWords2)];
+    // Return the unique words
+    return uniqueWords;
+}
+
+
 
 // query for stories 
 exports.queryStories = async function (req, res, next) {
 
     const {query,language,ranking,page,limit} = req.query;    
+    
+    try { 
+        
+        let stories = await new GetStories().queryStoriesPagination_(query,language,ranking,page,limit);        
+        //if no stories found
+        if (stories.totalStories == 0) {
+            stories = await new GetStories().queryStoriesEnhancedSearch(breakdownQuery(query),language,ranking,page,limit);
+        }
 
-    try {  
 
-        // Query stories
-        const stories = await new GetStories().queryStoriesPagination_(query,language,ranking,page,limit);
-       
         //get users role 
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
 

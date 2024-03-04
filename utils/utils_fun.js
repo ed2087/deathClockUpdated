@@ -151,6 +151,105 @@ class GetStories {
         return this.getTopByLimitUpvoteCommentsAndByQuery;
     }
 
+    async queryStoriesEnhancedSearch(keywords, language, ranking, page, limit) {
+        try {
+            // Convert page and limit to numbers and provide default values
+            const page_ = page * 1 || 1;
+            const limit_ = limit * 1 || 16;
+
+            // Calculate the number of documents to skip for pagination
+            const skip = (page_ - 1) * limit_;
+
+            // Default language is English unless specified
+            if (!language) {
+                language = "English";
+            }
+
+            // Define the aggregation pipeline for counting total stories
+            const countPipeline = [
+                {
+                    $match: {
+                        language: language,
+                    },
+                },
+            ];
+
+            // Include conditions for enhanced search using keywords
+            const fuzzyQueryConditions = keywords.map(keyword => ({
+                $or: [
+                    { legalName: new RegExp(keyword, 'i') },
+                    { creditingName: new RegExp(keyword, 'i') },
+                    { storyTitle: new RegExp(keyword, 'i') },
+                    { tags: new RegExp(keyword, 'i') },
+                    { categories: { $regex: keyword.split(/\s+/).join('.*'), $options: "i" } },
+                    { slug: new RegExp(keyword, 'i') },
+                    { storySummary: new RegExp(keyword, 'i') },
+                    { storyText: new RegExp(keyword, 'i') },
+                ]
+            }));
+
+            countPipeline.unshift({
+                $match: {
+                    $or: fuzzyQueryConditions,
+                },
+            });
+
+            // Get the count of total stories that match the query but don't count the ones that are not isApproved
+            const totalCount = await Storys.aggregate([
+                ...countPipeline,
+                {
+                    $match: {
+                        isApproved: true,
+                    },
+                },
+                {
+                    $count: "totalStories",
+                },
+            ]);
+
+            // Define the aggregation pipeline for fetching paginated stories with enhanced search
+            const pipeline = [
+                ...countPipeline,
+                {
+                    $match: {
+                        isApproved: true,
+                    },
+                },
+                {
+                    $sort: {
+                        createdAt: -1,
+                    },
+                },
+                {
+                    $skip: skip,
+                },
+                {
+                    $limit: limit_,
+                },
+                {
+                    $sort: {
+                        createdAt: -1,
+                    },
+                },
+                {
+                    $project: this.projectedFields(),
+                },
+            ];
+
+            // Fetch stories using the aggregation pipeline
+            const stories = await Storys.aggregate(pipeline);
+
+            return {
+                stories,
+                totalStories: totalCount[0] ? totalCount[0].totalStories : 0,
+            };
+
+        } catch (error) {
+            console.error(error);
+            throw new Error("An error occurred while fetching stories with enhanced search.");
+        }
+    }
+
     async queryStoriesPagination_(query, language, ranking, page, limit) {
         try {
             // Convert page and limit to numbers and provide default values
@@ -186,6 +285,8 @@ class GetStories {
                     { tags: new RegExp(query, 'i') },
                     { categories: { $regex: query.split(/\s+/).join('.*'), $options: "i" } }, // Handle separated words in categories
                     { slug: new RegExp(query, 'i') },
+                    { storySummary: new RegExp(query, 'i') },
+                    { storyText: new RegExp(query, 'i') },
                 ];
 
                 // Include fuzzy search conditions

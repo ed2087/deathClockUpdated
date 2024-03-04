@@ -230,8 +230,7 @@ exports.postRegister = async (req, res, next) => {
 
         //validate
         const validate_ = registerValidation(req);
-
-        console.log(validate_);
+        
 
         if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register",  "Register", validate_[0].msg, validate_[0].field, req.body)
 
@@ -361,12 +360,13 @@ exports.verificationPage = async (req, res, next) => {
         res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
             title: "Resend Activation Link",
             path: "/user/verificationPage",
-            description: "Resend your TerrorHub email verification",
+            description: "Activate your TerrorHub account",
             message: null,
             field: null,
             id: id,
             activateToken: activateToken,
-            userActive
+            userActive,
+            email : user.email
         });
 
         
@@ -380,9 +380,11 @@ exports.verificationPage = async (req, res, next) => {
 
 //resent activation link post
 exports.resendVerification = async (req, res, next) => {
+
+    // fix this
     try {
-        const {id} = req.params;
-        
+        const {id} = req.params;        
+
         //get user
         const user = await User.findById(id);
 
@@ -778,3 +780,6 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 
+
+
+//http://localhost:3001/user/verificationPage?id=65d9e891d50ffdcf55781bf6&activateToken=93df235d-f2d0-4f7a-8b52-685207eca456
