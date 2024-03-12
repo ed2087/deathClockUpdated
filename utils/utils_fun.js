@@ -143,15 +143,19 @@ class GetStories {
     // Find all stories by limit, upvoteCount and comments and by query if quey is empty return top storys 
     async getTopByLimitUpvoteCommentsAndByQuery(limit, query) {
         console.log(query, "query");
-        if (query === "") {
-            this.getTopByLimitUpvoteCommentsAndByQuery = await Storys.find({ isApproved: true }).sort({ upvoteCount: -1, comments: -1 }).limit(limit);
-        } else {
-            this.getTopByLimitUpvoteCommentsAndByQuery = await Storys.find({ $text: { $search: query }, isApproved: true }).sort({ upvoteCount: -1, comments: -1 }).limit(limit);
+        let queryObj = { isApproved: true };
+        if (query !== "") {
+            queryObj.$text = { $search: query };
         }
-        return this.getTopByLimitUpvoteCommentsAndByQuery;
+        const randomStories = await Storys.aggregate([
+            { $match: queryObj },
+            { $sample: { size: limit } }
+        ]);
+        return randomStories;
     }
 
     async queryStoriesEnhancedSearch(keywords, language, ranking, page, limit) {
+        console.log("query by keywords")
         try {
             // Convert page and limit to numbers and provide default values
             const page_ = page * 1 || 1;
@@ -251,6 +255,7 @@ class GetStories {
     }
 
     async queryStoriesPagination_(query, language, ranking, page, limit) {
+        console.log("query stories")
         try {
             // Convert page and limit to numbers and provide default values
             const page_ = page * 1 || 1;
@@ -260,8 +265,8 @@ class GetStories {
             const skip = (page_ - 1) * limit_;
 
             // Default language is English unless specified
-            if (!language) {
-                language = "English";
+            if (language == "all") {
+                language = { $exists: true };
             }
 
             // Check if the query is empty

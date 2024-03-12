@@ -85,16 +85,7 @@ exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive, userData } = await someUserInfo(req, res, next);      
-      
-
-      //get top 5 stories
-      const stories = await getTopAndOtherStories(4, '');
-
-      const topStoryByUpvotes = stories.top1Story;
-
-      const topStorys = stories.topStories;
-    
+      const { userName, userActive, userData } = await someUserInfo(req, res, next);   
       
       res.status(200).render("../views/storypages/terrorTales", {
         title: "Creepypasta - Explore Scary Stories and Original Horror Fiction, Dive into Captivating Short Tales",
@@ -104,8 +95,6 @@ exports.terrorTalesPage = async (req, res, next) => {
         userActive,
         userName,
         userData,
-        topStoryByUpvotes,
-        topStorys
       });
 
     } catch (error) {
@@ -162,7 +151,6 @@ exports.readPage = async (req, res, next) => {
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
         const slug = req.params.slug;
 
-        console.log(slug);
 
         // Get the story by title
         const story = await Story.findOne({ slug: slug });   
@@ -937,17 +925,68 @@ const breakdownQuery = (query) => {
 
 
 
-// query for stories 
-exports.queryStories = async function (req, res, next) {
+//TELL USER WHAT IS THE ORIGNAL LANGUAGE THAT IT WAS WRITTEN ON
+const languageMap = {
+    "english": "English",
+    "ingles" : "English",
+    "Spanish": "Spanish",
+    "español": "Spanish",
+    "espanol": "Spanish",    
+    "mandarin Chinese": "Mandarin Chinese",
+    "hindi": "Hindi",
+    "arabic": "Arabic",
+    "bengali": "Bengali",
+    "portuguese": "Portuguese",
+    "russian": "Russian",
+    "ruso": "Russian",
+    "japanese": "Japanese",
+    "japones": "Japanese",
+    "punjabi": "Punjabi",
+    "german": "German",
+    "aleman": "German",
+    "wu Chinese": "Wu Chinese",
+    "javanese": "Javanese",
+    "korean": "Korean",
+    "koreano": "Korean",
+    "french": "French",
+    "frances" : "French",
+    "telugu": "Telugu",
+    "marathi": "Marathi",
+    "tamil": "Tamil",
+    "turkish": "Turkish",
+    "turco": "Turkish",
+    "vietnamese": "Vietnamese"
+};
 
-    const {query,language,ranking,page,limit} = req.query;    
+// query for stories 
+exports.queryStories = async function (req, res, next) {    
+
+    const {query,language,ranking,page,limit} = req.query;  
     
-    try { 
+    let language_ = language;
+    let query_ = query.toLowerCase().trim();
+    
+    try {   
+       
+        // Check if the query is "all" to indicate all languages
+        if (query_ === "all") {
+            language_ = "all";
+            query_ = "";
+        } else {
+            // Check if the query matches any language alias in the map
+            const languageName = languageMap[query_.toLowerCase()];
+            if (languageName) {
+                language_ = languageName;
+                query_ = "";
+            }
+        }
+
+        let stories = await new GetStories().queryStoriesPagination_(query_,language_,ranking,page,limit); 
         
-        let stories = await new GetStories().queryStoriesPagination_(query,language,ranking,page,limit);        
+       
         //if no stories found
         if (stories.totalStories == 0) {
-            stories = await new GetStories().queryStoriesEnhancedSearch(breakdownQuery(query),language,ranking,page,limit);
+            stories = await new GetStories().queryStoriesEnhancedSearch(breakdownQuery(query_),language_,ranking,page,limit);
         }
 
 
@@ -965,7 +1004,8 @@ exports.queryStories = async function (req, res, next) {
                 totalStories: stories.totalStories,
                 top5Stories: stories.top5Stories,
                 languagesArray: stories.languagesArray,
-                UserRole: role
+                UserRole: role,
+                language : language_
             });
         } else {
             return res.status(500).json({
