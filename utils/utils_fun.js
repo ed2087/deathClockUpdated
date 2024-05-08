@@ -56,7 +56,68 @@ class GetStories {
         this.bookByTitle = [];
         this.getTopStiesExcept = [];
         this.getTopByLimitUpvoteCommentsAndByQuery_ = [];
+        this.getstoriesBYupvotesBYnumReadsBYcommentsBYlimit_ = [];
     }
+
+
+    async getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(limit) {
+        
+        //we must take in to account upovotes, reads and comments to get the top story use aggregate
+
+        //lets use this to get the top storys
+        const upvotesWeight = 0.6;
+        const readsWeight = 0.01;
+        const commentsWeight = 0.4;
+        
+        
+        this.getstoriesBYupvotesBYnumReadsBYcommentsBYlimit_ = await Storys.aggregate([
+            {
+                $match: {
+                    isApproved: true, // Filter out stories that are not approved
+                },
+            },
+            {
+                $project: {
+                    legalName: 1,
+                    creditingName: 1,
+                    storyTitle: 1,
+                    storySummary: 1,
+                    tags: 1,
+                    storyText: 1,
+                    categories: 1,
+                    language: 1,
+                    extraTags: 1,
+                    upvoteCount: 1,
+                    createdAt: 1,
+                    readingTime: 1,
+                    comments: { $size: "$comments" }, // Get the length of the comments array
+                    readCount: 1,
+                    unicUrlTitle: 1,
+                    slug: 1,
+                    backgroundUrl: 1,
+                    owner: 1,
+                    totalScore: {
+                        $add: [
+                            { $multiply: ["$upvoteCount", upvotesWeight] },
+                            { $multiply: ["$readCount", readsWeight] },
+                            { $multiply: [{ $size: "$comments" }, commentsWeight] }, // Use $size to get the length
+                        ],
+                    },
+                },
+            },
+            {
+                $sort: {
+                    totalScore: -1,
+                },
+            },
+            {
+                $limit: limit,
+            },
+        ]);
+
+        return this.getstoriesBYupvotesBYnumReadsBYcommentsBYlimit_;
+
+    };
 
     async getTopStorys(limit) {
         //5 top storys by upvotes/comments/reads use agregate
@@ -154,8 +215,7 @@ class GetStories {
         return randomStories;
     }
 
-    async queryStoriesEnhancedSearch(keywords, language, ranking, page, limit) {
-        console.log("query by keywords")
+    async queryStoriesEnhancedSearch(keywords, language, ranking, page, limit) {       
         try {
             // Convert page and limit to numbers and provide default values
             const page_ = page * 1 || 1;
@@ -422,6 +482,7 @@ class GetStories {
             unicUrlTitle: 1,
             slug: 1,
             backgroundUrl: 1,
+            owner: 1,
         }
     }
 

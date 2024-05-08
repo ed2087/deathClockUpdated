@@ -14,15 +14,15 @@ exports.index = async function (req, res, next) {
     //check if user is logged in
   let {userName, userActive} = await someUserInfo(req, res, next);
 
-
+  let xy_ = await new GetStories().getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(4);
   
-  let topStoryByUpvotes = await new GetStories().getTopStorysByUpvotes(1);
+  let topStoryByUpvotes = xy_[0];
+  xy_.shift();
 
   //get id of topStoryByUpvotes
-  const topStoryByUpvotesId = topStoryByUpvotes[0]._id;
-  const topStorys = await new GetStories().getTopStorysExcept(topStoryByUpvotesId, 3);
-
-  const file = await readFileAPI("questions_api.json");
+  const topStorys = xy_;
+    
+  //const file = await readFileAPI("questions_api.json");
 
   res.status(200).render("index", {
     path: "/",
@@ -32,7 +32,7 @@ exports.index = async function (req, res, next) {
     userActive,
     userName,
     topStorys,
-    topStoryByUpvotes : topStoryByUpvotes[0],
+    topStoryByUpvotes,
   });
     
   } catch (error) {

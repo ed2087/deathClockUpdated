@@ -85,7 +85,8 @@ exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive, userData } = await someUserInfo(req, res, next);   
+      const { userName, userActive, userData } = await someUserInfo(req, res, next); 
+
       
       res.status(200).render("../views/storypages/terrorTales", {
         title: "Creepypasta - Explore Scary Stories and Original Horror Fiction, Dive into Captivating Short Tales",
