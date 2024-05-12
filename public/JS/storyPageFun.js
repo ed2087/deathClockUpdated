@@ -1,1 +1,414 @@
-console.log("storyPageFun.js loaded");let timer,page=1,limit=16,query="",totalStories_available=0,language="all";const deleteStory=async n=>{try{const e=confirm("Are you sure you want to delete this story?");if(!e)return;const t=`/terrorTales/deleteStory/${n}`;await fetch(t,{method:"POST"})}catch(n){console.error("An error occurred while deleting the story:",n.message)}},CommonStoryTemplates=(n,e)=>{console.log(n);const{createdAt:t,comments:a,extraTags:o,categories:i}=n,r=new Date(t),s=(r.getDate(),r.getMonth(),r.getFullYear(),a.length),l=n=>`<span class="storyTag"><span class="story_hashtag"></span>${n}</span>`,d=[...o,...i].map(l).join(""),u=id_("csrf").value;let c="";return"admin"===e&&(c=`\n            <div class="story_buttons_wrap">             \n                \n                <form id="changeStoryPermisionForm" action="/terrorTales/editStory/${n.slug}" method="GET">\n                    <button type="submit">Edit Story</button>\n                </form> \n\n                <form id="deleteStoryForm" action="/terrorTales/deleteStory" method="POST">\n                    <input type="hidden" name="slug" value="${n.slug}">\n                    <input type="hidden" name="_csrf" value="${u}">\n                    <button type="submit" onclick="return confirm('Are you sure you want to delete this story?');">Delete Story</button>\n                </form>\n                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">\n                    <input type="hidden" name="slug" value="${n.slug}">\n                    <input type="hidden" name="_csrf" value="${u}">\n                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>\n                </form>\n            </div>\n        `),"moderator"===e&&(c=`\n            <div class="story_buttons_wrap">\n\n                <form id="changeStoryPermisionForm" action="/terrorTales/editStory/${n.slug}" method="GET">\n                    <button type="submit">Edit Story</button>\n                </form>        \n\n                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">\n                    <input type="hidden" name="slug" value="${n.slug}">\n                    <input type="hidden" name="_csrf" value="${u}">\n                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>\n                </form>\n\n            </div>\n        `),`\n\n            <div class="story_wrap">\n\n                <div class="story_inner_wrap story_innerTitle_wrap">\n                    <h2 class="storyTitle">${n.storyTitle}</h2>\n                </div>\n\n                <div class="story_inner_wrap story_innerInfo_wrap">\n\n                    <div class="story_info_wrap">\n\n                        <div class="info_wrap_first">\n                        \n                            <div class="readingTime">\n                                <img src="../../IMAGES/Icons/clock.webp" alt="pen" />\n                                ${n.readingTime} min read\n                            </div>\n\n                            <div class="legalName">\n                                <img src="../../IMAGES/Icons/signature.webp" alt="pen" />\n                                ${n.creditingName}\n                            </div>\n\n                        </div>\n\n                        <div class="info_wrap_second">\n\n                            <div class="upvoteCount">\n                                <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />\n                                ${n.upvoteCount}\n                            </div> \n\n                            <div class="upvoteCount">\n                                <img src="../../IMAGES/Icons/view.webp" alt="pen" />\n                                ${n.readCount}\n                            </div> \n\n                            <div class="upvoteCount">\n                                <img src="../../IMAGES/Icons/chat.webp" alt="pen" />\n                                ${s}\n                            </div> \n\n                            <div class="upvoteCount">\n                                <img src="../../IMAGES/Icons/globe.webp" alt="languages" />\n                                ${n.language}\n                            </div>\n\n                        </div>\n                        \n                    </div>\n\n                    <h3 class="storySummary">${n.storySummary}</h3>\n\n                    <div class="storyTags_wrap">\n                        ${d}\n                    </div>\n                    \n                    ${c}                    \n                    \n                    <a class="read_story_button" href="/terrorTales/horrorStory/${n.slug}">Read Story</a>\n\n                </div>\n\n        </div>\n\n    `},loadingAnimationTemplate=()=>'\n\n            <div class="loading_story_wrap loadingHTMLTemplates">\n\n                <div class="loadingAnimation loading_story_innerTitle_wrap"></div>\n\n                <div class="loading_story_innerInfo_wrap">\n\n                    <div class="loading_story_info_wrap">\n\n                        <div class="loading_info_wrap_first">\n                            <div class="loadingAnimation loading_readingTime"></div>\n                            <div class="loadingAnimation loading_legalName"></div>\n                        </div>\n\n                        <div class="loading_info_wrap_second">\n\n                            <div class="loadingAnimation loading_upvoteCount"></div> \n\n                            <div class="loadingAnimation loading_upvoteCount"></div> \n\n                            <div class="loadingAnimation loading_upvoteCount"></div> \n\n                        </div>\n                        \n                    </div>\n\n                    <h3 class="loadingAnimation loading_storySummary"></h3>\n\n                    <div class="loading_storyTags_wrap">\n                        <span class="loadingAnimation loading_storyTag"></span>\n                        <span class="loadingAnimation loading_storyTag"></span>\n                        <span class="loadingAnimation loading_storyTag"></span>\n                    </div>\n\n                </div>\n\n        </div>\n\n    ',loadLoadinHTML=()=>{for(let n=0;n<8;n++)id_("storyListWrap").innerHTML+=loadingAnimationTemplate()},removeLoadingHTML=()=>{queryAll_(".loadingHTMLTemplates").forEach(n=>{n.remove()})},wipeOutStories=()=>{id_("storyListWrap").innerHTML=""};let allowOnce=!0;const query_fetch=async()=>{loadLoadinHTML();const n=id_("search").value,e=id_("language").value;e!==language&&(page=1,wipeOutStories(),loadLoadinHTML());const t={query:n||"",language:e||language,page:page,limit:limit},a=new URLSearchParams(t),o=`/terrorTales/query?${a.toString()}`,i=await fetch_(o,"GET",null);if(200===i.status){allowOnce&&(id_("language").innerHTML='<option value="all">All - Language</option>',i.languagesArray.forEach(n=>{id_("language").innerHTML+=`<option value="${n}">${n}</option>`}),allowOnce=!1),1===page&&removeLoadingHTML();const n=id_("storyListWrap");0===i.stories.length?n.innerHTML='\n                <div class="noData">No data found</div>\n            ':(console.log("data.stories.length",i.stories.length),i.stories.forEach(e=>{n.innerHTML+=CommonStoryTemplates(e,i.UserRole),totalStories_available++}),language=i.language,queryAll_("#language option").forEach(n=>{n.value===language?n.setAttribute("selected","selected"):n.removeAttribute("selected")}),removeLoadingHTML()),i.totalStories<=totalStories_available?id_("loadMore").style.display="none":id_("loadMore").style.display="block"}else console.log("error");language=e},debounceQueryFetch=n=>{id_("storyListWrap").innerHTML="";for(let n=0;n<8;n++)id_("storyListWrap").innerHTML+=loadingAnimationTemplate();clearTimeout(timer),timer=setTimeout(()=>{page=1,totalStories_available=0,query_fetch(n.target.value)},1e3)};id_("search").addEventListener("keyup",debounceQueryFetch),queryAll_(".selectQueryData").forEach(n=>{n.addEventListener("change",n=>{page=1,totalStories_available=0,query_fetch(n.target.value)})});const preventEnterPress=n=>{13===n.keyCode&&n.preventDefault()};id_("search").addEventListener("keydown",preventEnterPress);const loadMoreStories=async()=>{page++,query_fetch(query,language,page,limit)};id_("loadMore").addEventListener("click",loadMoreStories),query_fetch();
+console.log('storyPageFun.js loaded');
+
+let page = 1;
+let limit = 16;
+let query = '';
+let totalStories_available = 0;
+let timer;
+let language = 'all';
+
+
+
+/////////////////////////////////////////////////
+// admin Functions
+/////////////////////////////////////////////////
+
+
+const deleteStory = async (slug) => {
+    try {
+        // Confirm deletion with the user
+        const shouldDelete = confirm('Are you sure you want to delete this story?');
+        
+        if (!shouldDelete) return;
+
+        // Send a POST request to delete the story
+        const url = `/terrorTales/deleteStory/${slug}`;
+        await fetch(url, {
+            method: 'POST',
+        });
+
+        // Redirect to another page or handle UI updates as needed
+    } catch (error) {
+        console.error('An error occurred while deleting the story:', error.message);
+        // Handle the error, maybe show a user-friendly message
+    }
+};
+
+
+
+/////////////////////////////////////////////////
+// Template Functions
+/////////////////////////////////////////////////
+
+const CommonStoryTemplates = (data,UserRole) => {    
+   
+    console.log('data', data);
+    const { createdAt, comments, extraTags, categories } = data;
+    const date = new Date(createdAt);
+    const formattedDate = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+    const commentsCount = comments.length;
+
+    const renderStoryTag = (tag) => `<span class="storyTag"><span class="story_hashtag"></span>${tag}</span>`;
+    const extraTags_categories = [...extraTags, ...categories].map(renderStoryTag).join('');
+
+
+    const csrfToken =  id_('csrf').value;
+
+    let adminButtons = '';
+    
+    //if admin allow edit, delete, suspend story
+    if (UserRole === 'admin') {
+        adminButtons = `
+            <div class="story_buttons_wrap">             
+                
+                <form id="changeStoryPermisionForm" action="/terrorTales/editStory/${data.slug}" method="GET">
+                    <button type="submit">Edit Story</button>
+                </form> 
+
+                <form id="deleteStoryForm" action="/terrorTales/deleteStory" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this story?');">Delete Story</button>
+                </form>
+                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>
+                </form>
+            </div>
+        `;
+    }
+
+    //if moderator only allow suspend or edit story
+    if(UserRole === 'moderator'){
+        adminButtons = `
+            <div class="story_buttons_wrap">
+
+                <form id="changeStoryPermisionForm" action="/terrorTales/editStory/${data.slug}" method="GET">
+                    <button type="submit">Edit Story</button>
+                </form>        
+
+                <form id="changeStoryPermisionForm" action="/terrorTales/changeStoryPermision" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to suspend this story?');">Suspend Story</button>
+                </form>
+
+            </div>
+        `;
+    }
+
+    //if user is story owner
+    if(UserRole === 'writter' && id_("id_user").value === data.owner){
+        adminButtons = `
+            <div class="story_buttons_wrap">
+
+                <form id="changeStoryPermisionForm" action="/terrorTales/editStory/${data.slug}" method="GET">
+                    <button type="submit">Edit Story</button>
+                </form>        
+
+                <form id="deleteStoryForm" action="/terrorTales/deleteStory" method="POST">
+                    <input type="hidden" name="slug" value="${data.slug}">
+                    <input type="hidden" name="_csrf" value="${csrfToken}">
+                    <button type="submit" onclick="return confirm('Are you sure you want to delete this story?');">Delete Story</button>
+                </form>
+
+            </div>
+        `;
+    }
+
+    return `
+
+            <div class="story_wrap">
+
+                <div class="story_inner_wrap story_innerTitle_wrap">
+                    <h2 class="storyTitle">${data.storyTitle}</h2>
+                </div>
+
+                <div class="story_inner_wrap story_innerInfo_wrap">
+
+                    <div class="story_info_wrap">
+
+                        <div class="info_wrap_first">
+                        
+                            <div class="readingTime">
+                                <img src="../../IMAGES/Icons/clock.webp" alt="pen" />
+                                ${data.readingTime} min read
+                            </div>
+
+                            <div class="legalName">
+                                <img src="../../IMAGES/Icons/signature.webp" alt="pen" />
+                                ${data.creditingName}
+                            </div>
+
+                        </div>
+
+                        <div class="info_wrap_second">
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/upArrow1.webp" alt="pen" />
+                                ${data.upvoteCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/view.webp" alt="pen" />
+                                ${data.readCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
+                                ${commentsCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/globe.webp" alt="languages" />
+                                ${data.language}
+                            </div>
+
+                        </div>
+                        
+                    </div>
+
+                    <h3 class="storySummary">${data.storySummary}</h3>
+
+                    <div class="storyTags_wrap">
+                        ${extraTags_categories}
+                    </div>
+                    
+                    ${adminButtons}                    
+                    
+                    <a class="read_story_button" href="/terrorTales/horrorStory/${data.slug}">Read Story</a>
+
+                </div>
+
+        </div>
+
+    `;
+};
+
+
+
+//create a loading animation like the mold on  CommonStoryTemplates
+
+
+
+
+const loadingAnimationTemplate = () => {
+
+    return `
+
+            <div class="loading_story_wrap loadingHTMLTemplates">
+
+                <div class="loadingAnimation loading_story_innerTitle_wrap"></div>
+
+                <div class="loading_story_innerInfo_wrap">
+
+                    <div class="loading_story_info_wrap">
+
+                        <div class="loading_info_wrap_first">
+                            <div class="loadingAnimation loading_readingTime"></div>
+                            <div class="loadingAnimation loading_legalName"></div>
+                        </div>
+
+                        <div class="loading_info_wrap_second">
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                            <div class="loadingAnimation loading_upvoteCount"></div> 
+
+                        </div>
+                        
+                    </div>
+
+                    <h3 class="loadingAnimation loading_storySummary"></h3>
+
+                    <div class="loading_storyTags_wrap">
+                        <span class="loadingAnimation loading_storyTag"></span>
+                        <span class="loadingAnimation loading_storyTag"></span>
+                        <span class="loadingAnimation loading_storyTag"></span>
+                    </div>
+
+                </div>
+
+        </div>
+
+    `; 
+
+};
+
+
+const loadLoadinHTML = () => {
+    //id_('storyListWrap').innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+        id_('storyListWrap').innerHTML += loadingAnimationTemplate();
+    }
+};
+
+
+//remove loading html
+const removeLoadingHTML = () => {
+    queryAll_('.loadingHTMLTemplates').forEach((loadingHTML) => {
+        loadingHTML.remove();
+    });
+};
+
+const wipeOutStories = () => {
+    id_("storyListWrap").innerHTML = "";
+};
+
+
+/////////////////////////////////////////////////
+// Fetch Data from Server
+/////////////////////////////////////////////////
+
+
+let allowOnce = true;
+
+const query_fetch = async () => {
+
+    //loading animation
+    loadLoadinHTML();
+
+    const searchInput = id_("search").value;
+    const selectedLanguage  = id_("language").value;
+
+
+    if (selectedLanguage !== language) {
+        page = 1;
+        wipeOutStories();
+        loadLoadinHTML();
+    }
+
+    const queryObject = {
+        query: searchInput || '',
+        language: selectedLanguage  || language,
+        page,
+        limit,
+    };
+
+    const urlParams = new URLSearchParams(queryObject);
+
+    const url = `/terrorTales/query?${urlParams.toString()}`;
+
+    const data = await fetch_(url, 'GET', null);
+    //console.log(data);
+
+    if (data.status === 200) {
+
+
+        //allowOnce
+        if (allowOnce) {
+
+            id_('language').innerHTML = '<option value="all">All - Language</option>';
+            //add languagesArray to language select
+            data.languagesArray.forEach((language) => {
+                id_('language').innerHTML += `<option value="${language}">${language}</option>`;
+            });
+            
+            allowOnce = false;
+
+        }
+        
+
+        if (page === 1) {
+            removeLoadingHTML(); 
+        }
+
+        const storyListWrap = id_('storyListWrap');
+
+        if (data.stories.length === 0) {
+            storyListWrap.innerHTML = `
+                <div class="noData">No data found</div>
+            `;
+        } else {
+            console.log('data.stories.length', data.stories.length);
+            data.stories.forEach((data_) => {
+                storyListWrap.innerHTML += CommonStoryTemplates(data_, data.UserRole);
+                totalStories_available++;
+            });
+
+            //add language
+            language = data.language;
+
+            // add active to the selected language in language select loop troue all options and deselct and activate
+            queryAll_('#language option').forEach((option) => {
+                if (option.value === language) {
+                    option.setAttribute('selected', 'selected');
+                } else {
+                    option.removeAttribute('selected');
+                }
+            });
+
+
+            //remove loadin html
+            removeLoadingHTML();
+        }
+
+        //if data.totalStories is greater then totalStories_available then dont add load more button        
+        if (data.totalStories <= totalStories_available) {
+            //display load more button #loadMore
+            id_('loadMore').style.display = 'none';
+        }else{
+            id_('loadMore').style.display = 'block';
+        }
+
+    } else {
+        console.log('error');
+    }
+
+    language = selectedLanguage;
+};
+
+const debounceQueryFetch = (event) => {
+
+    // add loading animation
+    id_('storyListWrap').innerHTML = '';
+    for (let i = 0; i < 8; i++) {
+        id_('storyListWrap').innerHTML += loadingAnimationTemplate();
+    }
+
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+        page = 1;
+        totalStories_available = 0;
+        query_fetch(event.target.value);
+    }, 1000);
+};
+
+id_("search").addEventListener('keyup', debounceQueryFetch);
+
+queryAll_('.selectQueryData').forEach((query) => {
+    query.addEventListener('change', (event) => {
+        page = 1;
+        totalStories_available = 0;
+        query_fetch(event.target.value);
+    });
+});
+
+
+
+const preventEnterPress = (event) => {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+    }
+};
+
+id_("search").addEventListener('keydown', preventEnterPress);
+
+
+
+/////////////////////////////////////////////////
+// Fetch Data Pagination
+/////////////////////////////////////////////////
+
+const loadMoreStories = async () => {
+    page++;
+    query_fetch(query, language, page, limit);
+};
+
+id_('loadMore').addEventListener('click', loadMoreStories);
+
+// Get all the stories initially
+query_fetch();
