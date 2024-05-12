@@ -781,5 +781,65 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 
+//send mass message to all users in the database for special ocassions
 
-//http://localhost:3001/user/verificationPage?id=65d9e891d50ffdcf55781bf6&activateToken=93df235d-f2d0-4f7a-8b52-685207eca456
+
+const sendmassEmail = async (req, res, next) => {
+
+    try {
+
+        //get all users
+        const users = await User.find({});
+
+        //send email
+        const html = htmlTemplate(
+            `
+                <h2>New Updates on TerrorHub!</h2>
+                <p>Dear Users,</p>
+                <p>I'm thrilled to announce some exciting new features on TerrorHub:</p>
+                <ol style="margin-left: 20px; padding-left: 0;">
+                    <li style="margin-bottom: 10px; color: #8c0000;">Now you can comment on the stories you love, engaging with other users and sharing your thoughts.</li>
+                    <li style="margin-bottom: 10px; color: #8c0000;">You have the ability to update and delete your own stories, giving you more control over your content.</li>
+                </ol>
+                <p>And that's not all! I have some upcoming updates in the pipeline:</p>
+                <ol style="margin-left: 20px; padding-left: 0;">
+                    <li style="margin-bottom: 10px; color: #8c0000;">A "Follow" button for writers, so you can stay updated on your favorite authors' latest works.</li>
+                    <li style="margin-bottom: 10px; color: #8c0000;">A profile page/portfolio where you can manage your account. If you're a writer, you'll be able to manage your stories. Users will also be able to browse all your stories in one convenient location.</li>
+                </ol>
+                <p>I sincerely apologize for the delay in implementing these new features. As a solo developer, it's been challenging, but I'm committed to making TerrorHub the best it can be.</p>
+                <p>I'd love to hear your feedback on how I can continue to improve the website for everyone. Your input is invaluable to me!</p>
+                <p>You can contact me with your feedback at <a href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>.</p>
+                <a href="http://terrorhub.com/">Visit TerrorHub</a>
+            `
+        );        
+
+        //lest do a test email to edgararobledo2087@gmail.com
+        //const email = await sendEmail("edgararobledo2087@gmail.com", "New Updates on TerrorHub.com", html);
+        
+
+        //send email to all users
+        users.forEach(async (user) => {
+
+            //send verification email
+            const email = await sendEmail(user.email, "New Updates on TerrorHub.com", html);
+
+            if(email){
+                console.log("email sent");
+            }else{
+                console.log("email not sent");
+            }
+
+        });
+
+        console.log("done");
+
+    } catch (error) {
+        console.log(error);
+    }
+
+};
+
+//activate sendmassEmail only onece
+//sendmassEmail();
+
+
