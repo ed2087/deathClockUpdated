@@ -6,6 +6,7 @@ const successPagefun = (req, res, successTitle, successMessage) => {
     
             title: "Success",
             path: "/successPage",
+            description: "TerrrorHub - Success Message Handler",
             userActive,
             userName,
             successTitle,

@@ -10,37 +10,36 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email:{
+  email: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
-  // get users age by date of birth
   age: {
     type: Date,
+    required: false,
+  },
+  password: {
+    type: String,
     required: true,
   },
-  password:{
-    type: String,
-    required: true
-  },
   userOnline: {
-    type : Boolean,
-    default : false
-  },
-  userVerified:{
     type: Boolean,
-    default: false
+    default: false,
   },
-  activateToken : String,
+  userVerified: {
+    type: Boolean,
+    default: false,
+  },
+  activateToken: String,
   passwordResetToken: String,
-  //we need to tract times password reset and date
   passwordResetTokenTimes: {
     type: Number,
-    default: 0
+    default: 0,
   },
   passwordResetTokenDate: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   birthdate: {
     type: Date,
@@ -48,83 +47,135 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin", "moderator", "writter"],
+    enum: ["user", "admin", "moderator", "writer"],
     default: "user",
   },
+  // bio
+  bio: {
+    type: String,
+    default: null,
+  },
   contributions: {
-     stories:[
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Story"
-        }
-     ],
-      //number of issues
-      storiesCount: {
-        type: Number,
-        default: 0,
+    stories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Story",
       },
+    ],
+    storiesCount: {
+      type: Number,
+      default: 0,
+    },
   },
   deathclock: {
-    //get deathclock id
     type: mongoose.Schema.Types.ObjectId,
-    ref: "DeathClock"
- },
+    ref: "DeathClock",
+  },
   createdAt: {
     type: Date,
-    default: Date.now, // Set the default value to the current date/time
+    default: Date.now,
   },
   updatedAt: {
     type: Date,
-    default: Date.now, // Set the default value to the current date/time
+    default: Date.now,
   },
-  // user gets achivement in form of badges images the images are stored in the public folder
   badges: [
     {
-      // we will need image path + badge name
       badgeName: {
-        type: String
+        type: String,
       },
       badgeImage: {
-        type: String
+        type: String,
       },
       badgeDescription: {
-        type: String
+        type: String,
       },
-      
-    }
+    },
   ],
-  // is user allow to post stories by default yes
   isStoryAllowed: {
     type: Boolean,
-    default: true
+    default: true,
   },
-  // is user allow to post comments by default yes
   isCommentAllowed: {
     type: Boolean,
-    default: true
+    default: true,
   },
-  // is uder banned by default no
   isBanned: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  // books user has read
   booksRead: [
     {
       bookId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Book"
+        ref: "Book",
       },
       booksReadCount: {
         type: Number,
-        default: 0
-      }
-    }
+        default: 0,
+      },
+    },
   ],
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  // following
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  socialLinks: {
+    redditUrl: {
+      type: String,
+      default: '',
+    },
+    instagramUrl: {
+      type: String,
+      default: '',
+    },
+    twitterUrl: {
+      type: String,
+      default: '',
+    },
+    tumblrUrl: {
+      type: String,
+      default: '',
+    },
+    facebookUrl: {
+      type: String,
+      default: '',
+    },
+    tiktokUrl: {
+      type: String,
+      default: '',
+    },
+    youtubeUrl: {
+      type: String,
+      default: '',
+    },
+    linkedinUrl: {
+      type: String,
+      default: '',
+    },
+    websiteUrl: {
+      type: String,
+      default: '',
+    },
+  },
+});
 
+// Pre-save middleware to update updatedAt field
+userSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 // Create the User model
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

@@ -7,7 +7,7 @@ const {sendEmail,htmlTemplate} = require("../utils/sendEmail.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 const {successPagefun} = require("../utils/successPageHandler.js");
 const {isToxic} = require("../utils/toxicity_tensorflow.js");
-const {someUserInfo, calculateReadingTime} = require("../utils/utils_fun.js");
+const {someUserInfo, calculateReadingTime , GetStories} = require("../utils/utils_fun.js");
 const nlp = require('compromise');
 //packages
 const { checkCsrf } = require("../utils/csrf.js");
@@ -60,22 +60,42 @@ function isValidLinkfun(link) {
 }
 
 
+//separate top 1 story and get the other 4 stories
+async function getTopAndOtherStories(limit,query) {
+    try {
+        const topStories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(limit, query);
+
+        // Remove the first story from the top 5 stories
+        const top1Story = topStories.shift();
+
+        return {
+            top1Story,
+            topStories: topStories
+        };
+
+    } catch (error) {
+        return null;
+    }
+
+};
+
 
 // Home page
 exports.terrorTalesPage = async (req, res, next) => {
 
     try {
 
-      const { userName, userActive, userData } = await someUserInfo(req, res, next);
-      
+      const { userName, userActive, userData } = await someUserInfo(req, res, next); 
 
+      
       res.status(200).render("../views/storypages/terrorTales", {
-        title: "Terror Tales",
+        title: "Creepypasta - Explore Scary Stories and Original Horror Fiction, Dive into Captivating Short Tales",
         path: "/terrorTales",
-        headerTitle: "TERROR TALES",
+        headerTitle: "Unleashing Original Horror Stories Creepypasta Central",
+        description: "Share your original horror stories, creepy pasta, and other horror-related content. Read and write horror stories, and explore the best horror fiction on the internet.",
         userActive,
         userName,
-        userData
+        userData,
       });
 
     } catch (error) {
@@ -84,6 +104,43 @@ exports.terrorTalesPage = async (req, res, next) => {
     }
 
 };
+
+
+// spanish version to lapding page
+exports.cuentosDeTerror = async (req, res, next) => {
+    
+        try {
+    
+        const { userName, userActive, userData } = await someUserInfo(req, res, next);      
+        
+    
+        //get top 5 stories
+        const stories = await getTopAndOtherStories(4, '');
+    
+        const topStoryByUpvotes = stories.top1Story;
+    
+        const topStorys = stories.topStories;
+        
+        //this is a spanish version of the landing page
+        res.status(200).render("../views/storypages/spanishTerrorTales", {
+            title: "Creepypasta - Explora Historias de Terror y Ficción de Horror Original, Sumérgete en Cuentos Cortos Fascinantes",
+            path: "/terrorTales",
+            headerTitle: "Desatando Historias de Terror Originales en Creepypasta Central",
+            description: "Comparte tus historias de terror originales, creepy pasta y otro contenido relacionado con el horror. Lee y escribe historias de terror, y explora la mejor ficción de horror en internet.",
+            userActive,
+            userName,
+            userData,
+            topStoryByUpvotes,
+            topStorys
+        });
+        
+    
+        } catch (error) {
+            console.error("Error in terrorTalesPage:", error);
+            globalErrorHandler(req, res, 500, "Something went wrong");
+        }
+    
+    }
 
 
 
@@ -95,6 +152,7 @@ exports.readPage = async (req, res, next) => {
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
         const slug = req.params.slug;
 
+
         // Get the story by title
         const story = await Story.findOne({ slug: slug });   
 
@@ -102,10 +160,19 @@ exports.readPage = async (req, res, next) => {
         // add or story not isApproved = false
         if (!story || !story.isApproved) {
             return globalErrorHandler(req, res, 404, "Story not found");
-        }
+        }       
+
+        //conbine extraTags and story.categories
+        const categories = story.categories.concat(story.extraTags);
+        let randomTag = categories[Math.floor(Math.random() * categories.length)];
+
+        //if randomTag is undefined then use default tag
+        if (!randomTag) {
+                randomTag = "horror";
+        }        
 
         // get top 5 stories using this story language and tags
-        const top5Stories = await getTop6Stories(story);
+        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
 
         // Check if the user is logged in
         if (userActive) {
@@ -146,6 +213,7 @@ exports.readPage = async (req, res, next) => {
             title: story.storyTitle,
             path: `/terrorTales/horrorStory/${slug}`,
             headerTitle: `${story.storyTitle}`,
+            description: null,
             userActive,
             userName,
             story,
@@ -163,29 +231,63 @@ exports.readPage = async (req, res, next) => {
 
 
 // Submission page
-exports.submission = async  (req, res, next) => {
+// Fetch popular categories
+const getPopularCategories = async () => {
+    try {
+        const categories = await Story.aggregate([
+            { $project: { allTags: { $concatArrays: ["$categories", "$extraTags"] } } },
+            { $unwind: "$allTags" },
+            { $group: { _id: "$allTags", count: { $sum: 1 } } },
+            { $sort: { count: -1 } },
+            { $limit: 10 }
+        ]);
+
+        return categories.map(category => category._id);
+    } catch (error) {
+        console.error("Error fetching popular categories:", error);
+        return [];
+    }
+};
+
+exports.submission = async (req, res, next) => {
   try {
     const { userName, userActive, userData } = await someUserInfo(req, res, next);
-
     const legalName = !userData.legalName ? null : userData.legalName;
 
+    const popularCategories = await getPopularCategories();
 
-    console.log(legalName);
+    let defaultCategories = [
+      'AI Created', 'Supernatural Horror', 'Psychological Horror', 'Body Horror', 'Slasher', 'Found Footage',
+      'Sci-Fi Horror', 'True Crime', 'Lovecraftian Horror', 'Creepypasta', 'Folk Horror', 'Body Snatcher Horror',
+      'Zombie Apocalypse', 'Gothic Horror', 'Vampire Horror', 'Werewolf Horror', 'Haunted House', 'Occult Horror',
+      'Religious Horror', 'Monster Horror', 'Alien Invasion', 'Horror', 'Classic Horror', 'Horror Comedy',
+      'Horror Drama', 'Horror Thriller', 'Horror Mystery', 'Horror Romance', '2 sentence horror stories',
+      'Short Horror Stories', 'Ghost Stories', 'Historical Horror', 'Cursed Objects', 'Apocalyptic Horror',
+      'Witchcraft and Witches', 'Survival Horror', 'Abductions and Kidnappings', 'Toys and Dolls', 'Urban Legends',
+      'Technology, the Internet, and the Deep Web', 'Myths and Legends', 'Madness, Paranoia, and Mental Illness',
+      'Conspiracies and Government'
+    ];
+
+    // Filter out popular categories from defaultCategories
+    defaultCategories = defaultCategories.filter(category => !popularCategories.includes(category));
 
     res.render("../views/storypages/submission", {
-      title: "Submission",
+      title: "Submit Your Pasta - Original Horror Story Submissions - Creepypasta Central",
       path: "/submission",
-      headerTitle: "SUBMIT YOUR STORY",
+      headerTitle: "Submit Your Horror Story Up The World",
+      description: "Submit your original horror stories, creepy pasta, and other horror-related content. Share your horror stories and explore the best horror fiction on the internet.",
       userActive,
       userName,
       legalName,
+      popularCategories,
+      defaultCategories, // Pass the filtered default categories to the view
+      story: {} // Ensure story object is defined
     });
 
   } catch (error) {
-        console.error("Error in submission:", error);
-        globalErrorHandler(req, res, 500, "Something went wrong");
+    console.error("Error in submission:", error);
+    globalErrorHandler(req, res, 500, "Something went wrong");
   }
-
 };
 
 
@@ -331,6 +433,24 @@ exports.submissionPost = async function (req, res, next) {
             const html = htmlTemplate(bodyContent);
 
             const emailSent = await sendEmail(email, subject, html);
+            
+
+            user.followers.forEach(async (follower) => {
+                const followerUser = await User.findById(follower);
+
+                if (followerUser) {
+                    let html = htmlTemplate(`
+                        <h2>New Story Alert</h2>
+                        <p>Dear ${followerUser.username},</p>
+                        <p>${userName} has submitted a new story titled <a href="${websiteUrl}/terrorTales/horrorStory/${submission.slug}">${submission.storyTitle}</a>. Please check it out at your earliest convenience.</p>
+                        <p>Best regards,</p>
+                        <p>TerrorHub Team</p>
+                    `);
+
+                    await sendEmail(followerUser.email, `New Story Alert: ${submission.storyTitle}`, html);
+
+                }
+            });
 
 
             //send email to all admin and moderator
@@ -584,22 +704,11 @@ exports.checkBookTitle = async (req, res, next) => {
 };
 
 
-// comments
-exports.comments = async (req, res, next) => {
-
-    
-    // not sure if im adding this maybe later
-
-};
-
-
 // update story
 exports.updateStoryPage = async (req, res, next) => {
-
     const { slug } = req.params;   
 
     try {
-
         const { userName, userActive } = await someUserInfo(req, res, next);
 
         //check if user is logged in
@@ -610,36 +719,94 @@ exports.updateStoryPage = async (req, res, next) => {
         //find story
         const story = await Story.findOne({ slug });
 
-
         //make sure story exist
         if (!story) {
             return  globalErrorHandler(req, res, 404, "Story not found");
         }
+
+        // Get popular categories
+        const popularCategories = await getPopularCategories();
+
+        let defaultCategories = [
+          'AI Created', 'Supernatural Horror', 'Psychological Horror', 'Body Horror', 'Slasher', 'Found Footage',
+          'Sci-Fi Horror', 'True Crime', 'Lovecraftian Horror', 'Creepypasta', 'Folk Horror', 'Body Snatcher Horror',
+          'Zombie Apocalypse', 'Gothic Horror', 'Vampire Horror', 'Werewolf Horror', 'Haunted House', 'Occult Horror',
+          'Religious Horror', 'Monster Horror', 'Alien Invasion', 'Horror', 'Classic Horror', 'Horror Comedy',
+          'Horror Drama', 'Horror Thriller', 'Horror Mystery', 'Horror Romance', '2 sentence horror stories',
+          'Short Horror Stories', 'Ghost Stories', 'Historical Horror', 'Cursed Objects', 'Apocalyptic Horror',
+          'Witchcraft and Witches', 'Survival Horror', 'Abductions and Kidnappings', 'Toys and Dolls', 'Urban Legends',
+          'Technology, the Internet, and the Deep Web', 'Myths and Legends', 'Madness, Paranoia, and Mental Illness',
+          'Conspiracies and Government'
+        ];
+
+        // Filter out popular categories from defaultCategories
+        defaultCategories = defaultCategories.filter(category => !popularCategories.includes(category));
 
         //send to edit.ejs
         res.status(200).render("../views/storypages/edit", {
             title: "Edit Story",
             path: "/editStory",
             headerTitle: "EDIT STORY",
+            description: "Edit your story",
             userActive,
             userName,
-            story
+            story,
+            popularCategories,
+            defaultCategories // Pass the filtered default categories to the view
         });
         
     } catch (error) {
-
         console.log(error);
         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
-        
     }
-
 };
+
+// exports.updateStoryPage = async (req, res, next) => {
+
+//     const { slug } = req.params;   
+
+//     try {
+
+//         const { userName, userActive } = await someUserInfo(req, res, next);
+
+//         //check if user is logged in
+//         if (!userActive) {
+//             return globalErrorHandler(req, res, 401, "You do not have permission to update this story");
+//         }
+
+//         //find story
+//         const story = await Story.findOne({ slug });
+
+
+//         //make sure story exist
+//         if (!story) {
+//             return  globalErrorHandler(req, res, 404, "Story not found");
+//         }
+
+//         //send to edit.ejs
+//         res.status(200).render("../views/storypages/edit", {
+//             title: "Edit Story",
+//             path: "/editStory",
+//             headerTitle: "EDIT STORY",
+//             description: "Edit your story",
+//             userActive,
+//             userName,
+//             story
+//         });
+        
+//     } catch (error) {
+
+//         console.log(error);
+//         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+        
+//     }
+
+// };
 
 
 
 // update story
 exports.updateStoryPost = async (req, res, next) => {
-
     const {
         legalName,
         socialMedia,
@@ -656,41 +823,41 @@ exports.updateStoryPost = async (req, res, next) => {
         storyId
     } = req.body;
 
-
     // socialMedia array
     const socialMedia_ = getValidSocialMediaArray(socialMedia);    
 
     try {
-
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
 
-        //check if user is logged in
+        // Check if user is logged in
         if (!userActive) {
             return globalErrorHandler(req, res, 401, "You do not have permission to update this story");
         }
 
-        //find story
+        // Find story
         const story = await Story.findById(storyId);
 
-        //make sure story exist
+        // Make sure story exists
         if (!story) {
             return globalErrorHandler(req, res, 404, "Story not found");
         }
 
-
-        //create array out of extraTags if ther is any 
+        // Create array out of extraTags if there are any
         let extraTagsArray = [];
         if (extraTags) {
             extraTagsArray = extraTags.split(",").map(extraTag => extraTag.trim()).filter(extraTag => extraTag !== "");
         }
 
-        //get time book will take to read
+        // Ensure categories is an array
+        const categoriesArray = Array.isArray(categories) ? categories : [categories];
+
+        // Get time book will take to read
         const readingTime = calculateReadingTime(storyText);
 
-        //generate slugify
+        // Generate slug
         const slug = slugify(storyTitle, { lower: true, strict: true });
 
-        //update story
+        // Update story
         story.legalName = legalName;
         story.creditingName = story.creditingName;
         story.socialMedia = socialMedia_;
@@ -700,43 +867,138 @@ exports.updateStoryPost = async (req, res, next) => {
         story.storyTitle = storyTitle;
         story.slug = slug;
         story.storySummary = storySummary;
-        story.tags = tags;
+        story.tags = tags.split(",").map(tag => tag.trim()).filter(tag => tag !== ""); // Ensure tags is an array
         story.storyText = storyText;
-        story.categories = story.categories;
-        //add extraTags to extraTags
-        story.extraTags = extraTagsArray;
+        story.categories = categoriesArray; // Set categories as an array
+        story.extraTags = extraTagsArray; // Set extraTags as an array
         story.language = language;
         story.readingTime = readingTime;
 
-        //updateDetails array        
+        // Update details array        
         story.updateDetails.push({
             userId: userData.id,
-            updatedAt : Date.now()
+            updatedAt: Date.now()
         });
 
-        //save story
+        // Save story
         let story_ = await story.save();
 
+        // Send to success page
+        if (story_) {
 
-        //send to success page
-        if(story_){
-            return successPagefun(req, res, "Story Updated", 
-                `Your story has been updated successfully.`
-            );
-        }else{
+            //send to storie
+            return res.status(200).redirect(`/terrorTales/horrorStory/${story.slug}`);
+            // return successPagefun(req, res, "Story Updated", 
+            //     `Your story has been updated successfully.`
+            // );
+        } else {
             return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
         }
-
-        
     } catch (error) {
-
         console.log(error);
         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
-        
     }
-
-
 };
+
+// exports.updateStoryPost = async (req, res, next) => {
+
+//     const {
+//         legalName,
+//         socialMedia,
+//         website,
+//         youtube,
+//         backgroundUrl,
+//         storyTitle,
+//         storySummary,
+//         tags,
+//         storyText,
+//         categories,
+//         extraTags,
+//         language,
+//         storyId
+//     } = req.body;
+
+
+//     // socialMedia array
+//     const socialMedia_ = getValidSocialMediaArray(socialMedia);    
+
+//     try {
+
+//         const { userName, userActive, userData } = await someUserInfo(req, res, next);
+
+//         //check if user is logged in
+//         if (!userActive) {
+//             return globalErrorHandler(req, res, 401, "You do not have permission to update this story");
+//         }
+
+//         //find story
+//         const story = await Story.findById(storyId);
+
+//         //make sure story exist
+//         if (!story) {
+//             return globalErrorHandler(req, res, 404, "Story not found");
+//         }
+
+
+//         //create array out of extraTags if ther is any 
+//         let extraTagsArray = [];
+//         if (extraTags) {
+//             extraTagsArray = extraTags.split(",").map(extraTag => extraTag.trim()).filter(extraTag => extraTag !== "");
+//         }
+
+//         //get time book will take to read
+//         const readingTime = calculateReadingTime(storyText);
+
+//         //generate slugify
+//         const slug = slugify(storyTitle, { lower: true, strict: true });
+
+//         //update story
+//         story.legalName = legalName;
+//         story.creditingName = story.creditingName;
+//         story.socialMedia = socialMedia_;
+//         story.website = website;
+//         story.youtubeLink = replaceYouTubeLink(youtube);
+//         story.backgroundUrl = backgroundUrl;
+//         story.storyTitle = storyTitle;
+//         story.slug = slug;
+//         story.storySummary = storySummary;
+//         story.tags = tags;
+//         story.storyText = storyText;
+//         story.categories = story.categories;
+//         //add extraTags to extraTags
+//         story.extraTags = extraTagsArray;
+//         story.language = language;
+//         story.readingTime = readingTime;
+
+//         //updateDetails array        
+//         story.updateDetails.push({
+//             userId: userData.id,
+//             updatedAt : Date.now()
+//         });
+
+//         //save story
+//         let story_ = await story.save();
+
+
+//         //send to success page
+//         if(story_){
+//             return successPagefun(req, res, "Story Updated", 
+//                 `Your story has been updated successfully.`
+//             );
+//         }else{
+//             return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+//         }
+
+        
+//     } catch (error) {
+
+//         console.log(error);
+//         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
+        
+//     }
+
+
+// };
 
 
 
@@ -847,16 +1109,89 @@ exports.changeStoryPermision = async (req, res, next) => {
 
 
 
+
+//if breakdown users query to find related stories NLP
+
+const breakdownQuery = (query) => {
+    // Break down the query into individual words
+    const words = query.split(" ");
+    // Remove any empty strings
+    const filteredWords = words.filter(word => word !== "");
+    // Remove any words that are less than 3 characters
+    const filteredWords2 = filteredWords.filter(word => word.length > 2);
+    // Remove any duplicate words
+    const uniqueWords = [...new Set(filteredWords2)];
+    // Return the unique words
+    return uniqueWords;
+}
+
+
+
+//TELL USER WHAT IS THE ORIGNAL LANGUAGE THAT IT WAS WRITTEN ON
+const languageMap = {
+    "english": "English",
+    "ingles" : "English",
+    "Spanish": "Spanish",
+    "español": "Spanish",
+    "espanol": "Spanish",    
+    "mandarin Chinese": "Mandarin Chinese",
+    "hindi": "Hindi",
+    "arabic": "Arabic",
+    "bengali": "Bengali",
+    "portuguese": "Portuguese",
+    "russian": "Russian",
+    "ruso": "Russian",
+    "japanese": "Japanese",
+    "japones": "Japanese",
+    "punjabi": "Punjabi",
+    "german": "German",
+    "aleman": "German",
+    "wu Chinese": "Wu Chinese",
+    "javanese": "Javanese",
+    "korean": "Korean",
+    "koreano": "Korean",
+    "french": "French",
+    "frances" : "French",
+    "telugu": "Telugu",
+    "marathi": "Marathi",
+    "tamil": "Tamil",
+    "turkish": "Turkish",
+    "turco": "Turkish",
+    "vietnamese": "Vietnamese"
+};
+
 // query for stories 
-exports.queryStories = async function (req, res, next) {
+exports.queryStories = async function (req, res, next) {    
 
-    const {query,language,ranking,page,limit} = req.query;    
-
-    try {
-
-        // Query stories
-        const stories = await queryStoriesPagination(query,language,ranking,page,limit);
+    const {query,language,ranking,page,limit} = req.query;  
+    
+    let language_ = language;
+    let query_ = query.toLowerCase().trim();
+    
+    try {   
        
+        // Check if the query is "all" to indicate all languages
+        if (query_ === "all") {
+            language_ = "all";
+            query_ = "";
+        } else {
+            // Check if the query matches any language alias in the map
+            const languageName = languageMap[query_.toLowerCase()];
+            if (languageName) {
+                language_ = languageName;
+                query_ = "";
+            }
+        }
+
+        let stories = await new GetStories().queryStoriesPagination_(query_,language_,ranking,page,limit); 
+        
+       
+        //if no stories found
+        if (stories.totalStories == 0) {
+            stories = await new GetStories().queryStoriesEnhancedSearch(breakdownQuery(query_),language_,ranking,page,limit);
+        }
+
+
         //get users role 
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
 
@@ -871,7 +1206,8 @@ exports.queryStories = async function (req, res, next) {
                 totalStories: stories.totalStories,
                 top5Stories: stories.top5Stories,
                 languagesArray: stories.languagesArray,
-                UserRole: role
+                UserRole: role,
+                language : language_
             });
         } else {
             return res.status(500).json({
@@ -886,235 +1222,6 @@ exports.queryStories = async function (req, res, next) {
     }
 
 };
-
-
-// Get paginated stories and total count based on query, language, ranking, page, and limit
-async function queryStoriesPagination(query, language, ranking, page, limit) {
-    try {
-        // Convert page and limit to numbers and provide default values
-        const page_ = page * 1 || 1;
-        const limit_ = limit * 1 || 8;
-
-        // Calculate the number of documents to skip for pagination
-        const skip = (page_ - 1) * limit_;
-
-        // Default language is English unless specified
-        if (!language) {
-            language = "English";
-        }
-
-        // Check if the query is empty
-        const queryIsEmpty = !query || query.trim() === "";
-
-        // Define the aggregation pipeline for counting total stories
-        const countPipeline = [
-            {
-                $match: {
-                    language: language,
-                },
-            },
-        ];
-
-        if (!queryIsEmpty) {
-            // If the query is not empty, add the $or conditions for searching
-            countPipeline.unshift({
-                $match: {
-                    $or: [
-                        {
-                            legalName: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            creditingName: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            storyTitle: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            tags: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            categories: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-                        {
-                            slug: {
-                                $regex: query,
-                                $options: "i",
-                            },
-                        },
-
-                    ],
-                },
-            });
-        }
-
-        // Get the count of total stories that match the query
-        const totalCount = await Story.aggregate(countPipeline).count("totalStories");
-
-        //get higest upvote count using countPipeline get top 5 posts
-        const top5Stories = await Story.aggregate([
-            {
-                $match: {
-                    language: language,
-                },
-            },
-            {
-                $sort: {
-                    upvoteCount: -1
-                }
-            },
-            {
-                $limit: 5
-            }
-        ]);
-
-
-
-        //get languages abalable
-        const languages = await Story.aggregate([
-            {
-                $group: {
-                    _id: "$language"
-                }
-            }
-        ]);
-
-        //add values to array
-        let languagesArray = [];
-        languages.forEach((language_) => {
-            languagesArray.push(language_._id);
-        });
-
-
-
-        // Define the aggregation pipeline for fetching paginated stories
-        const pipeline = [
-            ...countPipeline, // Reuse the count pipeline
-            {
-                $match: {
-                    isApproved: true, // Filter out stories that are not approved
-                },
-            },            
-            {
-                $sort: {
-                    createdAt: -1, // Sort by createdAt field in descending order
-                },
-            },
-            {
-                $skip: skip,
-            },
-            {
-                $limit: limit_,
-            },
-            //get most newes to oldest
-            {
-                $sort: {
-                    createdAt: -1
-                }
-            },
-
-            {
-                $project: {
-                    // Include fields you want to retrieve
-                    legalName: 1,
-                    creditingName: 1,
-                    storyTitle: 1,
-                    storySummary: 1,
-                    tags: 1,
-                    storyText: 1,
-                    categories: 1,
-                    language: 1,
-                    extraTags: 1,
-                    upvoteCount: 1,
-                    createdAt: 1,
-                    readingTime: 1,
-                    comments: 1,
-                    readCount: 1,
-                    unicUrlTitle: 1,
-                    slug: 1,
-                },
-            },
-        ];
-
-        // Fetch stories using the aggregation pipeline
-        const stories = await Story.aggregate(pipeline);
-
-        return {
-            stories,
-            totalStories: totalCount[0] ? totalCount[0].totalStories : 0,
-            top5Stories,
-            languagesArray
-        };
-
-    } catch (error) {
-        console.error(error);
-        throw new Error("An error occurred while fetching stories with pagination.");
-    }
-}
-
-
-
-// getTop5Stories function to get top 5 stories using this story language and tags
-async function getTop6Stories(story) {
-    try {
-        const top5Stories = await Story.aggregate([
-            {
-                $match: {
-                    isApproved: true, // Filter out stories that are not approved
-                },
-            },
-            {
-                $match: {
-                    $and: [
-                        {
-                            _id: { $ne: story._id } // Exclude the current story
-                        },
-                        {
-                            $or: [
-                                {
-                                    tags: {
-                                        $in: story.tags
-                                    }
-                                },
-                                {
-                                    language: story.language
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                $sort: {
-                    upvoteCount: -1
-                }
-            },
-            {
-                $limit: 6
-            }
-        ]);
-
-        return top5Stories;
-    } catch (error) {
-        console.error("Error in getTop5Stories:", error);
-        throw error; // Propagate the error for handling by the calling code
-    }
-}
-
 
 
 

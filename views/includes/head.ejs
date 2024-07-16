@@ -3,26 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-
 
     <!-- check if  path icludes /terrorTales/horrorStory -->
     <% if (path.includes('/terrorTales/horrorStory')) { %>
+        <title><%- title %></title>
         <!-- Meta Description -->
-        <meta name="description" content="<%= story.storySummary %>">
+        <meta name="description" content="<%- story.storySummary %>">
 
         <!-- Social Media Meta Tags -->
-        <meta property="og:title" content="<%= story.title %>">
-        <meta property="og:description" content="<%= story.storySummary %>">
+        <meta property="og:title" content="<%- story.title %>">
+        <meta property="og:description" content="<%- story.storySummary %>">
         <meta property="og:image" content="<%= story.backgroundUrl || '../../IMAGES/logos/logo5.webp' %>">
         <meta property="og:url" content="https://www.terrorhub.com/terrorTales/horrorStory/<%= story.slug %>">
         <meta name="twitter:card" content="summary_large_image">
+        <!-- profile  -->
+    <% }else if(path.includes(`/profile`)){ %>
+        <title><%- profileOwner.username %></title>
+        <!-- Meta Description -->
+        <meta name="description" content="<%- profileOwner.bio %>">
 
-    <% }else{ %>
+        <!-- Social Media Meta Tags -->
+        <meta property="og:title" content="<%- profileOwner.username %> - Profile">
+        <meta property="og:description" content="<%- profileOwner.bio %>">
+        <meta property="og:image" content="<%= profileOwner.profilePic || '../../IMAGES/logos/logo5.webp' %>">
+        <meta property="og:url" content="https://www.terrorhub.com/profile/u/<%= profileOwner.username %>">
+        <meta name="twitter:card" content="summary_large_image">
+    
+    <%}else{ %>
+
+            <title><%- title %></title>
 
             <!-- Meta Description -->
-            <meta name="description" content="Explore chilling horror stories, mysterious Creepy Pastas, and predict your lifespan with the Death Clock. Join the terror at TerrorHub - Your portal to the unknown.">
-
+            <% if (description) { %>
+                <meta name="description" content="<%- description %>">
+            <% } else { %>
+                <meta name="description" content="Explore chilling horror stories, mysterious Creepy Pastas, and predict your lifespan with the Death Clock. Join the terror at TerrorHub - Your portal to the unknown.">
+            <% } %>
             
             <!-- Social Media Meta Tags -->
             <meta property="og:title" content="<%= title %>">

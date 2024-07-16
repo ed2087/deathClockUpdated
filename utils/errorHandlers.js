@@ -63,6 +63,7 @@ const displayError = (req, res, statusCode, message) => {
 
         title: "Error",
         path: "/errorHandler",
+        description: "TerrrorHub - Website Message Handler",
         statusCode: statusCode,
         message: message,
         userActive,

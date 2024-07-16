@@ -72,28 +72,22 @@ const storySchema = new mongoose.Schema({
   upvoteCount: {
     type: Number,
     default: 0,
-  },  
-  //add comments from users
-  comments : [
-    {
-      userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Reference to the user who commented
-        required: true,
-      },
-      comment: {
-        type: String,
-        required: true,
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },      
-    },
-  ],
+  }, 
   readingTime: {
     type: Number,
     required: true,
+  },
+  // Comments get number of comments only
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Message', // Reference to the user who commented
+      required: true,
+    },
+  ],
+  commentCount: {
+    type: Number,
+    default: 0,
   },
   // Reporting system
   reports: [
@@ -165,13 +159,7 @@ storySchema.pre('save', function (next) {
   next();
 });
 
-// ... (your existing code)
-
-const Story = mongoose.model('Story', storySchema);
-
-module.exports = Story;
-
-// create a text index
+// Create a text index
 storySchema.index({
   legalName: 'text',
   creditingName: 'text',
@@ -181,8 +169,14 @@ storySchema.index({
   storyText: 'text',
   categories: 'text',
   extraTags: 'text',
-  slug: 'text', // Include slug in text index
+  slug: 'text',
 });
+
+const Story = mongoose.model('Story', storySchema);
+
+module.exports = Story;
+
+
 
 
 

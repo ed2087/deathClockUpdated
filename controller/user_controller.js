@@ -35,8 +35,9 @@ exports.loginPage = async (req, res, next) => {
     let {userName, userActive} = await someUserInfo(req, res, next);
 
     res.render("../views/usersInterface/login",{
-        title: "Login",
+        title: "Login to TerrorHub - And Share Your Horror Stories",
         path: "/user/login",
+        description: "Login to your TerrorHub account - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: null,
         field: null,
         body: null,
@@ -55,6 +56,7 @@ exports.registerPage = async (req, res, next) => {
     res.render("../views/usersInterface/register",{
         title: "Register",
         path: "/user/register",
+        description: "Register to TerrorHub - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: null,
         field: null,
         body: null,
@@ -173,6 +175,7 @@ exports.postLogin = async (req, res, next) => {
             //create session
             req.session.userId = user._id;
             req.session.user = user;
+           
 
             //i only need username,id,email,role
             const userSession = {
@@ -186,18 +189,23 @@ exports.postLogin = async (req, res, next) => {
                 isStoryAllowed: user.isStoryAllowed,
                 isCommentAllowed: user.isCommentAllowed,
                 isBanned: user.isBanned,
+                bio : user.bio,
+                socialLinks: user.socialLinks,
+                badges: user.badges,
+                followers: user.followers,
+                following: user.following,
             };
 
             //set session
             req.session.user = userSession;
 
-            //save session
+            // Save session and redirect
             req.session.save((err) => {
-                if(err) console.log(err);
-            });
-
-            //redirect to home page
-            res.redirect("/");
+                if (err) {
+                    return globalErrorHandler(req, res, 500, "Internal Server Error", err);
+                }
+                res.redirect(`/profile/u/${user.username}`);
+            });           
     
    } catch (error) {
 
@@ -228,8 +236,7 @@ exports.postRegister = async (req, res, next) => {
 
         //validate
         const validate_ = registerValidation(req);
-
-        console.log(validate_);
+        
 
         if(validate_.length > 0) return handlingFlashError(res,req,next, "../views/usersInterface/register", "/register",  "Register", validate_[0].msg, validate_[0].field, req.body)
 
@@ -359,11 +366,13 @@ exports.verificationPage = async (req, res, next) => {
         res.status(200).render("../views/usersInterface/verifyEmail.ejs",{
             title: "Resend Activation Link",
             path: "/user/verificationPage",
+            description: "Activate your TerrorHub account",
             message: null,
             field: null,
             id: id,
             activateToken: activateToken,
-            userActive
+            userActive,
+            email : user.email
         });
 
         
@@ -377,9 +386,11 @@ exports.verificationPage = async (req, res, next) => {
 
 //resent activation link post
 exports.resendVerification = async (req, res, next) => {
+
+    // fix this
     try {
-        const {id} = req.params;
-        
+        const {id} = req.params;        
+
         //get user
         const user = await User.findById(id);
 
@@ -449,6 +460,7 @@ exports.resetPasswordRequestPage = async (req, res, next) => {
         res.render("../views/usersInterface/resetPasswordRequest.ejs",{
             title: "Reset Password",
             path: "/user/resetPasswordRequest",
+            description: "Reset your TerrorHub password",
             message: null,
             field: null,
             body: null,
@@ -587,6 +599,7 @@ exports.resetPasswordPage = async (req, res, next) => {
         res.render("../views/usersInterface/resetPassword.ejs",{
             title: "Reset Password",
             path: "/user/resetPassword",
+            description: "Reset your TerrorHub password",
             message: null,
             field: null,
             body: null,
@@ -686,6 +699,7 @@ exports.logout = async (req, res) => {
 
         // Destroy the session
         req.session.destroy((err) => {
+
             if (err) {
                 return globalErrorHandler(req, res, 500, "Internal Server Error", err);
             }
@@ -721,6 +735,7 @@ exports.userProfilePage = async (req, res, next) => {
         res.render("../views/usersInterface/profilePage.ejs",{
             title: "Profile",
             path: "/user/profile",
+            description: "Your TerrorHub profile",
             message: null,
             field: null,
             body: null,
@@ -761,6 +776,7 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
     res.render(urlPath, {
         title: title,
         path: path,
+        description : "Register to TerrorHub - Share your horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
         message: msg,
         field: path,
         body: body,
@@ -772,10 +788,65 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 
+//send mass message to all users in the database for special ocassions
 
 
+const sendmassEmail = async (req, res, next) => {
 
-//passworD2087
-//http://localhost:3000/user/activate/9e210301-23d9-45d6-bae9-bce2322e23d9
+    try {
 
-//http://localhost:3001/user/verificationPage?id=6569eab199a4b8078107ae01&activateToken=40629eb4-4e66-4e30-b379-3da46e5ffbb6
+        //get all users
+        const users = await User.find({});
+
+        //send email
+        const html = htmlTemplate(
+            `
+                <h2>New Updates on TerrorHub!</h2>
+                <p>Dear Users,</p>
+                <p>I'm thrilled to announce some exciting new features on TerrorHub:</p>
+                <ol style="margin-left: 20px; padding-left: 0;">
+                    <li style="margin-bottom: 10px; color: #8c0000;">Now you can comment on the stories you love, engaging with other users and sharing your thoughts.</li>
+                    <li style="margin-bottom: 10px; color: #8c0000;">You have the ability to update and delete your own stories, giving you more control over your content.</li>
+                </ol>
+                <p>And that's not all! I have some upcoming updates in the pipeline:</p>
+                <ol style="margin-left: 20px; padding-left: 0;">
+                    <li style="margin-bottom: 10px; color: #8c0000;">A "Follow" button for writers, so you can stay updated on your favorite authors' latest works.</li>
+                    <li style="margin-bottom: 10px; color: #8c0000;">A profile page/portfolio where you can manage your account. If you're a writer, you'll be able to manage your stories. Users will also be able to browse all your stories in one convenient location.</li>
+                </ol>
+                <p>I sincerely apologize for the delay in implementing these new features. As a solo developer, it's been challenging, but I'm committed to making TerrorHub the best it can be.</p>
+                <p>I'd love to hear your feedback on how I can continue to improve the website for everyone. Your input is invaluable to me!</p>
+                <p>You can contact me with your feedback at <a href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>.</p>
+                <a href="http://terrorhub.com/">Visit TerrorHub</a>
+            `
+        );        
+
+        //lest do a test email to edgararobledo2087@gmail.com
+        //const email = await sendEmail("edgararobledo2087@gmail.com", "New Updates on TerrorHub.com", html);
+        
+
+        //send email to all users
+        users.forEach(async (user) => {
+
+            //send verification email
+            const email = await sendEmail(user.email, "New Updates on TerrorHub.com", html);
+
+            if(email){
+                console.log("email sent");
+            }else{
+                console.log("email not sent");
+            }
+
+        });
+
+        console.log("done");
+
+    } catch (error) {
+        console.log(error);
+    }
+
+};
+
+//activate sendmassEmail only onece
+//sendmassEmail();
+
+

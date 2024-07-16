@@ -94,9 +94,14 @@
                 </div>
                 
 
-                <div class="form_group" id="tagsGroup">
-                    <label for="tags">Tags (separated by commas)*</label>
-                    <input type="text" id="tags" name="tags" value="<%= story.tags ? story.tags.join(', ') : '' %>" placeholder="Enter tags separated by commas">
+                <!-- Tags Input -->
+                <div class="form_group">
+                    <label for="tagsInput_fake">Tags:</label>
+                    <input type="text" id="tagsInput_fake" placeholder="Enter tags and press Enter" />
+                    <div id="tagsContainer" class="tags_catagories_continer">
+                    <!-- Existing tags will be appended here -->
+                    </div>
+                    <input type="hidden" id="tagsInput" name="tags" value="<%= story.tags.join(',') %>" />
                 </div>
                 
 
@@ -105,10 +110,38 @@
                     <textarea id="storyText" name="storyText" required placeholder="Enter the text of your story"><%- story.storyText ? story.storyText : '' %></textarea>
                 </div>
 
-                <!-- add extra tags -->
-                <div class="form_group" id="extraTagsGroup">
-                    <label for="extraTags">Extra Tags (separated by commas):</label>
-                    <input type="text" id="extraTags" name="extraTags" value="<%= story.extraTags ? story.extraTags.join(', ') : '' %>" placeholder="Enter extra tags separated by commas">
+                <!-- Categories Input -->
+                <div class="form_group" id="categoriesGroup">
+                    <label id="categories_label" for="categories">Select Scary Categories:</label>
+                    <div id="radio_wrap">
+                        <% if (popularCategories && popularCategories.length > 0) { %>
+                            <h3>Popular Categories:</h3>
+                            <% popularCategories.forEach(category => { %>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="<%= category.replace(/\s+/g, '') %>" name="categories" value="<%= category %>" <%= story.categories.includes(category) ? 'checked' : '' %>>
+                                    <label for="<%= category.replace(/\s+/g, '') %>"><%= category %></label>
+                                </div>
+                            <% }); %>
+                        <% } %>
+
+                        <h3>Other Categories:</h3>
+                        <% defaultCategories.forEach(category => { %>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="<%= category.replace(/\s+/g, '') %>" name="categories" value="<%= category %>" <%= story.categories.includes(category) ? 'checked' : '' %>>
+                                <label for="<%= category.replace(/\s+/g, '') %>"><%= category %></label>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <!-- Extra Tags Input -->
+                <div class="form_group">
+                    <label for="extraTagsInput_fake">Extra Categories (Optional):</label>
+                    <input type="text" id="extraTagsInput_fake" placeholder="Enter extra Categories and press Enter" />
+                    <div id="extraTagsContainer" class="tags_catagories_continer">
+                    <!-- Existing extra tags will be appended here -->
+                    </div>
+                    <input type="hidden" id="extraTagsInput" name="extraTags" value="<%= story.extraTags.join(',') %>" />
                 </div>
                 
 
@@ -124,7 +157,9 @@
     <!-- footer include -->
     <%- include('../includes/footer.ejs') %>
     
-    <script src="../../JS/master.js"></script> 
+    <script src="../../JS/master.js"></script>       
+    <script src="../../JS/submission.js"></script>
+    <script src="../../JS/edit.js"></script>
 
 </body>
 </html>

@@ -3,15 +3,16 @@
 </head>
 <body>
 
-    <!-- nav include -->
-    <%- include('./includes/nav.ejs') %>
-
-
 
         <div id="message_Container">
             <h2><%= successTitle %></h2>
             <h3><%= successMessage %></h3>
-            <a href="/">Home</a>
+
+            <div id="links_wrap">
+                <a href="/" class="btn">Back to Home</a>
+                <a href="/terrorTales"  class="btn">Read More Stories</a>
+            </div>
+            
         </div>
 
     <!-- footer include -->

@@ -18,7 +18,8 @@ const {
     deleteStory,
     changeStoryPermision,
     updateStoryPage,
-    updateStoryPost
+    updateStoryPost,
+    cuentosDeTerror
 } = require("../controller/terrorTales_controller.js");
 
 // Submission page
@@ -45,7 +46,6 @@ router.get("/query", queryStories);
 // Read page
 router.get("/horrorStory/:slug", readPage);
 
-
 // Upvote
 router.get("/upvote", upvote);
 
@@ -66,6 +66,9 @@ router.get("/editStory/:slug", updateStoryPage);
 
 // Update story post
 router.post("/editStory",csrfCheckRoute, updateStoryPost);
+
+// spanish version to lapding page
+router.get("/cuentosDeTerror", cuentosDeTerror);
 
 // Landing page
 router.get("*", terrorTalesPage);

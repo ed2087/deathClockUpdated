@@ -2,36 +2,41 @@ const { readFileAPI } = require("../utils/readFiles.js");
 const Question = require("../model/user.js");
 const Story = require("../model/submission.js");
 const xmlbuilder = require('xmlbuilder');
+const User = require("../model/user.js");
 // utils
 const {someUserInfo,calculateReadingTime,GetStories} = require("../utils/utils_fun.js");
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 
 
-exports.index = async function (req, res, next) {
+exports.index = async function (req, res, next) {  
 
   try {
 
     //check if user is logged in
-  let {userName, userActive} = await someUserInfo(req, res, next);
+  let { userName, userActive, userData } = await someUserInfo(req, res, next);
+ 
+  const userID = await User.findOne({ username: userName }).select("_id");
 
-
+  let xy_ = await new GetStories().getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(userID,4);
   
-  let topStoryByUpvotes = await new GetStories().getTopStorysByUpvotes(1);
+  let topStoryByUpvotes = xy_[0];
+  xy_.shift();
 
   //get id of topStoryByUpvotes
-  const topStoryByUpvotesId = topStoryByUpvotes[0]._id;
-  const topStorys = await new GetStories().getTopStorysExcept(topStoryByUpvotesId, 3);
-
-  const file = await readFileAPI("questions_api.json");
+  const topStorys = xy_;
+    
+  //const file = await readFileAPI("questions_api.json");
 
   res.status(200).render("index", {
     path: "/",
-    title: `TerrorHub - Home`,
+    title: `TerrorHub - Home To Death clock, Horror Stories Creepy Pasta & More`,
+    description: "TerrorHub is a community of horror enthusiasts who share their horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
     csrfToken: res.locals.csrfToken,
     userActive,
     userName,
     topStorys,
-    topStoryByUpvotes : topStoryByUpvotes[0],
+    topStoryByUpvotes,
+    userData
   });
     
   } catch (error) {
@@ -49,7 +54,7 @@ exports.faq = async function (req, res, next) {
 
   try {
     //check if user is logged in
-    let {userName, userActive} = await someUserInfo(req, res, next);
+    let { userName, userActive, userData } = await someUserInfo(req, res, next);
 
     res.status(200).render("faq", {
       path: "/faq",
@@ -58,6 +63,7 @@ exports.faq = async function (req, res, next) {
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,
+      userData
     });
 
   } catch (error) {
@@ -72,15 +78,17 @@ exports.disclaimer = async function (req, res, next) {
 
   try {
     //check if user is logged in
-    let {userName, userActive} = await someUserInfo(req, res, next);
+    let { userName, userActive, userData } = await someUserInfo(req, res, next);
 
     res.status(200).render("disclaimer", {
       path: "/disclaimer",
-      title: "Disclaimer",
+      title: "TerrorHub - Disclaimer",
       headerTitle: "Disclaimer",
+      description: "TerrorHub - Disclaimer",
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,
+      userData
     });
 
   } catch (error) {
@@ -95,15 +103,17 @@ exports.termsConditions = async function (req, res, next) {
 
   try {
     //check if user is logged in
-    let {userName, userActive} = await someUserInfo(req, res, next);
+    let { userName, userActive, userData } = await someUserInfo(req, res, next);
 
     res.status(200).render("termsConditions", {
       path: "/termsConditions",
       title: "Terms & Conditions",
       headerTitle: "Terms & Conditions",
+      description: "TerrorHub - Terms & Conditions",
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,
+      userData
     });
 
   } catch (error) {

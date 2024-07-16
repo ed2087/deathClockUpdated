@@ -1,0 +1,241 @@
+    <!-- head include -->
+    <%- include('./includes/head.ejs') %>
+
+    <link rel="stylesheet" href="../../CSS/landingStoryPage.css">
+    <link rel="stylesheet" href="../../CSS/profile.css">
+    
+    <!-- token -->
+    <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="isOwner" id="isOwner" value="<%= isOwner %>">
+</head>
+<body>
+
+    <div class="profile_container">
+
+        <div class="profile_header">            
+
+            <div class="profile_info">
+
+                <!-- top navigation home, stories page and settings button on the right -->
+                <div class="profile_top_nav">
+                    <div class="profile_innernav_wrap">
+                        <a href="/" class="home_btn">Home</a>
+                        <a href="/terrorTales" class="stories_btn">TerrorTales</a>
+                    </div>
+                    <!-- if userData not == null the next step -->
+                    <%if(userData){  %>
+                        <% if (isOwner) { %>
+                            <div class="profile_innernav_wrap">
+                                <button class="profile_settings_btn">Settings</button>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+                
+                <h2 class="username"><%= profileOwner.username %> </h2>                
+
+                <div class="bio">
+                    <span class="bioTitle">Bio</span>
+                    <p class="bioPtag">
+                        <%= profileOwner.bio ? profileOwner.bio : "So much emptiness..." %>
+                    </p>
+
+                </div>
+
+                <div class="metrics">
+                    <div class="metrics_items followers"><span id="followers_tick" class="num_metrics"><%=profileOwner.followersCount%></span> Followers</div>
+                    <div class="metrics_items stories"><span class="num_metrics"><%=profileOwner.storiesCount%></span> Stories</div>
+                    <div class="metrics_items likes"><span class="num_metrics"><%=profileOwner.upvotes%></span> Upvotes</div>
+                    <div class="metrics_items comments"><span class="num_metrics"><%=profileOwner.comments%></span> Comments</div>
+                </div>
+                
+                <% if (profileOwner.socialLinks.redditUrl || profileOwner.socialLinks.instagramUrl || profileOwner.socialLinks.twitterUrl || profileOwner.socialLinks.tumblrUrl) { %>
+                    <div class="metrics">
+                        <% if (profileOwner.socialLinks.redditUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.redditUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Reddit.webp" alt="Reddit">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.instagramUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.instagramUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Instagram.webp" alt="Instagram">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.twitterUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.twitterUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Twitter.webp" alt="Twitter">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.tumblrUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.tumblrUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Tumblr.webp" alt="Tumblr">
+                            </a>
+                        <% } %>
+                        <!-- ticktock and facebook -->
+                        <% if (profileOwner.socialLinks.tiktokUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.tiktokUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Tiktok.webp" alt="Tiktok">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.facebookUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.facebookUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Facebook.webp" alt="Facebook">
+                            </a>
+                        <% } %>
+                        <!-- linkedin and youtube website -->
+                        <% if (profileOwner.socialLinks.linkedinUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.linkedinUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Linkedin.webp" alt="Linkedin">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.youtubeUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.youtubeUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Youtube.webp" alt="Youtube">
+                            </a>
+                        <% } %>
+                        <% if (profileOwner.socialLinks.websiteUrl) { %>
+                            <a href="<%= profileOwner.socialLinks.websiteUrl %>" target="_blank">
+                                <img src="../../IMAGES/social/Website.webp" alt="Website">
+                            </a>
+                        <% } %>
+                    </div>
+                <% } %>
+
+                <!-- if owner then don't display -->
+                 <% if(userData){ %>
+                    <% if (profileOwner.username !== userData.username) { %>
+                        <!-- check if user is following profileOwner by checking the following array for profileOwner's id -->
+                        <% if (userData.following && profileOwner.id && userData.following.some(follow => follow && follow.toString() === profileOwner.id.toString())) { %>
+                            <div class="actions">
+                                <button id="unfollow_subBTN" class="follow_btn call_to_action_red">Unfollow</button>
+                            </div>
+                        <% } else { %>
+                            <div class="actions">
+                                <button id="follow_subBTN" class="follow_btn call_to_action_red">Follow</button>
+                            </div>
+                        <% } %>
+                    <% } %>
+                 <% }else{ %>
+                    <div class="actions">
+                        <a href="/user/login" class="follow_btn call_to_action_red">Log in to follow</a>
+                    </div>
+                <% } %>
+            
+            </div>
+            
+        </div>
+
+        <div class="search_bar">
+            <input type="text" id="searchInput" placeholder="Search stories...">
+        </div>
+
+        <div class="stories_grid" id="stories_grid"></div>
+        
+    </div>
+
+
+    <!-- settings container -->
+    <%if(userData){  %>
+        <% if (isOwner) { %>
+            <div class="settings_container">
+                <!-- close button -->
+                <div class="profile_innernav_wrap">
+                    <button class="profile_settings_btn">Close</button>
+                </div>
+
+                <div class="settings_header">
+                    <h2>Settings</h2>
+                </div>
+                <div class="settings_body">
+
+                    <form action="/profile/u/<%= userData.username %>/username" method="POST" class="form_settings_item">
+                        <div class="settings_item">
+                            <h3>Change Username</h3>
+                            <div class="message">
+                                <p id="message_alert"></p>
+                            </div>
+                            <input type="text" placeholder="New Username" name="newUsername" id="userName" value="<%= userData.username %>">
+                        </div>
+                        <!-- token -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="settings_item">
+                            <button type="submit" id="register_button" class="post_btn call_to_action_red">Save</button>
+                        </div>
+                    </form>
+
+                    <form action="/profile//u/<%= userData.username %>/bio" method="POST" class="form_settings_item">
+                        <div class="settings_item">
+                            <h3>Change Bio</h3>
+                            <textarea name="bio" id="bio"><%= userData.bio ? userData.bio : "So much emptiness..." %></textarea>
+                        </div>
+                        <!-- token -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="settings_item">
+                            <button type="submit" class="post_btn call_to_action_red">Save</button>
+                        </div>
+                    </form>
+
+                    <!-- Add social media links section -->
+                    <form action="/profile/u/<%= userData.username %>/url" method="POST" class="form_settings_item">
+                        <div class="settings_item">
+                            <h3>Social Media Links</h3>
+                            <input type="text" placeholder="Reddit URL" name="reddit" id="redditUrl" value="<%= profileOwner.socialLinks.redditUrl %>">
+                            <input type="text" placeholder="Instagram URL" name="instagram" id="instagramUrl" value="<%= profileOwner.socialLinks.instagramUrl %>">
+                            <input type="text" placeholder="Twitter/X URL" name="twitter" id="twitterUrl" value="<%= profileOwner.socialLinks.twitterUrl %>">
+                            <input type="text" placeholder="Tumblr URL" name="tumblr" id="tumblrUrl" value="<%= profileOwner.socialLinks.tumblrUrl %>">
+                            <input type="text" placeholder="Facebook URL" name="facebook" id="facebookUrl" value="<%= profileOwner.socialLinks.facebookUrl %>">
+                            <input type="text" placeholder="Tiktok URL" name="tiktok" id="tiktokUrl" value="<%= profileOwner.socialLinks.tiktokUrl %>">
+                            <input type="text" placeholder="LinkedIn URL" name="linkedin" id="linkedinUrl" value="<%= profileOwner.socialLinks.linkedinUrl %>">
+                            <input type="text" placeholder="Youtube URL" name="youtube" id="youtubeUrl" value="<%= profileOwner.socialLinks.youtubeUrl %>">
+                            <input type="text" placeholder="Website URL" name="website" id="websiteUrl" value="<%= profileOwner.socialLinks.websiteUrl %>">
+                        </div>
+                        <!-- token -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="settings_item">
+                            <button type="submit" class="post_btn call_to_action_red" id="saveButton">Save</button>
+                        </div>
+                    </form>
+
+                    <!-- change password -->
+                    <form action="/profile/u/<%= userData.username %>/password" method="POST" class="form_settings_item">
+                        <div class="settings_item">
+                            <h3>Change Password</h3>
+                            <input type="password" name="currentPassword" placeholder="Current Password">
+                            <input type="password" name="newPassword" placeholder="New Password">
+                        </div>
+                        <!-- token -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="settings_item">
+                            <button type="submit" class="post_btn call_to_action_red">Change Password</button>
+                        </div>
+                    </form>
+
+                    <!-- delete account form -->
+                    <!-- <form action="/profile/settings/delete/u/<%= userData.id %>" method="POST" class="form_settings_item">
+                        <div class="settings_item">
+                            <h3>Delete Account</h3>
+                            <input type="password" placeholder="Password">
+                        </div>                       
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="settings_item">
+                            <button type="submit" class="post_btn call_to_action_red">Delete Account</button>
+                        </div>
+                    </form> -->
+                    
+                </div>
+
+            </div>
+        <% } %>
+    <% } %>
+
+    <button id="loadMoreStories">Load More</button>
+
+    <!-- footer include -->
+    <%- include('./includes/footer.ejs') %>
+
+    <script src="../../JS/master.js"></script>
+    <script src="../../JS/profile.js"></script>
+    <script src="../../JS/utils.js"></script>
+    <script src="../../JS/userInterface.js"></script>
+</body>
+</html>
