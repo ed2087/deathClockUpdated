@@ -1,1 +1,120 @@
-console.log("readPageFun.js");const upvoteFetch=async()=>{const e=id_("csrf").value,t=`/terrorTales/upvote?storyID=${id_("postId").value}&token=${e}`,o=await fetch(t,{method:"GET"}),a=await o.json();if("ok"===a.status){const e=queryAll_(".upvoteCounter");for(let t=0;t<e.length;t++)e[t].innerHTML=a.message;id_("upVote").disabled=!0,globalMessage("Upvote","Thank you for voting!",null)}else globalMessage("Upvote",a.message,null),id_("upVote").disabled=!0},reportFun=async()=>{const e=id_("csrf").value,t=id_("postId").value,o=prompt("Please enter a reason for reporting this story");if(""===o||null===o)return;const a=`/terrorTales/report?storyID=${t}&token=${e}&reason=${o}`,r=await fetch(a,{method:"GET"}),s=await r.json();s.status,globalMessage("Report",s.message,null)},aTagMold=e=>`<a href="${e}" target="_blank" style="color:#eb6612;">${extractDomain(e)}</a>`,extractDomain=e=>{const t=e.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);return null!=t&&t.length>2&&"string"==typeof t[2]&&t[2].length>0?t[2]:null},processParagraphs=()=>{document.querySelectorAll(".sentence_p").forEach((e=>{e.querySelectorAll("a");let t=findUrls(e.innerHTML);t.length>0&&t.forEach((t=>{e.innerHTML=e.innerHTML.replace(t,aTagMold(t))}))}))},findUrls=e=>e.match(/(https?:\/\/[^\s]+)/g)||[];window.onload=processParagraphs;
+console.log("readPageFun.js");
+
+
+
+const upvoteFetch = async () => {
+
+    // csrf token
+    const csrfToken = id_("csrf").value;
+    // post id
+    const postId = id_("postId").value;
+
+    //add post post id and csrd to url
+    const url = `/terrorTales/upvote?storyID=${postId}&token=${csrfToken}`;
+
+    // fetch add post id and csrf token to url we are using crud operation so use get 
+    const response = await fetch(url, {
+        method: "GET",
+    });
+
+    // get data from response
+    const data = await response.json();
+
+    //check if status is ok
+    if (data.status === "ok") {
+        //update upvote count
+        const upvoteCounter = queryAll_(".upvoteCounter");
+        //loop through all .upvoteCounter
+        for (let i = 0; i < upvoteCounter.length; i++) {
+            //update .upvoteCounter
+            upvoteCounter[i].innerHTML = data.message;
+        }
+
+        // disable upvote button
+        id_("upVote").disabled = true;
+        //alert user
+        //title, message
+        globalMessage("Upvote", "Thank you for voting!", null);
+    }else{         
+        globalMessage("Upvote", data.message, null);
+        // disable upvote button
+        id_("upVote").disabled = true;
+    }
+
+};
+
+
+
+const reportFun = async () => {
+
+    // csrf token
+    const csrfToken = id_("csrf").value;
+    // post id
+    const postId = id_("postId").value;
+
+    //prompt user for reason
+    const reason = prompt("Please enter a reason for reporting this story");
+
+    //check if reason is empty or cancel return
+    if (reason === "" || reason === null) {
+        return;
+    }
+
+    //add post post id and csrd to url
+    const url = `/terrorTales/report?storyID=${postId}&token=${csrfToken}&reason=${reason}`;
+
+    // fetch add post id and csrf token to url we are using crud operation so use get 
+    const response = await fetch(url, {
+        method: "GET",
+    });
+
+    // get data from response
+    const data = await response.json();
+
+    //check if status is ok
+    if (data.status === "ok") {
+       globalMessage("Report", data.message, null);
+    }else{
+        globalMessage("Report", data.message, null);
+    }
+
+
+};
+
+const aTagMold = (url) => {
+    const domain = extractDomain(url);
+    return `<a href="${url}" target="_blank" style="color:#eb6612;">${domain}</a>`;
+}
+
+const extractDomain = (url) => {
+    const match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+    if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+        return match[2];
+    } else {
+        return null;
+    }
+}
+
+const processParagraphs = () => {
+    const paragraphs = document.querySelectorAll('.sentence_p');
+
+    paragraphs.forEach(paragraph => {
+        const links = paragraph.querySelectorAll('a');
+
+        let urls = findUrls(paragraph.innerHTML);
+
+        if (urls.length > 0) {
+            urls.forEach(url => {
+                paragraph.innerHTML = paragraph.innerHTML.replace(url, aTagMold(url));
+            });
+        }
+    });
+};
+
+const findUrls = (text) => {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.match(urlRegex) || [];
+};
+
+window.onload = processParagraphs;
+

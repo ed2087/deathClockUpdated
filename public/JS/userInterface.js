@@ -1,1 +1,81 @@
-const cleanAndValidateUsername=e=>{const s=e.replace(/[\s\W]/g,""),t=s.replace(/[^a-zA-Z0-9]/g,""),a=t.slice(0,15);return id_("userName").value=a,a},fetchUsernameCheck=async e=>{try{const s=await fetch(`/user/userName?userName=${e}`),t=await s.json();handleResponse(t)}catch(e){handleError()}},handleResponse=e=>{!0!==e.status?enableRegisterButton(e.message):disableRegisterButton(e.message)},handleError=()=>{id_("userName").style.color="lightgreen",id_("message_alert").style.color="red",id_("message_alert").innerHTML="Error checking username"},enableRegisterButton=e=>{id_("message_alert").style.color="lightgreen",id_("message_alert").innerHTML=e,id_("register_button").disabled=!1},disableRegisterButton=e=>{id_("message_alert").style.color="red",id_("message_alert").innerHTML=e,id_("userName").style.color="red",id_("register_button").disabled=!0};let timeout;query_(".message").display="none",id_("userName").addEventListener("input",e=>{const s=e.target.value;cleanAndValidateUsername(s),clearTimeout(timeout),timeout=setTimeout(()=>{fetchUsernameCheck(s)},1e3)});
+// Function to clean and validate the username format
+const cleanAndValidateUsername = (username) => {
+    // Remove spaces and special characters
+    const cleanedUsername = username.replace(/[\s\W]/g, '');
+   
+    // Only allow alphanumeric characters
+    const validUsername = cleanedUsername.replace(/[^a-zA-Z0-9]/g, '');
+   
+    // Truncate the username to the first 20 characters
+    const truncatedUsername = validUsername.slice(0, 15);   
+
+    // Update the input field with the truncated username
+    id_("userName").value = truncatedUsername;
+
+    return truncatedUsername;
+    
+};
+
+
+
+// Function to fetch the username check
+const fetchUsernameCheck = async (username) => { 
+    try {
+        const response = await fetch(`/user/userName?userName=${username}`);
+        const data = await response.json();
+
+        id_("message_alert").innerHTML = '';
+        // Handle successful request
+        handleResponse(data);
+    } catch (error) {
+        // Handle request error
+        handleError();
+    }
+};
+
+// Function to handle the response data
+const handleResponse = (data) => {
+    if (data.status !== true) {
+        enableRegisterButton(data.message);
+    } else {
+        disableRegisterButton(data.message);
+    }
+};
+
+// Function to handle the error response
+const handleError = () => {
+    id_("userName").style.color = "#007a00";
+    id_("message_alert").style.color = "red";
+    id_("message_alert").innerHTML = "Error checking username";
+};
+
+// Function to enable the register button
+const enableRegisterButton = (message) => {
+    id_("userName").style.color = "#007a00";
+    id_("message_alert").style.color = "lightgreen";
+    id_("message_alert").innerHTML = message;
+    id_("register_button").disabled = false;
+};
+
+// Function to disable the register button
+const disableRegisterButton = (message) => {
+    id_("message_alert").style.color = "red";
+    id_("message_alert").innerHTML = message;
+    id_("userName").style.color = "darkred";
+    id_("register_button").disabled = true;
+};
+
+// Listen for #userName input
+let timeout;
+query_(".message").display = "none";
+id_("userName").addEventListener("input", (e) => {
+    const username = e.target.value;
+
+    cleanAndValidateUsername(username);
+
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+        fetchUsernameCheck(username);
+    }, 1000);
+});

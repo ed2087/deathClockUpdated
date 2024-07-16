@@ -1,1 +1,270 @@
-function calculateBMIMetric(e,t){return e/Math.pow(t,2)}function calculateBMIStandard(e,t){return 703*e/Math.pow(t,2)}function convertToInches(e,t){return 12*e+t}function calculateBMI_(){const e=document.getElementById("q23_"),t=document.getElementById("q24_"),n=parseFloat(e.value),o=t.value.split("."),s=parseFloat(o[0]),i=parseFloat(o[1]||0);if(isNaN(n)||isNaN(s)||isNaN(i)||n<=0||s<=0||i<0)return"Invalid Input";const r="standard";let a;if("metric"===r){const e=convertToInches(s,i),t=.0254*e,o=.453592*n;a=calculateBMIMetric(o,t)}else{const e=convertToInches(s,i);a=calculateBMIStandard(n,e)}return a.toFixed(2)}console.log("deathClock_questions.js loaded");const getQuestionsJson=async()=>{const e=await fetch_("/questionsAPI","GET");return e.questions},addToJson=(e,t,n)=>{const o=e.find(e=>e.id===t);o&&(o.user={userAnswer:n,points:0})},Q1_MAX_LENGTH=10,SPECIAL_CHARACTERS=["{","}","[","]","(",")","<",">","/","\\","|","~","`","!","@","#","$","%","^","&","*","+","=","?",":",";",'"',"'"],checkQ1=e=>{e.preventDefault();let t=id_("q1"),n=t.value;n.length>Q1_MAX_LENGTH&&(t.value=n.slice(0,Q1_MAX_LENGTH),n=t.value);const o=sanitizeInput(n);t.value=o,t.style.color="white"},convertToMetric=e=>{console.log("convertToMetric()"),e.preventDefault();let t=id_("q23_"),n=id_("q24_"),o=parseFloat(t.value),s=n.value.split("."),i=parseFloat(s[0]),r=parseFloat(s[1]||0);if(isNaN(r)||o<=0||i<=0||r<0)return;const a=convertToInches(i,r);let l=.0254*a,c=.453592*o;isNaN(c)&&(c=0),isNaN(l)&&(l=0),id_("metric_height").innerHTML=`${l.toFixed(2)} M`,id_("metric_weight").innerHTML=`${c.toFixed(2)} KG`};id_("q23_")&&(id_("q23_").addEventListener("change",convertToMetric),id_("q23_").addEventListener("keyup",convertToMetric)),id_("q24_")&&(id_("q24_").addEventListener("change",convertToMetric),id_("q24_").addEventListener("keyup",convertToMetric));const sanitizeInput=e=>{let t=e.trim();for(let e=0;e<SPECIAL_CHARACTERS.length;e++){const n=SPECIAL_CHARACTERS[e];t=t.split(n).join("")}return t},q1=id_("q1");q1&&q1.addEventListener("keyup",checkQ1);const checkAll=async e=>{e.preventDefault(),console.log("checkAll()");const t=queryAll_("input"),n=queryAll_("select"),o=[...t],s=[...n],i=o.every(e=>"email"===e.name||""!==e.value);if(!i){for(let e=0;e<o.length;e++)if(""===o[e].value){o[e].scrollIntoView();break}return}const r=s.map(e=>e.value);let a=await getQuestionsJson();addToJson(a,"q1",id_("q1").value),addToJson(a,"q2",id_("q2").value);let l=0;for(let e=0;e<s.length;e++)if(s[e]&&s[e].name)for(let t=0;t<a.length;t++)if(23!==a[t].id&&s[e].id.toLowerCase()===a[t].id.toLowerCase())for(let n=0;n<a[t].answer_options.length;n++){const o=r[e].trim().toLowerCase(),s=a[t].answer_options[n].option.trim().toLowerCase();o===s&&(l+=a[t].answer_options[n].scores[0],a[t].user={userAnswer:r[e],points:a[t].answer_options[n].scores[0]})}const c=id_("q23_").value,d=id_("q24_").value;addToJson(a,"q23",c),addToJson(a,"q24",d);const u=calculateBMI_();addToJson(a,"q25",u);const _={id:"userPermission",userPermission:id_("q_permission").value},v={_csrf:id_("csrf").value},h={totalPoints:l};a.push(h,_,v);const p=await sendJson("/questionsAPI","POST",a);if(p){const e=p.userShortId;window.location.href="/deathClock/results/"+e}else console.log("Error sending json");const q=id_("submit_btn");q.disabled=!0},healthForm=id_("healthForm");healthForm&&healthForm.addEventListener("submit",checkAll);
+console.log('deathClock_questions.js loaded');
+
+const getQuestionsJson = async () => {
+    const data = await fetch_('/questionsAPI', 'GET');
+    return data.questions;
+};
+
+const addToJson = (json, id, value) => {
+    const foundQuestion = json.find((question) => question.id === id);
+
+    if (foundQuestion) {
+        foundQuestion.user = {
+            userAnswer: value,
+            points: 0
+        };
+    }
+};
+
+/////////////////////////////////////////
+//value checks
+/////////////////////////////////////////
+// constants
+const Q1_MAX_LENGTH = 10;
+const SPECIAL_CHARACTERS = ['{', '}', '[', ']', '(', ')', '<', '>', '/', '\\', '|', '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '+', '=', '?', ':', ';', '"', '\''];
+
+// function
+const checkQ1 = (e) => {
+    e.preventDefault();
+    let q1 = id_('q1');
+    let q1Value = q1.value;
+
+    // validate length
+    if (q1Value.length > Q1_MAX_LENGTH) {
+        q1.value = q1Value.slice(0, Q1_MAX_LENGTH);
+        q1Value = q1.value; // Update q1Value after truncating
+    }
+
+    // remove spaces and special characters
+    const sanitizedQ1Value = sanitizeInput(q1Value);
+
+    // update q1 input
+    q1.value = sanitizedQ1Value;
+    q1.style.color = 'white';
+}
+
+
+function calculateBMIMetric(weight, heightInMeters) {
+    return weight / Math.pow(heightInMeters, 2);
+}
+
+// Function for standard BMI calculation
+function calculateBMIStandard(weight, heightInInches) {
+    return (weight * 703) / Math.pow(heightInInches, 2);
+}
+
+// Function to convert feet and inches to inches
+function convertToInches(feet, inches) {
+    return (feet * 12) + inches;
+}
+
+// Main function to determine which calculation to use based on the weight type
+function calculateBMI_() {
+    const weightInput = document.getElementById('q23_');
+    const heightInput = document.getElementById('q24_');
+
+    const weight = parseFloat(weightInput.value);
+    const heightValue = heightInput.value.split('.'); // Splitting the value into feet and inches
+    const feet = parseFloat(heightValue[0]);
+    const inches = parseFloat(heightValue[1] || 0); // If no inches provided, default to 0
+
+    if (isNaN(weight) || isNaN(feet) || isNaN(inches) || weight <= 0 || feet <= 0 || inches < 0) {
+        return 'Invalid Input';
+    }
+
+    const weightType = "standard";
+    let bmi;
+    
+
+    if (weightType === 'metric') {
+        // Convert feet and inches to meters
+        const totalInches = convertToInches(feet, inches);
+        const heightMeters = totalInches * 0.0254;
+    
+        // Convert pounds to kilograms
+        const weightKg = weight * 0.453592; 
+    
+        bmi = calculateBMIMetric(weightKg, heightMeters);
+        
+    } else {
+        const heightInInches = convertToInches(feet, inches); // Convert feet and inches to total inches for standard calculation
+        bmi = calculateBMIStandard(weight, heightInInches);
+    }
+
+    return bmi.toFixed(2); // Just the BMI value
+}
+
+
+/////////////////////////////////////////
+//convert standard to metric
+/////////////////////////////////////////
+const convertToMetric = (e) => {
+    console.log('convertToMetric()');
+    e.preventDefault();
+
+    let weightInput = id_('q23_');
+    let heightInput = id_('q24_');
+
+    let weight = parseFloat(weightInput.value);
+    let heightValue = heightInput.value.split('.'); // Splitting the value into feet and inches
+    let feet = parseFloat(heightValue[0]);
+    let inches = parseFloat(heightValue[1] || 0); // If no inches provided, default to 0
+
+    if (isNaN(inches) || weight <= 0 || feet <= 0 || inches < 0) {
+        return;
+    }
+
+    // Convert feet and inches to meters
+    const totalInches = convertToInches(feet, inches);
+    let heightMeters = totalInches * 0.0254;
+
+    // Convert pounds to kilograms
+    let weightKg = weight * 0.453592;
+
+
+    //check if its empty or NaN add 0.0
+    if (isNaN(weightKg)) {
+        weightKg = 0.0;
+    }
+
+    if (isNaN(heightMeters)) {
+        heightMeters = 0.0;
+    }
+
+
+    id_("metric_height").innerHTML = `${heightMeters.toFixed(2)} M`;
+    id_("metric_weight").innerHTML = `${weightKg.toFixed(2)} KG`;
+    
+};
+
+// listen for q23_ and q24_ on change event
+if (id_('q23_')) {
+    id_('q23_').addEventListener('change', convertToMetric);
+    id_('q23_').addEventListener('keyup', convertToMetric);
+}
+
+if (id_('q24_')) {
+    id_('q24_').addEventListener('change', convertToMetric);
+    id_('q24_').addEventListener('keyup', convertToMetric);
+}
+
+
+
+
+
+// helper function
+const sanitizeInput = (input) => {
+    let sanitizedInput = input.trim(); // remove spaces from the beginning and end
+
+    // remove special characters
+    for (let i = 0; i < SPECIAL_CHARACTERS.length; i++) {
+        const specialCharacter = SPECIAL_CHARACTERS[i];
+        sanitizedInput = sanitizedInput.split(specialCharacter).join('');
+    }
+
+    return sanitizedInput;
+}
+
+
+//listen for q1 on keyup event
+const q1 = id_('q1');
+if (q1) {
+    q1.addEventListener('keyup', checkQ1);
+}
+
+
+const checkAll = async (e) => {
+    e.preventDefault();
+
+    console.log('checkAll()');
+
+    const inputs = queryAll_('input');
+    const selects = queryAll_('select');
+
+    const inputs_ = [...inputs];
+    const selects_ = [...selects];
+
+    const checkValues = inputs_.every((value) => value.name === 'email' || value.value !== '');
+
+    if (!checkValues) {
+        for (let i = 0; i < inputs_.length; i++) {
+            if (inputs_[i].value === '') {
+                inputs_[i].scrollIntoView();
+                break;
+            }
+        }
+        return;
+    }
+
+    const selectValuesArr = selects_.map((value) => value.value);
+
+    let json = await getQuestionsJson();
+
+    addToJson(json, 'q1', id_('q1').value);
+    addToJson(json, 'q2', id_('q2').value);
+
+    let addPoints = 0;
+
+    for (let i = 0; i < selects_.length; i++) {
+        if (selects_[i] && selects_[i].name) {
+            for (let j = 0; j < json.length; j++) {
+                if (json[j].id !== 23 && selects_[i].id.toLowerCase() === json[j].id.toLowerCase()) {
+                    for (let k = 0; k < json[j].answer_options.length; k++) {
+                        const userAnswer = selectValuesArr[i].trim().toLowerCase();
+                        const option = json[j].answer_options[k].option.trim().toLowerCase();
+
+                        if (userAnswer === option) {
+                            addPoints += json[j].answer_options[k].scores[0];
+                            json[j].user = {
+                                userAnswer: selectValuesArr[i],
+                                points: json[j].answer_options[k].scores[0]
+                            };
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const weightInput = id_('q23_').value;
+    const heightInput = id_('q24_').value; 
+
+    addToJson(json, 'q23', weightInput);
+    addToJson(json, 'q24', heightInput);
+
+    const bmi = calculateBMI_();
+    addToJson(json, 'q25', bmi);
+
+    const userPermission = {
+        id: 'userPermission',
+        userPermission: id_('q_permission').value
+    };
+
+    const csrf = {
+        _csrf: id_('csrf').value
+    };
+
+    const totalPoints = {
+        totalPoints: addPoints
+    };
+
+    json.push(totalPoints, userPermission, csrf);
+    
+    // Send json to /questionsAPI
+    const data = await sendJson('/questionsAPI', 'POST', json);
+
+    if (data) {
+        const userShortId = data.userShortId;
+        window.location.href = '/deathClock/results/' + userShortId;
+    } else {
+        console.log('Error sending json');
+    }
+
+    const submitBtn = id_('submit_btn');
+    submitBtn.disabled = true;
+};
+
+const healthForm = id_('healthForm');
+if (healthForm) {
+    healthForm.addEventListener('submit', checkAll);
+}
