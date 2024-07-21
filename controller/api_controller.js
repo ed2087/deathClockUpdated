@@ -83,7 +83,7 @@ const gptInstruction = {
       lifespan_calculation{
         title: some title,
         message: some message,        
-      } -- do this for lifespan_calculation, improve_lifespan, bmi_explanation, cause_of_death_explanation, horoscope, card_reading
+      } -- do this for Lifespan_Calculation, Improve_Lifespan, BMI_Explanation, Cause_of_Death_Explanation, Creepy_Omen, Supernatural_Encounter
     - Include realistic and personalized advice based on the user's data -explain how many years the lost and how we got the calculation.
   `
 };
