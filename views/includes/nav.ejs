@@ -126,7 +126,7 @@
             <li><a id="logIn_small" href="/user/login">Login</a></li>
         <% }else{ %>
             <li>
-                <a id="userAvatar" href="#">
+                <a id="userAvatar" href="/profile/u/<%= userName %>">
                     <!-- get first letter of users name -->
                     <p id="nav_user_avatar_small"><%= userName.charAt(0).toUpperCase() %></p>
                     <!-- <img src="../../IMAGES/Icons/user.webp" alt="user" id="nav_user_avatar"> -->
