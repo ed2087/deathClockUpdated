@@ -10,51 +10,110 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  allowed: {
-    type: Boolean,
-    default: false, // Set the default value to false
-  },
   birthdate: {
     type: Date,
     required: true,
-  },  
-  clock:{
-      predictedDeathYear: {
-        type: Number,
-        default: 0, 
-      },
-      yearsLeft: {
-        type: Number,
-        default: 0,
-      },
-      monthsLeft: {
-        type: Number,
-        default: 0,
-      },
-      weeksLeft: {
-        type: Number,
-        default: 0,
-      },
-      daysLeft: {
-        type: Number,
-        default: 0,
-      },
-      hoursLeft: {
-        type: Number,
-        default: 0,
-      },
-      secondsLeft: {
-        type: Number,
-        default: 0,
-      },
-      //add object for expectedFutureDate
-      expectedFutureDate: {
-        type: Object,
-        default: 0,
-      },
+  },
+  gender: {
+    type: String,
+    required: true,
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  height: {
+    type: String,
+    required: true,
+  },
+  weight: {
+    type: String,
+    required: true,
+  },
+  chronic: {
+    type: String,
+  },
+  cancer: {
+    type: String,
+  },
+  bloodPressure: {
+    type: String,
+    required: true,
+  },
+  cholesterol: {
+    type: String,
+    required: true,
+  },
+  smoke: {
+    type: String,
+  },
+  alcohol: {
+    type: String,
+  },
+  diet: {
+    type: String,
+  },
+  exercise: {
+    type: String,
+  },
+  sleep: {
+    type: String,
+    required: true,
+  },
+  stress: {
+    type: String,
+  },
+  risks: {
+    type: String,
+  },
+  stroke: {
+    type: String,
+  },
+  hereditary: {
+    type: String,
+  },
+  checkup: {
+    type: String,
+  },
+  vaccinations: {
+    type: String,
+  },
+  social: {
+    type: String,
+  },
+  occupation: {
+    type: String,
+  },
+  workEnv: {
+    type: String,
+  },
+  scenario1: {
+    type: String,
+  },
+  scenario2: {
+    type: String,
+  },
+  scenario3: {
+    type: String,
   },
   jsonFile: {
     type: String, // Assuming the JSON file content will be stored as a string
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  lastPredictionDate: {
+    type: Date,
+    default: null, // Track the last time a user made a prediction
+  },
+  predicted_Year: {
+    type: Number,
+    default: 0,
+  },
+  predicted_date_of_death: {
+    type: Date,
+    default: Date.now,
   },
   createdAt: {
     type: Date,

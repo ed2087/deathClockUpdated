@@ -29,6 +29,9 @@ const UserRoutes = require("./routes/user_routes.js");
 const StoryMessageRoutes = require("./routes/storyMessage_routes.js");
 const ProfileRoutes = require("./routes/profileRoutes.js");
 
+// refresh user session
+const refreshUserSession = require('./middleware/session-data-refresh.js');
+
 
 // Create Express app
 const app = express();
@@ -112,6 +115,10 @@ app.use((req, res, next) => {
 });
 
 
+//refresh user session
+app.use(refreshUserSession);
+
+
 // Routes
 app.use(StoryMessageRoutes);
 app.use("/user", UserRoutes);
@@ -140,7 +147,8 @@ const db_connect = async () => {
   try {
     await mongoose.connect(DB, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000
     });
   } catch (error) {
     console.log(error);

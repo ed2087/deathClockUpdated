@@ -82,16 +82,42 @@
                     </ul>
                 <% } %>
 
-                <div id="story">
+                <div id="story">  
+                    <!-- add buttons for user to be able to listen to the audio play,pause,stop -->
+                    <!-- Audio Controls -->
+                <div id="audio_controls" class="audio-controls">
+                    <div id="loading_animation" class="loading-animation">Loading audio <div class="loading">
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                    </div></div>
+                    <div id="audio_container" class="hidden">
+                        <audio id="story_audio" src="" preload="none"></audio>
+                        <div class="button-container">
+                            <button id="play_audio" class="audio-button">Play</button>
+                            <button id="pause_audio" class="audio-button">Pause</button>
+                            <button id="stop_audio" class="audio-button">Stop</button>
+                        </div>
+                        <input type="range" id="seek_bar" class="seek-bar" value="0" max="100">
+                        <div class="volume-container">
+                            <label for="volume_control" class="volume-label">Volume:</label>
+                            <input type="range" id="volume_control" class="volume-control" min="0" max="1" step="0.01" value="1">
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- MAIN STORY -->
                     <p><%- story.storyText %></p>
+
+                    
                     <!-- youtube video -->
                     <% if(story.youtubeLink){ %>
                         <div id="youtube_frame">
                             <iframe src="<%= story.youtubeLink %>" frameborder="0" allowfullscreen></iframe>
                         </div>
                     <% } %>
+
                     <!-- buy me a coffee include-->
                     <%- include('../includes/buyMeACoffee.ejs') %>
+
                 </div>                
 
                 <!-- upvote downvote and report -->
@@ -125,8 +151,8 @@
 
                 </div> 
                 
-                <!-- share buttons -->
 
+                <!-- share buttons -->
                 <ul class="socialWrap_icons">
                     <!-- title -->
                     <h4>

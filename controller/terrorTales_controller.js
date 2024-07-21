@@ -19,6 +19,11 @@ const { get } = require("mongoose");
 const slugify = require('slugify'); // Make sure to install this package using `npm install slugify`
 
 
+// audio 
+const gtts = require('gtts');
+const fs = require('fs');
+const path = require('path');
+
 //utils
 
 //youtube link validation
@@ -145,33 +150,115 @@ exports.cuentosDeTerror = async (req, res, next) => {
 
 
 // Read page
-exports.readPage = async (req, res, next) => {
-    // add the new social media links here!!!!!!!!!!
-    try {
+// Mapping of story languages to GTTS language codes
+const languageMap_ = {
+    afrikaans: 'af',
+    albanian: 'sq',
+    arabic: 'ar',
+    armenian: 'hy',
+    catalan: 'ca',
+    chinese: 'zh',
+    croatian: 'hr',
+    czech: 'cs',
+    danish: 'da',
+    dutch: 'nl',
+    english: 'en-us',
+    esperanto: 'eo',
+    finnish: 'fi',
+    french: 'fr',
+    german: 'de',
+    greek: 'el',
+    haitian: 'ht',
+    hindi: 'hi',
+    hungarian: 'hu',
+    icelandic: 'is',
+    indonesian: 'id',
+    italian: 'it',
+    japanese: 'ja',
+    korean: 'ko',
+    latin: 'la',
+    latvian: 'lv',
+    macedonian: 'mk',
+    norwegian: 'no',
+    polish: 'pl',
+    portuguese: 'pt',
+    romanian: 'ro',
+    russian: 'ru',
+    serbian: 'sr',
+    slovak: 'sk',
+    spanish: 'es-us',
+    swahili: 'sw',
+    swedish: 'sv',
+    tamil: 'ta',
+    thai: 'th',
+    turkish: 'tr',
+    vietnamese: 'vi',
+    welsh: 'cy'
+};
 
+const generateAudioFile = (text, languageCode, audioFilePath) => {
+    return new Promise((resolve, reject) => {
+        const gttsInstance = new gtts(text, languageCode);
+        gttsInstance.save(audioFilePath, function(err) {
+            if (err) {
+                return reject(err);
+            }
+            resolve();
+        });
+    });
+};
+
+exports.generateAudio = async (req, res, next) => {
+    try {
+        const storyId = req.params.id;
+        const story = await Story.findById(storyId);
+
+        if (!story) {
+            return res.status(404).json({ message: 'Story not found' });
+        }
+
+        const audioDir = path.join(__dirname, '../public/audio');
+        if (!fs.existsSync(audioDir)) {
+            fs.mkdirSync(audioDir, { recursive: true });
+        }
+
+        const languageCode = languageMap_[story.language.toLowerCase()] || 'en';
+        const audioFilePath = path.join(audioDir, `${story._id}.mp3`);
+
+        if (!fs.existsSync(audioFilePath)) {
+            await generateAudioFile(story.storyText, languageCode, audioFilePath);
+        }
+
+        res.status(200).json({ audioLink: `/audio/${story._id}.mp3` });
+    } catch (error) {
+        console.error("Error generating audio:", error);
+        res.status(500).json({ message: 'Error generating audio' });
+    }
+};
+
+exports.readPage = async (req, res, next) => {
+    try {
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
         const slug = req.params.slug;
 
-
         // Get the story by title
-        const story = await Story.findOne({ slug: slug });   
+        const story = await Story.findOne({ slug: slug });
 
-        // If story not found, return a 404 error 
-        // add or story not isApproved = false
+        // If story not found, return a 404 error
         if (!story || !story.isApproved) {
             return globalErrorHandler(req, res, 404, "Story not found");
-        }       
+        }
 
-        //conbine extraTags and story.categories
+        // Combine extraTags and story.categories
         const categories = story.categories.concat(story.extraTags);
         let randomTag = categories[Math.floor(Math.random() * categories.length)];
 
-        //if randomTag is undefined then use default tag
+        // If randomTag is undefined then use default tag
         if (!randomTag) {
-                randomTag = "horror";
-        }        
+            randomTag = "horror";
+        }
 
-        // get top 5 stories using this story language and tags
+        // Get top 5 stories using this story language and tags
         const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
 
         // Check if the user is logged in
@@ -207,7 +294,7 @@ exports.readPage = async (req, res, next) => {
 
         // Update the story object with the formatted text
         story.storyText = storyText;
-        
+
         // Render the read page with the story details
         res.status(200).render("../views/storypages/read", {
             title: story.storyTitle,
@@ -226,6 +313,7 @@ exports.readPage = async (req, res, next) => {
         globalErrorHandler(req, res, 500, "Something went wrong");
     }
 };
+
 
 
 

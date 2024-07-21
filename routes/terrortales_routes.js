@@ -19,7 +19,8 @@ const {
     changeStoryPermision,
     updateStoryPage,
     updateStoryPost,
-    cuentosDeTerror
+    cuentosDeTerror,
+    generateAudio
 } = require("../controller/terrorTales_controller.js");
 
 // Submission page
@@ -69,6 +70,8 @@ router.post("/editStory",csrfCheckRoute, updateStoryPost);
 
 // spanish version to lapding page
 router.get("/cuentosDeTerror", cuentosDeTerror);
+
+router.get('/generate-audio/:id', generateAudio);
 
 // Landing page
 router.get("*", terrorTalesPage);

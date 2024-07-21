@@ -60,9 +60,9 @@ class GetStories {
     }
 
     async  getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(userId, limit) {
-        const upvotesWeight = 0.6;
+        const upvotesWeight = 0.4;
         const readsWeight = 0.01;
-        const commentsWeight = 0.4;
+        const commentsWeight = 0.6;
     
         let combinedStories = [];
         

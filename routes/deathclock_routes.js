@@ -1,23 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const deathclockController = require('../controller/deathclock_controller');
+const { isAuthenticated } = require("../utils/auth.js");
 
-// Controller
-const {deathclockQuestions,deathclockResults,graveyard,updateUserClock,graveyardPagination} = require("../controller/deathclock_controller.js");
+// Routes for rendering pages
+router.get('/questions', isAuthenticated, deathclockController.deathclockQuestions);
+router.get('/results/:id', deathclockController.deathclockResults);
+router.get('/graveyard', deathclockController.graveyard);
+router.get('/graveyardPagination', deathclockController.graveyardPagination);
 
-// DeathclockQuestions
-router.get("/questions", deathclockQuestions);
-
-// DeathclockResults
-router.get("/results/:id", deathclockResults);
-
-// GraveyardPagination
-router.get("/pagination", graveyardPagination);
-
-// Graveyard
-router.get("/graveyard", graveyard);
-
-// UpdateUserClock
-router.post("/updateUserClock", updateUserClock);
-
+// Route for updating user clock
+// router.post('/updateUserClock', deathclockController.updateUserClock);
 
 module.exports = router;

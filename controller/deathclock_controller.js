@@ -1,14 +1,13 @@
-const { readFileAPI } = require("../utils/readFiles.js");
-const {someUserInfo} = require("../utils/utils_fun.js");
-// Add model
+const { someUserInfo } = require("../utils/utils_fun.js");
 const DeathClockModel = require("../model/deathclock.js");
-const e = require("connect-flash");
+const { OpenAI } = require('openai');
 
-// deathclockQuestions
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 exports.deathclockQuestions = async function (req, res, next) {
-
-  //check if user is logged in
-  let {userName, userActive} = await someUserInfo(req, res, next);
+  let { userName, userActive } = await someUserInfo(req, res, next);
 
   res.status(200).render("../views/deathclock/mortality_questions", {
     path: "/deathclockQuestions",
@@ -19,24 +18,32 @@ exports.deathclockQuestions = async function (req, res, next) {
     userActive,
     userName,
   });
-
 };
 
-// deathclockResults
 exports.deathclockResults = async function (req, res, next) {
   const id = req.params.id;
 
-  try {
-    // get user data
+  try {    
     const user = await DeathClockModel.findOne({ shortId: id });
-    // get all users' death    
+
+    //get all the user deathcloks
+    const userDeathClocks = await DeathClockModel.find();
+    let predictedDeathYears = userDeathClocks.map((user) => {
+      try {
+        const jsonFile = JSON.parse(user.jsonFile);
+        if (jsonFile && jsonFile.death_prediction) {
+          const predictedDate = jsonFile.death_prediction.predicted_date_of_death;
+          return predictedDate.split('-')[0]; // Extract the year part
+        }
+      } catch (error) {
+        console.error(`Error parsing JSON for user ${user.name}:`, error);
+      }
+    }).filter(Boolean); // Filter out any undefined values   
+
 
     if (user) {
+      let { userName, userActive } = await someUserInfo(req, res, next);
 
-      //check if user is logged in
-      let {userName, userActive} = await someUserInfo(req, res, next);
-
-      // render deathclockResults
       res.status(200).render("../views/deathclock/mortality_results", {
         path: `/deathClock/results/${id}`,
         title: `The Time Ticker: ${user.name}'s Death Clock Results`,
@@ -46,11 +53,11 @@ exports.deathclockResults = async function (req, res, next) {
         user: user,
         userActive,
         userName,
-        shortId: id
+        shortId: id,
+        predictedDeathYears,
       });
-      
     } else {
-      console.log("user not found");
+      console.log("User not found");
       res.redirect("/");
     }
   } catch (error) {
@@ -59,187 +66,120 @@ exports.deathclockResults = async function (req, res, next) {
   }
 };
 
-// graveyard where all users are listed
 exports.graveyard = async function (req, res, next) {
-
   try {
-
-    // Get the latest 10 users that are allowed using aggregation
-    const users = await DeathClockModel.find({ allowed: true })
-    .sort({ updatedAt: -1 })
-    .limit(10)
-    .exec();
-
-    const totalItems = await DeathClockModel.countDocuments({ allowed: true });
-
+    const users = await DeathClockModel.find().sort({ updatedAt: -1 }).limit(10).exec();
+    const totalItems = await DeathClockModel.countDocuments();
     
-    // Extract relevant user information
+
     const package_ = users.map((user) => ({
       userName: user.name,
       userShortId: user.shortId,
-      clock: user.clock,
+      clock: user.predicted_date_of_death,
     }));
 
-    //check if user is logged in
-    let {userName, userActive} = await someUserInfo(req, res, next);
+    let { userName, userActive } = await someUserInfo(req, res, next);
 
-    // Render deathclockResults
-    res.status(200).render("../views/deathclock/graveyard", {
-      path: "/graveyard",
-      title: "Join the Graveyard - On Death Clock",
-      headerTitle: "Join the Graveyard",
-      description: "Add Tumbsotne To The Graveyard - And Let The Time Ticker Count Down To Your Death",
+    res.status(200).render('../views/deathclock/graveyard', {
+      path: '/graveyard',
+      title: 'Join the Graveyard - On Death Clock',
+      headerTitle: 'Join the Graveyard',
+      description: 'Add Tombstone To The Graveyard - And Let The Time Ticker Count Down To Your Death',
       csrfToken: res.locals.csrfToken,
       users: package_,
       userActive,
       userName,
       totalItems,
     });
-
   } catch (error) {
     console.error(error);
-    res.redirect("/");
+    res.redirect('/');
   }
-
 };
-
 
 exports.graveyardPagination = async function (req, res, next) {
   try {
     const { page, limit } = req.query;
-    const {package_, totalClocks_avalable} = await loadMoreClocks(page, limit, res);
+    const { package_, totalClocks_avalable } = await loadMoreClocks(page, limit, res);    
 
-    // Send JSON response
-    const response = {
-      status: package_.length === 0 ? null : "ok",
+    res.status(200).json({
+      status: package_.length === 0 ? null : 'ok',
       data: package_,
       totalClocks_avalable,
-    };
-
-    res.status(200).json(response);
+    });
   } catch (error) {
     console.error(error);
-    res.redirect("/");
+    res.redirect('/');
   }
 };
 
-// Load more users' clocks
 async function loadMoreClocks(page, limit, res) {
-
   try {
-    // Convert page and limit to numbers with default values
-    const page_ = (page * 1) || 1;
-    const limit_ = (limit * 1) || 10;
-
-    // Calculate the number of documents to skip for pagination
+    const page_ = parseInt(page, 10) || 1;
+    const limit_ = parseInt(limit, 10) || 10;
     const skip = (page_ - 1) * limit_;
 
-    // Get the latest users that are allowed using aggregation
-    const users = await DeathClockModel.find({ allowed: true })
-      .sort({ updatedAt: -1 })
-      .skip(skip)
-      .limit(limit_)
-      .exec();
+    const users = await DeathClockModel.find().sort({ updatedAt: -1 }).skip(skip).limit(limit_).exec();
+    const totalClocks_avalable = await DeathClockModel.countDocuments();
+
+    const package_ = users.map((user) => {
+      let yearsLeft = null;
+      try {
+        const jsonFile = JSON.parse(user.jsonFile);
+        
+        if (jsonFile.death_prediction.predicted_date_of_death) {
+
+          //find how many years from now the user will die
+          const date = new Date(jsonFile.death_prediction.predicted_date_of_death);
+          const years = date.getFullYear();
+          yearsLeft = years;
+        }
+      } catch (error) {
+        console.error(`Error parsing JSON for user ${user.name}:`, error);
+      }
+      return {
+        userName: user.name,
+        userShortId: user.shortId,
+        clock: yearsLeft
+      };
+    });
 
 
-    // how many clocks are available
-    const totalClocks_avalable = await DeathClockModel.find({ allowed: true }).countDocuments();
- 
-    // Extract relevant user information
-    const package_ = users.map((user) => ({
-      userName: user.name,
-      userShortId: user.shortId,
-      clock: user.clock,
-    }));
-
-    return {
-      package_,
-      totalClocks_avalable,
-    };
-    
+    return { package_, totalClocks_avalable };
   } catch (error) {
     console.error(error);
-    res.redirect("/");
+    if (!res.headersSent) {
+      res.redirect('/');
+    }
   }
-
-};
-
+}
 
 
-
-// update user clock
 exports.updateUserClock = async function (req, res, next) {
   const body = req.body;
 
-  let pYear = body.predictedDeathYear;
-  let pMonth = body.yearsLeft;
-  let pWeek = body.monthsLeft;
-  let pDay = body.daysLeft;
-  let pHour = body.hoursLeft;
-  let pMinute = body.minutesLeft;
-  let pSecond = body.secondsLeft;
-
   try {
-    // update and return json with an ok status
     const user = await DeathClockModel.findOne({ shortId: body.shortId });
 
-    // get all users' death clock.predictedDeathYear use aggregate to get averages
-    const usersAvg = await DeathClockModel.aggregate([
-      { $group: { _id: null, avg: { $avg: "$clock.predictedDeathYear" } } },
-    ]);
+    user.clock = {
+      predictedDeathYear: body.predictedDeathYear,
+      yearsLeft: body.yearsLeft,
+      monthsLeft: body.monthsLeft,
+      weeksLeft: body.weeksLeft,
+      daysLeft: body.daysLeft,
+      hoursLeft: body.hoursLeft,
+      minutesLeft: body.minutesLeft,
+      secondsLeft: body.secondsLeft,
+      expectedFutureDate: body.expectedFutureDate,
+    };
 
-    // get all users' death clock.predictedDeathYear use aggregate to get averages
-    const usersMax = await DeathClockModel.aggregate([
-      { $group: { _id: null, max: { $max: "$clock.predictedDeathYear" } } },
-    ]);
-
-    // get all users' death clock.predictedDeathYear use aggregate to get averages
-    const usersMin = await DeathClockModel.aggregate([
-      { $group: { _id: null, min: { $min: "$clock.predictedDeathYear" } } },
-    ]);
-
-    // get current users' death clock.predictedDeathYear use aggregate to get averages
-    const userAvg = await DeathClockModel.aggregate([
-      { $match: { shortId: body.shortId } },
-      { $group: { _id: null, avg: { $avg: "$clock.predictedDeathYear" } } },
-    ]);
-
-    // update users clock
-    user.clock.predictedDeathYear = pYear;
-    user.clock.yearsLeft = pYear;
-    user.clock.monthsLeft = pMonth;
-    user.clock.weeksLeft = pWeek;
-    user.clock.daysLeft = pDay;
-    user.clock.hoursLeft = pHour;
-    user.clock.minutesLeft = pMinute;
-    user.clock.secondsLeft = pSecond;
-    user.clock.expectedFutureDate = body.expectedFutureDate;
-
-    // updatedAt
     user.updatedAt = Date.now();
-
-    // save user
     const updated = await user.save();
 
-    // if updated
     if (updated) {
-      console.log("user updated");
-      res.status(200).json({
-        status: "ok",
-        data: {
-          usersAvg,
-          usersMax,
-          usersMin,
-          userAvg,
-          name: updated.name,
-        },
-      });
+      res.status(200).json({ status: "ok", name: updated.name });
     } else {
-      console.log("user not updated");
-      res.status(200).json({
-        status: "not ok",
-        data: data,
-      });
+      res.status(200).json({ status: "not ok" });
     }
   } catch (error) {
     console.log(error);

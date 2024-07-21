@@ -172,29 +172,23 @@ exports.postLogin = async (req, res, next) => {
                 return handlingFlashError(res,req,next, "../views/usersInterface/login", "/login", "Login", "Invalid Email or Password", "password", req.body);
             }
 
-            //create session
-            req.session.userId = user._id;
-            req.session.user = user;
+       
            
+            //remove unneeded data
+            const userDObject = user.toObject();
 
-            //i only need username,id,email,role
-            const userSession = {
-                username: user.username,
-                legalName: user.legalName,
-                id: user._id,
-                email: user.email,
-                role: user.role,
-                userVerified: user.userVerified,
-                userOnline: true,
-                isStoryAllowed: user.isStoryAllowed,
-                isCommentAllowed: user.isCommentAllowed,
-                isBanned: user.isBanned,
-                bio : user.bio,
-                socialLinks: user.socialLinks,
-                badges: user.badges,
-                followers: user.followers,
-                following: user.following,
-            };
+            const {
+              activateToken,
+              passwordResetToken,
+              passwordResetTokenTimes,
+              passwordResetTokenDate,
+              createdAt,
+              updatedAt,
+              ...userSession
+            } = userDObject;
+
+            userSession.id = user._id;
+            req.session.userId = user._id;
 
             //set session
             req.session.user = userSession;
@@ -792,59 +786,62 @@ async function handlingFlashError (res,req,next, urlPath, title, path, msg, path
 
 
 const sendmassEmail = async (req, res, next) => {
-
     try {
+        const batchSize = 10; // Define batch size
+        let skip = 0;
+        let users;
 
-        //get all users
-        const users = await User.find({});
+        do {
+            // Get users in batches
+            users = await User.find({}).skip(skip).limit(batchSize).exec();
 
-        //send email
-        const html = htmlTemplate(
-            `
-                <h2>New Updates on TerrorHub!</h2>
-                <p>Dear Users,</p>
-                <p>I'm thrilled to announce some exciting new features on TerrorHub:</p>
-                <ol style="margin-left: 20px; padding-left: 0;">
-                    <li style="margin-bottom: 10px; color: #8c0000;">Now you can comment on the stories you love, engaging with other users and sharing your thoughts.</li>
-                    <li style="margin-bottom: 10px; color: #8c0000;">You have the ability to update and delete your own stories, giving you more control over your content.</li>
-                </ol>
-                <p>And that's not all! I have some upcoming updates in the pipeline:</p>
-                <ol style="margin-left: 20px; padding-left: 0;">
-                    <li style="margin-bottom: 10px; color: #8c0000;">A "Follow" button for writers, so you can stay updated on your favorite authors' latest works.</li>
-                    <li style="margin-bottom: 10px; color: #8c0000;">A profile page/portfolio where you can manage your account. If you're a writer, you'll be able to manage your stories. Users will also be able to browse all your stories in one convenient location.</li>
-                </ol>
-                <p>I sincerely apologize for the delay in implementing these new features. As a solo developer, it's been challenging, but I'm committed to making TerrorHub the best it can be.</p>
-                <p>I'd love to hear your feedback on how I can continue to improve the website for everyone. Your input is invaluable to me!</p>
-                <p>You can contact me with your feedback at <a href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>.</p>
-                <a href="http://terrorhub.com/">Visit TerrorHub</a>
-            `
-        );        
+            // Create the HTML template for the email
+            const html = htmlTemplate(
+                `
+                    <h2>New Updates on TerrorHub!</h2>
+                    <p>Dear Users,</p>
+                    <p>I'm thrilled to announce some exciting new features on TerrorHub:</p>
+                    <ol style="margin-left: 20px; padding-left: 0;">
+                        <li style="margin-bottom: 10px; color: #8c0000;">Users' profile page is now in beta testing.</li>
+                        <li style="margin-bottom: 10px; color: #8c0000;">New follow features.</li>
+                        <li style="margin-bottom: 10px; color: #8c0000;">Updates to the edit and submission pages to include tags and categories.</li>
+                        <li style="margin-bottom: 10px; color: #8c0000;">New settings features in the profiles page.</li>
+                        <li style="margin-bottom: 10px; color: #8c0000;">New search mechanism.</li>
+                    </ol>
+                    <p>I sincerely apologize for the delay in implementing these new features. As a solo developer, it's been challenging, but I'm committed to making TerrorHub the best it can be.</p>
+                    <p>I'd love to hear your feedback on how I can continue to improve the website for everyone. Your input is invaluable to me!</p>
+                    <p>You can contact me with your feedback at <a href="mailto:help.terrorhub@gmail.com">help.terrorhub@gmail.com</a>.</p>
+                    <a href="http://terrorhub.com/">Visit TerrorHub</a>
+                `
+            );
 
-        //lest do a test email to edgararobledo2087@gmail.com
-        //const email = await sendEmail("edgararobledo2087@gmail.com", "New Updates on TerrorHub.com", html);
-        
-
-        //send email to all users
-        users.forEach(async (user) => {
-
-            //send verification email
-            const email = await sendEmail(user.email, "New Updates on TerrorHub.com", html);
-
-            if(email){
-                console.log("email sent");
-            }else{
-                console.log("email not sent");
+            // Send email to all users in the current batch
+            for (const user of users) {
+                console.log(`email sent to ${user.email}`)
+                try {
+                    const email = await sendEmail(user.email, "New Updates on TerrorHub.com", html);
+                    if (email) {
+                        console.log("Email sent to", user.email);
+                    } else {
+                        console.log("Failed to send email to", user.email);
+                    }
+                } catch (error) {
+                    console.error("Error sending email to", user.email, error);
+                }
             }
 
-        });
+            // Increment the skip value for the next batch
+            skip += batchSize;
 
-        console.log("done");
+        } while (users.length > 0);
+
+        console.log("All emails sent");
 
     } catch (error) {
-        console.log(error);
+        console.error("Error sending mass email:", error);
     }
-
 };
+
 
 //activate sendmassEmail only onece
 //sendmassEmail();
