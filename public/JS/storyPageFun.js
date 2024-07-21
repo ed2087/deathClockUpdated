@@ -1,7 +1,7 @@
 console.log('storyPageFun.js loaded');
 
 let page = 1;
-let limit = 16;
+let limit = 18;
 let query = '';
 let totalStories_available = 0;
 let timer;
@@ -121,9 +121,10 @@ const CommonStoryTemplates = (data,UserRole) => {
 
             <div class="story_wrap">
 
-                <div class="story_inner_wrap story_innerTitle_wrap">
+
+                <a class="story_inner_wrap story_innerTitle_wrap" href="/terrorTales/horrorStory/${data.slug}">
                     <h2 class="storyTitle">${data.storyTitle}</h2>
-                </div>
+                </a>
 
                 <div class="story_inner_wrap story_innerInfo_wrap">
 

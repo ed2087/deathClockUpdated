@@ -5,6 +5,7 @@ let limit = 10;
 let availableClocks = 0;
 
 const liMold = (user) => {
+
     return `
         <li class="gaveyard_graves">
             <!-- image -->
@@ -13,7 +14,7 @@ const liMold = (user) => {
             <!-- users info -->
             <div class="user_infowrap">
                 <h3 class="userInfo_h3tag">${user.userName}</h3>
-                <p class="userInfo_ptag"><span class="special_yellow_text">Yrs Left</span> <br> ${user.clock.yearsLeft}</p>
+                <p class="userInfo_ptag"><span class="special_yellow_text">Death Year!</span> <br> ${user.clock}</p>
                 <!-- link -->
                 <a href="/deathClock/results/${user.userShortId}">More...</a>
             </div>
@@ -47,9 +48,9 @@ const fetchGraveyards = async () => {
     Array.from({ length: limit }, () => ULWrap.insertAdjacentHTML("beforeend", liMold_loading()));
 
     try {
-        const res = await fetch(`/deathClock/pagination?page=${page}&limit=${limit}`);
+        const res = await fetch(`/deathClock/graveyardPagination?page=${page}&limit=${limit}`);
         const data = await res.json();
-
+        
         if (data.status === "ok") {
             // remove all loading_mold
             document.querySelectorAll(".loading_mold").forEach(element => element.remove());

@@ -29,6 +29,7 @@
                 text-align: center;
                 display: block;
                 margin-top: 10px;
+                max-width: 800px;
             }
 
     /* form */
@@ -85,7 +86,7 @@
 
             /* p */
             #healthForm fieldset p{
-                font-size: 1rem;
+                font-size: 1.1rem;
                 padding: 10px;
             }
 
@@ -99,6 +100,33 @@
                     margin-right: 10px !important;
                     padding: 10px !important;
                 }
+
+                .explanation {
+                    color: #ebebeb;
+                    font-size: 1rem;
+                    margin-top: 10px;
+                    font-family: 'Creepster', cursive; /* Example for a creepy font, adjust as needed */
+                }
+                
+                .warning {
+                    color: #f8f8f8;
+                    font-size: 0.9rem;
+                    margin-top: 15px;
+                    line-height: 1.5;
+                    font-family: 'Creepster', cursive; /* Example for a creepy font, adjust as needed */
+                }
+                
+                .warning a {
+                    color: var(--global-yellow);
+                    text-decoration: underline;
+                    transition: color 0.3s ease;
+                }
+                
+                .warning a:hover {
+                    color: var(--globlal-brightRed);
+                }
+                
+                
                 
 @media only screen and (min-width:800px){
 
@@ -130,9 +158,9 @@
     }
      #healthForm fieldset div{
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-between;
-        align-items: center;
+        /* align-items: center; */
      }
 
         #healthForm fieldset div label{
@@ -143,11 +171,6 @@
     #healthForm fieldset{
         font-size: 1.7rem;
     }
-
-     #healthForm fieldset div input, #healthForm fieldset div select{
-        max-width: 200px;
-        margin: 0;
-     }
      
  }
 

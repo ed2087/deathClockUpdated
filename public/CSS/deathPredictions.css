@@ -193,20 +193,24 @@
     justify-content: space-evenly;
 }
     .explain_cards{
-        width: 100%;
-        min-width: 250px;
+        /* flex: 1 1 auto; */
+        flex-basis: 360px;
+        /* width: 100%; */
+        /* min-width: 250px; */
         margin-bottom: 20px;
-        min-height: 380px;
+        margin: 20px;
+        /* min-height: 380px; */
         background-size: cover;
         display: flex;
         align-items: center;
         color: black;
-        flex-direction: column;  
-        padding: 50px;  
-        max-width: 450px;    
+        flex-direction: column;
+        padding: 10px;
+        /* max-width: 450px; */
         position: relative;
         z-index: 1;
-        background-image: linear-gradient(to bottom, #000000, #878787, #fff, #fff, #fff, #fff, #fff, #fff, #fff, #fff, #878787, #000000);
+        background: white;
+        /* background-image: linear-gradient(to bottom, #000000, #878787, #fff, #fff, #fff, #fff, #fff, #fff, #fff, #fff, #878787, #000000); */
     }
             /* add a back layer with the image */
             .explain_cards::before{
@@ -216,7 +220,7 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: url(../../../IMAGES/Shapes/Layer_dark.webp)no-repeat center/cover;
+                /* background: url(../../../IMAGES/Shapes/Layer_dark.webp)no-repeat center/cover; */
                 z-index: -1;
             }
         .explain_cards img{
@@ -240,7 +244,7 @@
     }
 
     .explain_cards{
-        width: calc(100% / 2 - 40px);
+        /* width: calc(100% / 2 - 40px); */
     }
 }
 

@@ -118,3 +118,75 @@ const findUrls = (text) => {
 
 window.onload = processParagraphs;
 
+
+
+document.addEventListener('DOMContentLoaded', async function() {
+    // Get CSRF token and post ID
+    const csrfToken = document.getElementById("csrf").value;
+    const postId = document.getElementById("postId").value;
+
+    const audioContainer = document.getElementById('audio_container');
+    const loadingAnimation = document.getElementById('loading_animation');
+
+    try {
+        const response = await fetch(`/terrorTales/generate-audio/${postId}`, {
+            method: 'GET',
+            headers: {
+                'CSRF-Token': csrfToken
+            }
+        });
+        const data = await response.json();
+        
+        if (data.audioLink) {
+            const audioElement = document.getElementById('story_audio');
+            audioElement.src = data.audioLink;
+
+            loadingAnimation.classList.add('hidden');
+            audioContainer.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error loading audio:', error);
+        loadingAnimation.textContent = 'Error loading audio';
+    }
+
+    const audioElement = document.getElementById('story_audio');
+    const playButton = document.getElementById('play_audio');
+    const pauseButton = document.getElementById('pause_audio');
+    const stopButton = document.getElementById('stop_audio');
+    const seekBar = document.getElementById('seek_bar');
+    const volumeControl = document.getElementById('volume_control');
+
+    playButton.addEventListener('click', function() {
+        audioElement.play();
+    });
+
+    pauseButton.addEventListener('click', function() {
+        audioElement.pause();
+    });
+
+    stopButton.addEventListener('click', function() {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+        seekBar.value = 0;
+    });
+
+    audioElement.addEventListener('timeupdate', function() {
+        const value = (audioElement.currentTime / audioElement.duration) * 100;
+        seekBar.value = value;
+    });
+
+    seekBar.addEventListener('input', function() {
+        const time = (seekBar.value / 100) * audioElement.duration;
+        audioElement.currentTime = time;
+    });
+
+    volumeControl.addEventListener('input', function() {
+        audioElement.volume = volumeControl.value;
+    });
+});
+
+
+
+
+
+

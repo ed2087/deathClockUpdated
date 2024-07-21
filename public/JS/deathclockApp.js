@@ -1,484 +1,180 @@
-console.log("deathclock_app.js loaded");
-//ES6
-
-
-let userData = user;
-let jsonData = JSON.parse(userData.jsonFile);
-console.log(jsonData);
-// get totalPoints from the json file and return value
-
-// get totalPoints from the json file and return value
-let questionsPoints = jsonData
-    .filter(element => element.totalPoints)
-    .map(element => element.totalPoints);
-
-const userDetails_ = {
-    userName : userData.name,
-    userBirthdate : userData.birthdate,
-    userShortId : userData.shortId    
+// Template function for creating explain cards
+const explainCardsTemplate = (title, content) => {
+  return `
+    <li class="explain_cards">
+      <h3 class="explainded_h3">${title}:</h3>
+      <p class="explainded_p">
+          ${content}
+      </p>
+    </li>
+  `;
 };
 
-
-//find jsonData jsonData[i].totalPoints key and return the value
-let lifeExpectancy_negativeYears = jsonData.find((element) => {
-    return element.totalPoints;
-}).totalPoints; 
-
-
-
-//  send predicted death date and time data  /deathClock//updateUserClock use fetch
-const updateUserClock = async (userDetails_) => {
-    //use sendJson function
-   let data = await sendJson("/deathClock/updateUserClock", "POST", userDetails_);   
-   data = data.data;
-   data =[        
-        data.usersMin[0].min,
-        data.usersAvg[0].avg,
-        data.usersMax[0].max,
-        data.userAvg[0].avg,
-        data.name
-   ]
-
-   startChart(data);
-};
-
-
-// MESSAGE FOR  USER////////////////////////////////
-
-const createLifestyleMessageForBmi = (bmi, num) => {
-
-
-  let lifestyleMessage = "";
-
-  switch (num) {
-    case 1:
-      lifestyleMessage = `Your BMI of <span class="bmi_span">${bmi}</span> indicates you are currently underweight. This may be due to high metabolism, inadequate calorie intake, or over-exercising. We recommend working with a dietitian to ensure you are meeting your nutritional needs to support a healthy, active lifestyle. Small, nutritious snacks between meals can help.`;
-      break;
-    case 2: 
-      lifestyleMessage = `Great job maintaining a BMI of <span class="bmi_span">${bmi}</span>, which falls within the normal healthy weight range! To stay feeling your best, aim for a balanced diet high in fruits and vegetables, lean proteins and whole grains. Stay active with a combination of cardio and strength training most days of the week.`;
-      break;
-    case 3:
-      lifestyleMessage = `Your BMI of <span class="bmi_span">${bmi}</span> falls within the overweight range. The good news is small, sustainable lifestyle changes can improve your health and wellbeing over time. Try adding more steps daily, swapping sugary drinks for water, getting 7-9 hours of sleep, and focusing on portion control as some options to get started.`;   
-      break;
-    case 4:
-     lifestyleMessage = `With a BMI of <span class="bmi_span">${bmi}</span>, your current weight falls into obesity class I. Reaching a healthier weight can be challenging, but we're here to help. Let's collaborate with your healthcare provider to set nutrition, exercise, sleep and stress relief goals you can maintain long-term. We'll be with you each step of the way towards feeling your best.`;
-      break;
-    case 5:
-    lifestyleMessage = `Your BMI is currently <span class="bmi_span">${bmi}</span>, which is categorized as class II obesity. The great news is that improving small habits overtime can make a big difference in your health, energy levels and quality of life. Let's work together on a lifestyle adjustment plan just for you. We'll help you identify healthy changes you can sustain long-term.`;
-      break;
-    case 6:
-     lifestyleMessage = `Your current BMI of <span class="bmi_span">${bmi}</span> falls into the class III obesity range, indicating potential health risks. The good news is we can work together to help support positive lifestyle changes to improve your wellbeing. Let's collaborate with your healthcare provider to create reasonable nutrition, physical activity, sleep and stress relief goals you can maintain long-term while feeling your best.`;
-      break; 
-    default:
-     lifestyleMessage = "Unable to calculate lifestyle recommendations.";
-  
-  }
-
-  id_("lifestyle_Content").innerHTML = lifestyleMessage;
-
- 
-};
-
-
-
-const ageMessage = (age) => {
-  let message;
-
-  if (age < 18) {
-      message = `Embrace your youth at <span class="bmi_span">${age}</span>! Spend time with friends, explore hobbies, excel at school, and ensure adequate sleep for growth. To enhance your lifespan, focus on maintaining a balanced diet, staying physically active, and avoiding harmful habits like smoking.`;
-  } else if (age >= 18 && age < 30) {
-      message = `Seize the opportunities in your <span class="bmi_span">${age}s</span>! Explore travel, education, career, and relationships. Maintain balance between work, leisure, and self-care for a fulfilling life journey. Consider incorporating regular exercise, a nutritious diet, and stress management practices to promote longevity.`;
-  } else if (age >= 30 && age < 50) {
-      message = `In your <span class="bmi_span">${age}s</span>, share knowledge, mentor others, prioritize mental well-being, stay physically active, and consult healthcare experts for tailored health advice. Implementing a healthy lifestyle, including proper nutrition, regular exercise, and preventive healthcare measures, can contribute to a longer and healthier life.`;
-  } else {
-      message = `Offer wisdom at <span class="bmi_span">${age}</span>! Focus on fulfillment through part-time work, engaging hobbies, fostering social connections, and prioritizing your health and well-being. Consider incorporating activities that support mental and physical health, such as regular exercise, a balanced diet, and routine health check-ups, to enhance your overall lifespan.`;
-  }
-
-  id_("age_Content").innerHTML = message;
-};
-
-
-
-
-
-//END MESSAGE FOR  USER////////////////////////////////
-
-
-const calculateHealthScore = (bmi) => {
-  let healthScore = 0;
-
-  if (bmi < 18.5) {
-      healthScore = -2; // Underweight
-      createLifestyleMessageForBmi(bmi, 1);
-  } else if (bmi < 25) {
-      healthScore = 1; // Normal weight
-      createLifestyleMessageForBmi(bmi, 2);
-  } else if (bmi < 30) {
-      healthScore = -2; // Overweight (positive value)
-      createLifestyleMessageForBmi(bmi, 3);
-  } else if (bmi < 35) {
-      healthScore = -3; // Obese class I (positive value)
-      createLifestyleMessageForBmi(bmi, 4);
-  } else if (bmi < 40) {
-      healthScore = -4; // Obese class II (positive value)
-      createLifestyleMessageForBmi(bmi, 5);      
-  } else if (bmi >= 40) {
-      healthScore = -5; // Obese class III (positive value)
-      createLifestyleMessageForBmi(bmi, 6);
-  } else {
-      console.error("Error in calculateHealthScore function");
-  }
-
-  
-
-  return healthScore;
-};
-
-
-const getBmi_HScore = () => {
-
-  // get bmi from json by id q25
-  const bmi = jsonData.find((element) => {
-      return element.id === "q25";
+// Function to add explanation cards to the DOM
+const addExplanationCards = (explanations) => {
+  const cardsWrap = document.getElementById('cards__wrap_explain');
+  explanations.forEach(explanation => {
+    const cardHTML = explainCardsTemplate(explanation.title, explanation.content);
+    cardsWrap.insertAdjacentHTML('beforeend', cardHTML);
   });
-
-  const bmiHealthScore = calculateHealthScore(parseInt(bmi.user.userAnswer));
-
-  return bmiHealthScore;
-
 };
 
-
-
-function deathCountdown(deathYear) {
-
-  var now = new Date().getTime();
-
-  var countDownDate = new Date();
-
-  const getFulldeathYear = new Date().getFullYear() + deathYear;
-
-  //we need the tick go down till the user death date
-  countDownDate.setFullYear(getFulldeathYear);
-
-  countDownDate.setHours(0, 0, 0, 0);
-
-  var distance = countDownDate.getTime() - now;
-
-  // Time calculations for years, months, weeks, days, hours, minutes and seconds
- 
-
-  var years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
-  var months = Math.floor(distance / (1000 * 60 * 60 * 24 * 30.44));
-  var weeks = Math.floor(distance / (1000 * 60 * 60 * 24 * 7));
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor(distance / (1000 * 60 * 60));
-  var minutes = Math.floor(distance / (1000 * 60));
-  var seconds = Math.floor(distance / 1000);
-  var milliseconds = Math.floor(distance);
-
-
-
-  // get 
-
-  // Return the countdown object with formatted time
-  return {
-    years: years,
-    months: months,
-    weeks: weeks,
-    days: days,
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds,
-    milliseconds: milliseconds,
-  };
-
+const userJson = JSON.parse(user.jsonFile);
+let explanationsAdded = false;
+console.log(userJson);
+function formatNumberWithCommas(number) {
+  return number.toLocaleString();
 }
 
+// Function to update the display and populate explanation cards
+function updateDisplay() {
+  const now = Date.now();
+  const deathDate = new Date(userJson.death_prediction.predicted_date_of_death).getTime();
+  const millisecondsLeft = deathDate - now;
+
+  // Calculate the remaining time
+  const yearsLeft = Math.floor(millisecondsLeft / (1000 * 60 * 60 * 24 * 365));
+  const monthsLeft = Math.floor(millisecondsLeft / (1000 * 60 * 60 * 24 * 30.44));
+  const weeksLeft = Math.floor(millisecondsLeft / (1000 * 60 * 60 * 24 * 7));
+  const daysLeft = Math.floor(millisecondsLeft / (1000 * 60 * 60 * 24));
+  const totalHoursLeft = Math.floor(millisecondsLeft / (1000 * 60 * 60));
+  const totalMinutesLeft = Math.floor(millisecondsLeft / (1000 * 60));
+  const totalSecondsLeft = Math.floor(millisecondsLeft / 1000);
+
+  document.getElementById('yearsLeft').textContent = formatNumberWithCommas(yearsLeft);
+  document.getElementById('monthsLeft').textContent = formatNumberWithCommas(monthsLeft);
+  document.getElementById('weeksLeft').textContent = formatNumberWithCommas(weeksLeft);
+  document.getElementById('daysLeft').textContent = formatNumberWithCommas(daysLeft);
+  document.getElementById('hrsLeft').textContent = formatNumberWithCommas(totalHoursLeft);
+  document.getElementById('minLeft').textContent = formatNumberWithCommas(totalMinutesLeft);
+  document.getElementById('secLeft').textContent = formatNumberWithCommas(totalSecondsLeft);
+
+  // Update death date
+  const deathDateFormatted = new Date(deathDate).toLocaleDateString();
+  document.getElementById('deathYear').textContent = deathDateFormatted;
+
+  // Update lived time
 
 
-function calculateTime(userBirthdate) {
+  const { years_lived, months_lived, weeks_lived, days_lived, hours_lived, minutes_lived, seconds_lived } = userJson.you_have_lived;
   
-
-  const bmiHealthScore = getBmi_HScore();
-
-  const averageLifeExpectancy = 70;
-  const removeOraddYears = questionsPoints[0];
-  const currentDate = new Date();
-  const dob = new Date(userBirthdate);
-
-  if (isNaN(dob.getTime())) {
-      return "Please enter a valid date of birth.";
-  }
-
-  const timeLivedMilliseconds = currentDate.getTime() - dob.getTime();
-  //we need to create something likew this for the botom paert
-
-  if (timeLivedMilliseconds <= 0) {
-      return "Congratulations, you've already surpassed the average life expectancy!";
-  }
-
-  const timeLivedSeconds = Math.floor(timeLivedMilliseconds / 1000);
-  const timeLivedMinutes = Math.floor(timeLivedSeconds / 60);
-  const timeLivedHours = Math.floor(timeLivedMinutes / 60);
-  const timeLivedDays = Math.floor(timeLivedHours / 24);
-  const timeLivedWeeks = Math.floor(timeLivedDays / 7);
-  const timeLivedMonths = Math.floor(timeLivedDays / 30.44); // Average month length
-  const timeLivedYears = Math.floor(timeLivedMonths / 12);  
-
  
-  let totalLifeExpectancy_ = 0;
+  const birthDate = new Date(user.birthdate).getTime();
+  const millisecondsLived = now - birthDate;
 
-  if (averageLifeExpectancy > timeLivedYears) {
-    totalLifeExpectancy_ = averageLifeExpectancy - timeLivedYears + removeOraddYears + bmiHealthScore;
-  } else {
-    totalLifeExpectancy_ = timeLivedYears - averageLifeExpectancy + removeOraddYears + bmiHealthScore;
-  }
+  const yearsLived = Math.floor(millisecondsLived / (1000 * 60 * 60 * 24 * 365));
+  const monthsLived = Math.floor(millisecondsLived / (1000 * 60 * 60 * 24 * 30.44));
+  const weeksLived = Math.floor(millisecondsLived / (1000 * 60 * 60 * 24 * 7));
+  const daysLived = Math.floor(millisecondsLived / (1000 * 60 * 60 * 24));
+  const totalHoursLived = Math.floor(millisecondsLived / (1000 * 60 * 60));
+  const totalMinutesLived = Math.floor(millisecondsLived / (1000 * 60));
+  const totalSecondsLived = Math.floor(millisecondsLived / 1000);
 
+  document.getElementById('yearsLived').textContent = formatNumberWithCommas(yearsLived);
+  document.getElementById('monthsLived').textContent = formatNumberWithCommas(monthsLived);
+  document.getElementById('weeksLived').textContent = formatNumberWithCommas(weeksLived);
+  document.getElementById('daysLived').textContent = formatNumberWithCommas(daysLived);
+  document.getElementById('hrsLived').textContent = formatNumberWithCommas(totalHoursLived);
+  document.getElementById('minLived').textContent = formatNumberWithCommas(totalMinutesLived);
+  document.getElementById('secLived').textContent = formatNumberWithCommas(totalSecondsLived);
+
+  if (!explanationsAdded) {
+    // Prepare explanations
+    const detailedExplanation = userJson.explanation || userJson.detailed_explanation;
+    const explanations = Object.keys(detailedExplanation).map(key => ({
+      title: detailedExplanation[key].title || key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).replace("Detail", ""),
+      content: detailedExplanation[key].message || detailedExplanation[key].detail || detailedExplanation[key]
+    }));
   
-  if (totalLifeExpectancy_ < 0) {
-    //get 10% of his life in timeLivedYears
-    totalLifeExpectancy_ = parseInt(timeLivedYears * 0.3)
+    // Add the explanation cards to the DOM
+    addExplanationCards(explanations);
+    explanationsAdded = true;
   }
-
-  // Ensure totalLifeExpectancy_ is not negative
-  totalLifeExpectancy_ = Math.max(totalLifeExpectancy_, 0);  
   
-  // Calculate the future date when the user is expected to reach their remaining life expectancy
-  
-    const timeleft = deathCountdown(totalLifeExpectancy_);
-
-  const yearsLeftYears = timeleft.years;
-  const yearsLeftMonths = timeleft.months;
-  const yearsLeftWeeks = timeleft.weeks;
-  const yearsLeftDays = timeleft.days;
-  const yearsLeftHours = timeleft.hours;
-  const yearsLeftMinutes = timeleft.minutes;
-  const yearsLeftSeconds = timeleft.seconds;
-
-
-  let yearDeath = currentDate.getFullYear() + yearsLeftYears;
-  let monthDeath = currentDate.getMonth() + yearsLeftMonths;
-  let dayDeath = currentDate.getDate() + yearsLeftDays
-      monthDeath = monthDeath % 12;
-      dayDeath = dayDeath % 30;
-      
-  // Adjust month and year if dayDeath exceeds the days in the current month
-  const daysInMonth = new Date(yearDeath, monthDeath, 0).getDate();
-  if (dayDeath > daysInMonth) {
-      dayDeath -= daysInMonth;
-      monthDeath++;
-      if (monthDeath > 11) {
-          monthDeath = 0;
-          yearDeath++;
-      }
-  }
-
-  const expectedFutureDate = {
-      year: yearDeath,
-      month: monthDeath + 1, // Add 1 to month since it's zero-based
-      day: dayDeath,
-  };
-
-
-  return {
-      timeLived: {
-          years: timeLivedYears,
-          months: timeLivedMonths,
-          weeks: timeLivedWeeks,
-          days: timeLivedDays,
-          hours: timeLivedHours,
-          minutes: timeLivedMinutes,
-          seconds: timeLivedSeconds,
-      },
-      remainingTime: {
-          years: yearsLeftYears,
-          months: yearsLeftMonths,
-          weeks: yearsLeftWeeks,
-          days: yearsLeftDays,
-          hours: yearsLeftHours,
-          minutes: yearsLeftMinutes,
-          seconds: yearsLeftSeconds,
-      },
-      expectedFutureDate: {
-          year: expectedFutureDate.year,
-          month: expectedFutureDate.month, // Add 1 to month since it's zero-based
-          day: expectedFutureDate.day,
-      },
-  };
 }
-
-
-
-const addhtmlInfo_todeathclock = (userDetails_) => {  
-
-  id_("yearsLeft").innerHTML = userDetails_.remainingTime.years.toLocaleString();
-  id_("monthsLeft").innerHTML = userDetails_.remainingTime.months.toLocaleString();
-  id_("weeksLeft").innerHTML = userDetails_.remainingTime.weeks.toLocaleString();
-  id_("daysLeft").innerHTML = userDetails_.remainingTime.days.toLocaleString();
-  id_("hrsLeft").innerHTML = userDetails_.remainingTime.hours.toLocaleString();
-  id_("minLeft").innerHTML = userDetails_.remainingTime.minutes.toLocaleString();
-  id_("secLeft").innerHTML = userDetails_.remainingTime.seconds.toLocaleString();
-
-};
-
-const addhtmlInfo_timeLived = (userDetails_) => {
-
-
-  id_("yearsLived").innerHTML = userDetails_.timeLived.years.toLocaleString();
-  id_("monthsLived").innerHTML = userDetails_.timeLived.months.toLocaleString();
-  id_("weeksLived").innerHTML = userDetails_.timeLived.weeks.toLocaleString();
-  id_("daysLived").innerHTML = userDetails_.timeLived.days.toLocaleString();
-  id_("hrsLived").innerHTML = userDetails_.timeLived.hours.toLocaleString();
-  id_("minLived").innerHTML = userDetails_.timeLived.minutes.toLocaleString();
-  id_("secLived").innerHTML = userDetails_.timeLived.seconds.toLocaleString();
-
-};
-
-
-
-// Function to update and display the time every second
-let lock = false;
-function updateTime() {
-    const userDetails = {
-        userBirthdate: userDetails_.userBirthdate, // Replace with the person's date of birth
-        lifeExpectancy: userDetails_.lifeExpectancy, // Replace with the person's life expectancy in years
-    };
-    
-    const result = calculateTime(userDetails.userBirthdate, userDetails.lifeExpectancy);    
-    const expectedFutureDate = result.expectedFutureDate;
-
-    //build a package to send to the server
-    const userClock = {
-        shortId: userDetails_.userShortId,
-        predictedDeathYear: result.remainingTime.years,
-        yearsLeft: result.remainingTime.years,
-        monthsLeft: result.remainingTime.months,
-        weeksLeft: result.remainingTime.weeks,
-        daysLeft: result.remainingTime.days,
-        hoursLeft: result.remainingTime.hours,  
-        minutesLeft: result.remainingTime.minutes,
-        secondsLeft: result.remainingTime.seconds,
-        expectedFutureDate: expectedFutureDate,
-        //
-    };   
-   
-    
-
-    //send the package to the server
-    if(!lock){
-        updateUserClock(userClock);
-
-        //get users age just the year 
-        const age = new Date().getFullYear() - new Date(userDetails_.userBirthdate).getFullYear();
-        ageMessage(age);
-
-
-        lock = true;
-    }
-
-    // send data to function to update html
-    addhtmlInfo_todeathclock(result);
-    addhtmlInfo_timeLived(result);
-
-    // add deathdate to html
-    id_("deathYear").textContent = `${expectedFutureDate.year}-${expectedFutureDate.month}-${expectedFutureDate.day}`;
-
-};
-
-
-// onload
-window.onload = () =>{
-
-    //add loadingMold_dotts to all elements with class="loading_dotts"
-    const loading_dotts = queryAll_(".loading_dotts");
-    loading_dotts.forEach(element => {
-        element.innerHTML = loadingMold_dotts;
-    });
-
-    // set a timer then load function
-    setTimeout(() => {
-
-      updateTime();
-      setInterval(updateTime, 1000);
-
-    }, 2000);
-
-};
-
-
-
-
-
-
-// chart.js
 
 function startChart(data) {
-
   const ctx = document.getElementById("chart").getContext("2d");
 
-  // Define custom colors for the dark theme
-  const darkColors = ["#4CAF50", "#FF9800", "#2196F3", "#FFC107"]; // Add a color for user's time left
+  const userPredictedDeathYear = new Date(userJson.death_prediction.predicted_date_of_death).getFullYear();
+
+  const years = [...new Set([...data.years, userPredictedDeathYear])].sort((a, b) => a - b);
+  const counts = years.map(year => data.years.includes(year) ? data.counts[data.years.indexOf(year)] : 0);
+  const userCounts = years.map(year => (year === userPredictedDeathYear ? 1 : 0));
 
   const chart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: ["Min Average Age", "Average Age", "Max Average Age"],
+      labels: years, // Labels based on the years of predicted death including the user's year
       datasets: [
         {
-          label: "Average Predictions",
-          data: data.slice(0, 3).concat([null]), // Concatenate a null value for user's time left
-          borderColor: darkColors.slice(0, 3).concat(["transparent"]), // Use transparent for user's time left
-          backgroundColor: darkColors.slice(0, 3).map(color => color + "40"),
-          pointBackgroundColor: darkColors.slice(0, 3),
+          label: "Average Death Predictions",
+          data: counts, // Counts of users dying in those years
+          borderColor: "#4CAF50",
+          backgroundColor: "rgba(76, 175, 80, 0.2)",
+          pointBackgroundColor: "#4CAF50",
         },
-      ],
+        {
+          label: "Your Predicted Death Year",
+          data: userCounts,
+          borderColor: "rgba(255, 99, 132, 0.6)",
+          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          pointBackgroundColor: "rgba(255, 99, 132, 0.6)",
+          pointRadius: years.map(year => (year === userPredictedDeathYear ? 5 : 0)),
+          fill: false,
+          tension: 0.4
+        }
+      ]
     },
     options: {
-      title: {
-        display: true,
-        text: "Users Death Clock Predictions",
-        fontColor: "#FFF",
-      },
-      legend: {
-        labels: {
-          fontColor: "#FFF",
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: "Users' Death Clock Predictions",
+          color: "#FFF",
+        },
+        legend: {
+          labels: {
+            color: "#FFF",
+          },
         },
       },
       scales: {
-        xAxes: [{
+        x: {
           ticks: {
-            fontColor: "#FFF",
+            color: "#FFF",
           },
-        }],
-        yAxes: [{
+        },
+        y: {
           ticks: {
-            fontColor: "#FFF",
+            color: "#FFF",
           },
-        }],
+        },
       },
-    },
+    }
   });
 
-  // Add a separate dataset for User's Time Left with 100% opacity
-  chart.data.datasets.push({
-    label: `${data[4]} Time Left`,
-    data: [data[3], data[3], data[3]], // Use the 4th element for user's time left
-    borderColor: darkColors[3],
-    backgroundColor: darkColors[3] + "80", // 80% opacity
-    pointBackgroundColor: darkColors[3],
-  });
-
-  // Update the chart
   chart.update();
 
-  // remove #gridLoading from html
-  id_("gridLoading").remove();
+  // remove gridLoading
+  document.getElementById('gridLoading').remove();
 }
 
+window.onload = function() {
+  updateDisplay();
+  setInterval(updateDisplay, 1000);
 
+  const yearCounts = predictedDeathYears.reduce((acc, year) => {
+    acc[year] = (acc[year] || 0) + 1;
+    return acc;
+  }, {});
 
-  
+  const data = {
+    years: Object.keys(yearCounts).map(Number).sort((a, b) => a - b),
+    counts: Object.values(yearCounts)
+  };
 
-
-// addd user info to cards
+  startChart(data);
+};

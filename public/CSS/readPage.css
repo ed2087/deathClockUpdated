@@ -431,3 +431,69 @@
                         max-width: 400px;
                         margin: 0 auto;
                     }
+
+/* Audio Controls Container */
+.audio-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    /* background-color: var(--global-bg-color); */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading-animation {    
+    font-size: 1.5rem;
+    color: var(--global-yellow);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.audio-button {
+    background-color: var(--global-darkOrange);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.audio-button:hover {
+    background-color: var(--global-darkred);
+}
+
+.seek-bar {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.volume-container {
+    display: flex;
+    align-items: center;
+    display: none;
+}
+
+.volume-label {
+    margin-right: 10px;
+}
+
+.volume-control {
+    width: 150px;
+}

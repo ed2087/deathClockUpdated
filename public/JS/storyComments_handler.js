@@ -268,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   
     // Listen for form submission and fetch comments on page load   
-    console.log(UserID, "userID"); 
     if (UserID !== "") commentForm.addEventListener('submit', handleTopComment);    
     fetchComments();
 
