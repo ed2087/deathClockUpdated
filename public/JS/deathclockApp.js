@@ -21,7 +21,7 @@ const addExplanationCards = (explanations) => {
 
 const userJson = JSON.parse(user.jsonFile);
 let explanationsAdded = false;
-console.log(userJson);
+
 function formatNumberWithCommas(number) {
   return number.toLocaleString();
 }
