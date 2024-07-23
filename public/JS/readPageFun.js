@@ -121,6 +121,8 @@ window.onload = processParagraphs;
 
 
 document.addEventListener('DOMContentLoaded', async function() {
+
+
     // Get CSRF token and post ID
     const csrfToken = document.getElementById("csrf").value;
     const postId = document.getElementById("postId").value;
@@ -183,7 +185,47 @@ document.addEventListener('DOMContentLoaded', async function() {
     volumeControl.addEventListener('input', function() {
         audioElement.volume = volumeControl.value;
     });
+
+
+
+    // add view count
+    const storyReadTime = parseInt(id_("storyReadTime").value); 
+    const slug = id_("storySlug").value;
+    const userActive = id_("isUserActive").value; 
+
+    if (isNaN(storyReadTime)) {
+        console.error('Invalid story read time:', id_("storyReadTime").value);
+        return;
+    }
+
+    // Add 1 minute to the read time and convert to milliseconds
+    const readTime = (storyReadTime + 1) * 60 * 1000;
+
+    if(userActive){
+        setTimeout(() => {
+            console.log('Timeout reached, sending request to add to read list');
+            fetch(`/terrorTales/addToReadList/${slug}`, {
+                method: 'GET',
+                headers: {
+                    'CSRF-Token': csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json())
+                .then(data => {
+                    console.log('Response received:', data); // Log response
+                    if (data.status === 200) {
+                        //readCount
+                        id_("readCount").innerHTML = data.readCount;
+                    } else {
+                        console.log('Error:', data.message);
+                    }
+                }).catch(error => console.error('Fetch error:', error));
+        }, readTime);
+    };//end if
+
 });
+
+
 
 
 

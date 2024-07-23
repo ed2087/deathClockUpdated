@@ -127,13 +127,13 @@ if (settings_container) {
     });
 
     // Close the settings container if the user scrolls outside of it
-    window.addEventListener('scroll', () => {
-        if (n) {
-            settings_container.classList.remove(slideRight_);
-            settings_container.classList.add(slideLeft_);
-            n = false;
-        }
-    });
+    // window.addEventListener('scroll', () => {
+    //     if (n) {
+    //         settings_container.classList.remove(slideRight_);
+    //         settings_container.classList.add(slideLeft_);
+    //         n = false;
+    //     }
+    // });
 }
 
 

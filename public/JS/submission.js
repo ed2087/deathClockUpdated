@@ -12,9 +12,9 @@ const allowedDomains = [
 const allowedFormats = [".jpg", ".png", ".jpeg", ".gif"];
 
 
-const sendData = async (e) => {
+const sendData = async (e) => {  
+    
 
-    console.log("sendData()");
     e.preventDefault();    
   
     const form = document.querySelector('#submission_form');
@@ -102,6 +102,16 @@ const sendData = async (e) => {
     }
 
 };
+
+
+//check when storySubmit_form buttin is sumbitted it can only be submitted by clicking the button not any other way
+id_("storySubmit_form").addEventListener("click", (e) => {
+
+    e.preventDefault();
+    sendData(e);
+
+});
+
 
 
 const alertUserCharacters = (id, maxCharacters) => {
@@ -197,8 +207,7 @@ const checkBookTitle = async () => {
             id_("storySubmit_form").disabled = true;
 
             //alert user
-            alert("Only letters and numbers are allowed in the title");
-
+            globalMessage("Error","Only letters and numbers are allowed in the title");
             return;
         }else{
             id_("storyTitle").style.color = "green";
@@ -232,7 +241,7 @@ const checkBookTitle = async () => {
                 //disable submit button
                 id_("storySubmit_form").disabled = true;
                 //alert user
-                alert("Book title already exists");
+                globalMessage("Book title already exists","Please choose another title");
             }
     
         } catch (error) {
@@ -318,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
         input.value = tags.join(',');
     };
 
-    const addTag = (inputFake, container, input) => {
+    const addTag = (inputFake, container, input,event) => {
         const tag = inputFake.value.trim().replace(/,$/, ''); // Remove comma at the end if present
         if (tag) {
             const tagBox = createTagBox(tag, container, input);
