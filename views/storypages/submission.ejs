@@ -62,7 +62,7 @@
             </div>
 
             <!-- action="/terrorTales/submission" method="POST" -->
-            <form id="submission_form" onsubmit="sendData(event)">
+            <form id="submission_form">
                 
                 
                 <% if(!legalName){ %>
@@ -281,7 +281,7 @@
 
                 <!-- You can add more fields for rating and reporting here --->
                 <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">
-                <input id="storySubmit_form" class="call_to_action_yellow" type="submit" value="Submit">
+                <input id="storySubmit_form" class="call_to_action_yellow" type="button" value="Submit">
             </form>
 
     </div>

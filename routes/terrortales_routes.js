@@ -20,7 +20,8 @@ const {
     updateStoryPage,
     updateStoryPost,
     cuentosDeTerror,
-    generateAudio
+    generateAudio,
+    addToReadList
 } = require("../controller/terrorTales_controller.js");
 
 // Submission page
@@ -72,6 +73,9 @@ router.post("/editStory",csrfCheckRoute, updateStoryPost);
 router.get("/cuentosDeTerror", cuentosDeTerror);
 
 router.get('/generate-audio/:id', generateAudio);
+
+// Add to read list
+router.get("/addToReadList/:slug", addToReadList);
 
 // Landing page
 router.get("*", terrorTalesPage);

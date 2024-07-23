@@ -251,43 +251,34 @@ exports.readPage = async (req, res, next) => {
 
         // Combine extraTags and story.categories
         const categories = story.categories.concat(story.extraTags);
-        let randomTag = categories[Math.floor(Math.random() * categories.length)];
 
-        // If randomTag is undefined then use default tag
-        if (!randomTag) {
-            randomTag = "horror";
-        }
 
-        // Get top 5 stories using this story language and tags
-        const top5Stories = await new GetStories().getTopByLimitUpvoteCommentsAndByQuery(6, randomTag);
-
-        // Check if the user is logged in
-        if (userActive) {
-            const user = await User.findById(req.session.userId);
-
-            // Check if the user has already read this story
-            const hasAlreadyRead = user.booksRead.some(book => book.bookId.toString() === story._id.toString());
-
-            if (!hasAlreadyRead) {
-                // If the user has not read the story, add it to their books array
-                user.booksRead.push({
-                    bookId: story._id,
-                    booksReadCount: 1
-                });
-                await user.save();
-            } else {
-                // If user has already read the story, then increment the readCount
-                const book = user.booksRead.find(book => book.bookId.toString() === story._id.toString());
-                if (book) {
-                    book.booksReadCount++;
-                    await user.save();
-                }
+        //first step find all stories that belong to the user
+        let userStories = await Story.find({ owner: story.owner });
+        //remove the current story from the userStories
+        userStories = userStories.filter(userStory => userStory._id.toString() !== story._id.toString());
+        let storyPayload = [];
+        
+        
+        //if user has more then 6 stories then randomly choose 6 stories and send them to the user
+        if(userStories.length > 6){
+            let randomStories = userStories.sort(() => Math.random() - Math.random()).slice(0, 6);
+            storyPayload = randomStories;
+        }else{
+            storyPayload = userStories;
+            //depending on number of stories we will add more stories to the payload from other user by categorys making sure we dont add the same story
+            let count = 6 - userStories.length;
+            let otherStories = await Story.find({ categories: { $in: categories } });
+            let otherStoriesPayload = [];
+            let i = 0;
+            while(i < count){
+                let randomStories = otherStories.sort(() => Math.random() - Math.random()).slice(0, 1);
+                otherStoriesPayload.push(randomStories[0]);
+                i++;
             }
-        }
-
-        // Increment the readCount every time a user reads a story
-        story.readCount++;
-        await story.save();
+            storyPayload = storyPayload.concat(otherStoriesPayload);            
+            
+        }         
 
         // Format the story text
         const storyText = await formatStory(story.storyText, 80);
@@ -305,7 +296,7 @@ exports.readPage = async (req, res, next) => {
             userName,
             story,
             userData,
-            top5Stories
+            top5Stories:storyPayload
         });
 
     } catch (error) {
@@ -849,49 +840,6 @@ exports.updateStoryPage = async (req, res, next) => {
     }
 };
 
-// exports.updateStoryPage = async (req, res, next) => {
-
-//     const { slug } = req.params;   
-
-//     try {
-
-//         const { userName, userActive } = await someUserInfo(req, res, next);
-
-//         //check if user is logged in
-//         if (!userActive) {
-//             return globalErrorHandler(req, res, 401, "You do not have permission to update this story");
-//         }
-
-//         //find story
-//         const story = await Story.findOne({ slug });
-
-
-//         //make sure story exist
-//         if (!story) {
-//             return  globalErrorHandler(req, res, 404, "Story not found");
-//         }
-
-//         //send to edit.ejs
-//         res.status(200).render("../views/storypages/edit", {
-//             title: "Edit Story",
-//             path: "/editStory",
-//             headerTitle: "EDIT STORY",
-//             description: "Edit your story",
-//             userActive,
-//             userName,
-//             story
-//         });
-        
-//     } catch (error) {
-
-//         console.log(error);
-//         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
-        
-//     }
-
-// };
-
-
 
 // update story
 exports.updateStoryPost = async (req, res, next) => {
@@ -987,108 +935,6 @@ exports.updateStoryPost = async (req, res, next) => {
         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
     }
 };
-
-// exports.updateStoryPost = async (req, res, next) => {
-
-//     const {
-//         legalName,
-//         socialMedia,
-//         website,
-//         youtube,
-//         backgroundUrl,
-//         storyTitle,
-//         storySummary,
-//         tags,
-//         storyText,
-//         categories,
-//         extraTags,
-//         language,
-//         storyId
-//     } = req.body;
-
-
-//     // socialMedia array
-//     const socialMedia_ = getValidSocialMediaArray(socialMedia);    
-
-//     try {
-
-//         const { userName, userActive, userData } = await someUserInfo(req, res, next);
-
-//         //check if user is logged in
-//         if (!userActive) {
-//             return globalErrorHandler(req, res, 401, "You do not have permission to update this story");
-//         }
-
-//         //find story
-//         const story = await Story.findById(storyId);
-
-//         //make sure story exist
-//         if (!story) {
-//             return globalErrorHandler(req, res, 404, "Story not found");
-//         }
-
-
-//         //create array out of extraTags if ther is any 
-//         let extraTagsArray = [];
-//         if (extraTags) {
-//             extraTagsArray = extraTags.split(",").map(extraTag => extraTag.trim()).filter(extraTag => extraTag !== "");
-//         }
-
-//         //get time book will take to read
-//         const readingTime = calculateReadingTime(storyText);
-
-//         //generate slugify
-//         const slug = slugify(storyTitle, { lower: true, strict: true });
-
-//         //update story
-//         story.legalName = legalName;
-//         story.creditingName = story.creditingName;
-//         story.socialMedia = socialMedia_;
-//         story.website = website;
-//         story.youtubeLink = replaceYouTubeLink(youtube);
-//         story.backgroundUrl = backgroundUrl;
-//         story.storyTitle = storyTitle;
-//         story.slug = slug;
-//         story.storySummary = storySummary;
-//         story.tags = tags;
-//         story.storyText = storyText;
-//         story.categories = story.categories;
-//         //add extraTags to extraTags
-//         story.extraTags = extraTagsArray;
-//         story.language = language;
-//         story.readingTime = readingTime;
-
-//         //updateDetails array        
-//         story.updateDetails.push({
-//             userId: userData.id,
-//             updatedAt : Date.now()
-//         });
-
-//         //save story
-//         let story_ = await story.save();
-
-
-//         //send to success page
-//         if(story_){
-//             return successPagefun(req, res, "Story Updated", 
-//                 `Your story has been updated successfully.`
-//             );
-//         }else{
-//             return globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
-//         }
-
-        
-//     } catch (error) {
-
-//         console.log(error);
-//         globalErrorHandler(req, res, 500, "Oops! Something went wrong. Please try again later.");
-        
-//     }
-
-
-// };
-
-
 
 
 // delete story
@@ -1342,7 +1188,66 @@ async function formatStory(text) {
 
 
 
+//add to user read list and increment read count 
+exports.addToReadList = async (req, res, next) => {
+    try {
+        const { slug } = req.params;
+        const { userName, userActive } = await someUserInfo(req, res, next);
 
+        if (!userActive) {
+            return res.status(401).json({
+                status: 401,
+                message: "You must be logged in to add to your read list"
+            });
+        }
+
+        const user = await User.findById(req.session.userId);
+        const story = await Story.findOne({ slug });
+
+        if (!story) {
+            return res.status(404).json({
+                status: 404,
+                message: "Story not found",
+                readCount: 0
+            });
+        }
+
+        const hasAlreadyRead = user.booksRead.some(book => book.bookId.toString() === story._id.toString());
+
+        if (!hasAlreadyRead) {
+            user.booksRead.push({
+                bookId: story._id,
+                booksReadCount: 1
+            });
+            await user.save();
+        } else {
+            const book = user.booksRead.find(book => book.bookId.toString() === story._id.toString());
+            if (book) {
+                book.booksReadCount++;
+                await user.save();
+            }
+        }
+
+        story.readCount++;
+        await story.save();
+
+        //respond with success json
+        return res.status(200).json({
+            status: 200,
+            message: "Story added to your read list",
+            readCount: story.readCount
+        });
+
+    }catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: 500,
+            message: "Something went wrong",
+            readCount: 0
+        });
+    }
+
+}
 
 
   

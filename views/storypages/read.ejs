@@ -1,6 +1,11 @@
     <!-- head include -->
     <%- include('../includes/head.ejs') %>
     <link rel="stylesheet" href="../../../CSS/readPage.css">
+
+
+    <input type="hidden" id="storyReadTime" value="<%= story.readingTime %>">
+    <input type="hidden" id="storySlug" value="<%= story.slug %>">
+    <input type="hidden" id="isUserActive" value="<%= userActive %>">
 </head>
 <body>
 
@@ -37,7 +42,7 @@
                 </div>
                 <div  class="story_info_list"id="story_info_views">
                     <img src="../../IMAGES/Icons/view.webp" alt="pen" />
-                    <p><%= story.readCount %></p>
+                    <p id="readCount"><%= story.readCount %></p>
                 </div>
                 <div class="story_info_list" id="story_info_comments">
                     <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
@@ -205,7 +210,7 @@
         <article class="story_secs" id="related_stories_wrap">
 
             <div id="related_stories">
-                <h2>Related Stories</h2>
+                <h2>Other Stories</h2>
                 <div id="related_stories_list">
                     <% top5Stories.forEach(story_ => { %>
                         <div class="related_stories_list_item">
