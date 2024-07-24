@@ -242,12 +242,16 @@ exports.readPage = async (req, res, next) => {
         const slug = req.params.slug;
 
         // Get the story by title
-        const story = await Story.findOne({ slug: slug });
+        const story = await Story.findOne({ slug: slug });        
 
         // If story not found, return a 404 error
         if (!story || !story.isApproved) {
             return globalErrorHandler(req, res, 404, "Story not found");
         }
+
+        //add view count
+        story.viewCount++;
+        await story.save();
 
         // Combine extraTags and story.categories
         const categories = story.categories.concat(story.extraTags);
@@ -278,13 +282,14 @@ exports.readPage = async (req, res, next) => {
             }
             storyPayload = storyPayload.concat(otherStoriesPayload);            
             
-        }         
+        }  
+        
 
         // Format the story text
         const storyText = await formatStory(story.storyText, 80);
 
         // Update the story object with the formatted text
-        story.storyText = storyText;
+        story.storyText = storyText;        
 
         // Render the read page with the story details
         res.status(200).render("../views/storypages/read", {
@@ -396,9 +401,7 @@ exports.submissionPost = async function (req, res, next) {
         } = req.body;        
 
 
-        let getSocialMediaArray = getValidSocialMediaArray(socialMedia);
-
-        console.log(getSocialMediaArray);        
+        let getSocialMediaArray = getValidSocialMediaArray(socialMedia);    
 
         //replace youtube link
         const youtubeLink_ = replaceYouTubeLink(youtube); 

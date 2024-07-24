@@ -56,11 +56,26 @@ const storySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // how many times the story has been read
+  viewCount: {
+    type: Number,
+    default: 0,
+  },
   readCount: {
     type: Number,
     default: 0,
   },
+  readCountUserData: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      readAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   upvotes: [
     {
       type: mongoose.Schema.Types.ObjectId,

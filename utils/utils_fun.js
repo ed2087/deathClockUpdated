@@ -61,8 +61,9 @@ class GetStories {
 
     async  getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(userId, limit) {
         const upvotesWeight = 0.4;
-        const readsWeight = 0.01;
+        const readsWeight = 0.05;
         const commentsWeight = 0.6;
+        const viewCountWeight = 0.01;
     
         let combinedStories = [];
         
@@ -95,6 +96,7 @@ class GetStories {
                         readingTime: 1,
                         comments: { $size: "$comments" },
                         readCount: 1,
+                        viewCount: 1,
                         unicUrlTitle: 1,
                         slug: 1,
                         backgroundUrl: 1,
@@ -104,6 +106,7 @@ class GetStories {
                                 { $multiply: ["$upvoteCount", upvotesWeight] },
                                 { $multiply: ["$readCount", readsWeight] },
                                 { $multiply: [{ $size: "$comments" }, commentsWeight] },
+                                { $multiply: ["$viewCount", viewCountWeight] },
                             ],
                         },
                     },
@@ -145,6 +148,7 @@ class GetStories {
                             readingTime: 1,
                             comments: { $size: "$comments" },
                             readCount: 1,
+                            viewCount: 1,
                             unicUrlTitle: 1,
                             slug: 1,
                             backgroundUrl: 1,
@@ -154,6 +158,7 @@ class GetStories {
                                     { $multiply: ["$upvoteCount", upvotesWeight] },
                                     { $multiply: ["$readCount", readsWeight] },
                                     { $multiply: [{ $size: "$comments" }, commentsWeight] },
+                                    { $multiply: ["$viewCount", viewCountWeight] },
                                 ],
                             },
                         },
@@ -195,6 +200,7 @@ class GetStories {
                         readingTime: 1,
                         comments: { $size: "$comments" },
                         readCount: 1,
+                        viewCount: 1,
                         unicUrlTitle: 1,
                         slug: 1,
                         backgroundUrl: 1,
@@ -204,6 +210,7 @@ class GetStories {
                                 { $multiply: ["$upvoteCount", upvotesWeight] },
                                 { $multiply: ["$readCount", readsWeight] },
                                 { $multiply: [{ $size: "$comments" }, commentsWeight] },
+                                { $multiply: ["$viewCount", viewCountWeight] },
                             ],
                         },
                     },
@@ -641,6 +648,7 @@ class GetStories {
             readingTime: 1,
             comments: 1,
             readCount: 1, 
+            viewCount: 1,
             unicUrlTitle: 1,
             slug: 1,
             backgroundUrl: 1,
