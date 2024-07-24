@@ -199,10 +199,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Add 1 minute to the read time and convert to milliseconds
-    const readTime = (storyReadTime + 1) * 60 * 1000;
+    const readTime = storyReadTime * 60 * 1000 * 0.8; // Convert to milliseconds
 
-    if(userActive){
+    if(userActive !== "false"){
+
         setTimeout(() => {
+
             console.log('Timeout reached, sending request to add to read list');
             fetch(`/terrorTales/addToReadList/${slug}`, {
                 method: 'GET',
@@ -221,6 +223,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     }
                 }).catch(error => console.error('Fetch error:', error));
         }, readTime);
+
     };//end if
 
 });

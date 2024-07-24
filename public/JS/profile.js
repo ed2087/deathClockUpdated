@@ -45,12 +45,17 @@ const storyCardTemplate = (story,csrfToken) => {
 
             <div class="upvoteCount">
                 <img src="../../IMAGES/Icons/view.webp" alt="pen" />
-                ${story.readCount}
+                ${story.viewCount}
             </div> 
 
             <div class="upvoteCount">
                 <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
                 ${story.commentCount}
+            </div> 
+
+            <div class="upvoteCount">
+                <img src="../../IMAGES/Icons/reading.webp" alt="pen" />
+                ${story.readCount}
             </div> 
 
             <div class="upvoteCount">

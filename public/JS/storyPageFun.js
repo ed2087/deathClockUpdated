@@ -155,12 +155,17 @@ const CommonStoryTemplates = (data,UserRole) => {
 
                             <div class="upvoteCount">
                                 <img src="../../IMAGES/Icons/view.webp" alt="pen" />
-                                ${data.readCount}
+                                ${data.viewCount}
                             </div> 
 
                             <div class="upvoteCount">
                                 <img src="../../IMAGES/Icons/chat.webp" alt="pen" />
                                 ${commentsCount}
+                            </div> 
+
+                            <div class="upvoteCount">
+                                <img src="../../IMAGES/Icons/reading.webp" alt="pen" />
+                                ${data.readCount}
                             </div> 
 
                             <div class="upvoteCount">
