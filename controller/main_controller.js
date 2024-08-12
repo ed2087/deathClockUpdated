@@ -168,6 +168,17 @@ exports.sitemap = async (req, res, next) => {
         u.ele('priority', '0.8');
     });
 
+    // add writer profile /profile/u/username only if they are role = writer
+      const users = await User.find({ role: "writer" }).select("username");
+
+      users.forEach(user => {
+          const userUrl = `https://www.terrorhub.com/profile/u/${user.username}`;
+          var u = root.ele('url');
+          u.ele('loc', userUrl);
+          u.ele('changefreq', 'daily');
+          u.ele('priority', '0.8');
+      });
+
       res.set('Content-Type', 'text/xml');
       res.send(root.end({ pretty: true }));
   } catch (err) {
