@@ -168,8 +168,9 @@ exports.sitemap = async (req, res, next) => {
         u.ele('priority', '0.8');
     });
 
-    // add writer profile /profile/u/username only if they are role = writer
-      const users = await User.find({ role: "writer" }).select("username");
+
+     // add writer profile /profile/u/username only if they are role = writer or admin or moderator
+      const users = await User.find({ role: { $in: ['writer', 'admin', 'moderator'] } }).select("username");
 
       users.forEach(user => {
           const userUrl = `https://www.terrorhub.com/profile/u/${user.username}`;
