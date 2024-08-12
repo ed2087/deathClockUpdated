@@ -56,6 +56,7 @@ exports.faq = async function (req, res, next) {
       path: "/faq",
       title: "FAQ",
       headerTitle: "FAQ",
+      description: "TerrorHub - FAQ",
       csrfToken: res.locals.csrfToken,
       userActive,
       userName,
