@@ -14,7 +14,7 @@ const allowedFormats = [".jpg", ".png", ".jpeg", ".gif"];
 
 const sendData = async (e) => {  
     
-
+    console.log("sendata")
     e.preventDefault();    
   
     const form = document.querySelector('#submission_form');
