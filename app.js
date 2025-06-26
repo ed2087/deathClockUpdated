@@ -37,22 +37,43 @@ const refreshUserSession = require('./middleware/session-data-refresh.js');
 const app = express();
 
 //check if not www.terrorhub
-app.use((req, res, next) => {
+// app.use((req, res, next) => {
   
-  const isLocalhost = req.headers.host.includes('localhost');
+//   const isLocalhost = req.headers.host.includes('localhost');
 
-  if (!isLocalhost && req.headers.host !== 'www.terrorhub.com') {
+//   if (!isLocalhost && req.headers.host !== 'www.terrorhub.com') {
+//     const secureUrl = `https://www.terrorhub.com${req.originalUrl}`;
+//     res.redirect(301, secureUrl);
+//   } else if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+//     // Redirect to HTTPS if not already using it in production
+//     const secureUrl = `https://${req.headers.host}${req.originalUrl}`;
+//     res.redirect(301, secureUrl);
+//   } else {
+//     next();
+//   }
+// });
+
+
+app.use((req, res, next) => {
+  const isLocalhost = req.headers.host.includes('localhost');
+  const allowedHosts = ['www.terrorhub.com', 'terrorhub.com'];
+  
+  if (!isLocalhost && !allowedHosts.includes(req.headers.host)) {
+    // Handle unexpected hosts (security + SEO)
+    const secureUrl = `https://www.terrorhub.com${req.originalUrl}`;
+    res.redirect(301, secureUrl);
+  } else if (!isLocalhost && req.headers.host !== 'www.terrorhub.com') {
+    // Canonicalize to www
     const secureUrl = `https://www.terrorhub.com${req.originalUrl}`;
     res.redirect(301, secureUrl);
   } else if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
-    // Redirect to HTTPS if not already using it in production
+    // Force HTTPS in production
     const secureUrl = `https://${req.headers.host}${req.originalUrl}`;
     res.redirect(301, secureUrl);
   } else {
     next();
   }
 });
-
 
 
 // Connect to MongoDB

@@ -1,6 +1,7 @@
 // Enhanced TerrorTales Controller with New Categorization System
 const Story = require("../model/submission.js");
 const User = require("../model/user.js");
+const SlugGenerator = require('../utils/slugGenerator.js');
 
 // Utils
 const { sendEmail, htmlTemplate } = require("../utils/sendEmail.js");
@@ -26,7 +27,7 @@ const path = require('path');
 // ==================== ULTIMATE SEARCH SYSTEM ====================
 
 /**
- * 🚀 ULTIMATE SEARCH SYSTEM
+ * 🚀 ULTIMATE SEARCH SYSTEM submissionPost 
  * Multi-field, intelligent, fast search with advanced filtering
  */
 class UltimateSearchEngine {
@@ -1035,11 +1036,17 @@ exports.submissionPost = async function (req, res, next) {
 
        const finalLegalName = legalName?.trim() || userData.legalName;
        const readingTime = calculateReadingTime(storyText);
-       const slug = slugify(storyTitle, { lower: true, strict: true });
 
-       // Check for duplicate slugs
-       const existingStory = await Story.findOne({ slug });
-       const finalSlug = existingStory ? `${slug}-${Date.now()}` : slug;
+       // 🎯 NEW: Generate clean slug using the enhanced system
+       const cleanSlug = await SlugGenerator.generateUniqueSlug(storyTitle, Story);
+       
+       // Fallback to old system if slug generation fails
+       const finalSlug = cleanSlug || (() => {
+           const fallbackSlug = slugify(storyTitle, { lower: true, strict: true });
+           return existingStory ? `${fallbackSlug}-${Date.now()}` : fallbackSlug;
+       })();
+
+       console.log(`🎯 Generated clean slug: "${storyTitle}" → "${finalSlug}"`); // Debug log
 
        // Create story using EXISTING schema format
        const submissionData = {
@@ -1050,7 +1057,7 @@ exports.submissionPost = async function (req, res, next) {
            youtubeLink: youtubeVideo ? replaceYouTubeLink(youtubeVideo) : '',
            backgroundUrl: backgroundUrl || '',
            storyTitle: storyTitle.trim(),
-           slug: finalSlug,
+           slug: finalSlug, // 🎯 NEW: Clean slug instead of encoded mess
            storySummary: storySummary.trim(),
            tags: tagsArray,
            storyText: storyText.trim(),
@@ -1287,7 +1294,7 @@ exports.generateAudio = async (req, res, next) => {
 };
 
 /**
-* Enhanced Read Page
+* Enhanced Read Page - SEO OPTIMIZED
 */
 exports.readPage = async (req, res, next) => {
    try {
@@ -1308,6 +1315,40 @@ exports.readPage = async (req, res, next) => {
        story.viewCount = (story.viewCount || 0) + 1;
        await story.save();
 
+       // ========== SEO ENHANCEMENTS ==========
+       
+       // Calculate word count and reading time
+       const wordCount = story.storyText ? story.storyText.split(' ').length : 0;
+       const readingTimeMinutes = Math.ceil(wordCount / 200);
+       
+       // Clean categories and tags for SEO
+       const cleanCategories = story.categories ? 
+           [...new Set(story.categories)].filter(cat => cat && cat.trim() !== '').slice(0, 4) : [];
+       
+       let allTags = [];
+       if (story.tags) {
+           story.tags.forEach(tag => {
+               if (typeof tag === 'string' && tag.includes(',')) {
+                   allTags.push(...tag.split(',').map(t => t.trim()));
+               } else if (tag && tag.trim() !== '') {
+                   allTags.push(tag.trim());
+               }
+           });
+       }
+       if (story.extraTags) {
+           allTags.push(...story.extraTags.filter(tag => tag && tag.trim() !== ''));
+       }
+       const cleanTags = [...new Set(allTags)]
+           .filter(tag => tag && tag.length > 1)
+           .slice(0, 8);
+
+       // Create SEO-optimized title and description
+       const primaryCategory = cleanCategories[0] || 'Horror Story';
+       const seoTitle = `${story.storyTitle} - ${primaryCategory} | TerrorHub`;
+       const seoDescription = story.storySummary ? 
+           `${story.storySummary.substring(0, 150)}... Read this chilling ${primaryCategory.toLowerCase()} free on TerrorHub. ${readingTimeMinutes} min read.` :
+           `Read "${story.storyTitle}" - a terrifying ${primaryCategory.toLowerCase()} story on TerrorHub. Free horror stories and creepypasta.`;
+
        // Get related stories
        const categories = [...(story.categories || []), ...(story.extraTags || [])];
        const relatedStories = await getRelatedStories(story, categories, 6);
@@ -1319,18 +1360,35 @@ exports.readPage = async (req, res, next) => {
        // Get category information for display
        const categoryInfo = getCategoryDisplayInfo(story.categories || []);
 
+       // Enhanced story object with SEO data
+       const enhancedStory = {
+           ...story.toObject(),
+           wordCount,
+           readingTimeMinutes,
+           cleanCategories,
+           cleanTags,
+           storyText: formattedStoryText
+       };
+
        res.status(200).render("../views/storypages/read", {
-           title: `${story.storyTitle} | TerrorHub`,
+           title: seoTitle,
            path: `/terrorTales/horrorStory/${slug}`,
            headerTitle: story.storyTitle,
-           description: story.storySummary || "A chilling horror story from TerrorHub community",
+           description: seoDescription,
            userActive,
            userName,
-           story,
+           story: enhancedStory,
            userData,
            top5Stories: relatedStories,
            categoryInfo,
-           enhancedCategories: ENHANCED_CATEGORIES
+           enhancedCategories: ENHANCED_CATEGORIES,
+           // SEO breadcrumbs
+           breadcrumbs: [
+               { name: 'Home', url: '/' },
+               { name: 'Horror Stories', url: '/terrorTales' },
+               { name: primaryCategory, url: `/terrorTales/category/${primaryCategory.toLowerCase().replace(' ', '-')}` },
+               { name: story.storyTitle, url: `/terrorTales/horrorStory/${slug}` }
+           ]
        });
 
    } catch (error) {
@@ -2161,20 +2219,16 @@ exports.updateStoryPage = async (req, res, next) => {
 };
 
 /**
- * Update story post (enhanced) - Fixed
+ * Update story post - PRESERVES EXISTING SLUG for SEO stability
  */
 exports.updateStoryPost = async (req, res, next) => {
     try {
         console.log('=== UPDATE STORY REQUEST ===');
         console.log('Request body:', JSON.stringify(req.body, null, 2));
-        console.log('Content-Type:', req.headers['content-type']);
-        console.log('========================');
         
         const { userName, userActive, userData } = await someUserInfo(req, res, next);
-        console.log('User info retrieved:', { userName, userActive, userDataId: userData?.id });
 
         if (!userActive) {
-            console.log('User not authenticated');
             return res.status(401).json({
                 status: 401,
                 message: "You must be logged in to update stories"
@@ -2186,13 +2240,9 @@ exports.updateStoryPost = async (req, res, next) => {
             storySummary, tags, storyText, primaryGenre, format, theme, language
         } = req.body;
 
-        console.log('About to find story with ID:', storyId);
-
         const story = await Story.findById(storyId);
-        console.log('Story found:', story ? 'YES' : 'NO');
 
         if (!story) {
-            console.log('Story not found, sending 404');
             return res.status(404).json({
                 status: 404,
                 message: "Story not found"
@@ -2200,17 +2250,12 @@ exports.updateStoryPost = async (req, res, next) => {
         }
 
         // Check permissions
-        console.log('Checking permissions - User role:', userData.role, 'Story owner:', story.owner.toString(), 'User ID:', userData.id.toString());
-        
         if (userData.role !== "admin" && story.owner.toString() !== userData.id.toString()) {
-            console.log('Permission denied');
             return res.status(403).json({
                 status: 403,
                 message: "You don't have permission to edit this story"
             });
         }
-
-        console.log('Starting story update...');
 
         // Process enhanced categories (as strings for existing schema)
         const categories = [primaryGenre];
@@ -2224,35 +2269,34 @@ exports.updateStoryPost = async (req, res, next) => {
             : [];
 
         const readingTime = calculateReadingTime(storyText);
-        const slug = slugify(storyTitle, { lower: true, strict: true });
 
-        console.log('Processed data:', { categories, socialMediaArray, tagsArray, readingTime, slug });
-
-        // Check if slug already exists (exclude current story)
-        const existingStory = await Story.findOne({ 
-            slug, 
-            _id: { $ne: story._id } 
-        });
+        // 🎯 CRITICAL: NEVER change existing slugs - preserve for SEO
+        // Only generate new slug if the story somehow doesn't have one
+        let finalSlug = story.slug;
         
-        const finalSlug = existingStory ? `${slug}-${Date.now()}` : slug;
-        console.log('Final slug:', finalSlug);
+        if (!finalSlug) {
+            // Only if story has no slug (shouldn't happen, but safety)
+            console.log('⚠️ Story missing slug, generating new one...');
+            finalSlug = await SlugGenerator.generateUniqueSlug(storyTitle, Story, story._id);
+        }
 
-        // Update story with existing schema format
-        console.log('Updating story object...');
+        console.log(`🔒 Preserving existing slug: "${finalSlug}" (Title: "${storyTitle}")`);
+
+        // Update story with existing schema format - PRESERVE SLUG
         Object.assign(story, {
             legalName: legalName?.trim() || story.legalName,
             socialMedia: socialMediaArray,
             website: '', // Keep for compatibility
             youtubeLink: youtubeVideo ? replaceYouTubeLink(youtubeVideo) : '',
             backgroundUrl: backgroundUrl || '',
-            storyTitle: storyTitle.trim(),
-            slug: finalSlug,
+            storyTitle: storyTitle.trim(), // ✅ Title can change
+            slug: finalSlug, // 🔒 SLUG NEVER CHANGES (SEO preservation)
             storySummary: storySummary.trim(),
             tags: tagsArray,
             storyText: storyText.trim(),
-            categories: categories, // String array, not ObjectIds
+            categories: categories,
             language: language || 'English',
-            extraTags: [], // Keep empty for new system
+            extraTags: [],
             readingTime
         });
 
@@ -2265,12 +2309,10 @@ exports.updateStoryPost = async (req, res, next) => {
             updatedAt: new Date()
         });
 
-        console.log('About to save story...');
         await story.save();
-        console.log('Story saved successfully!');
 
-        console.log('Sending success response...');
-        // Return JSON response instead of redirect
+        console.log('✅ Story updated successfully - slug preserved for SEO');
+
         return res.status(200).json({
             status: 200,
             message: "Your story has been updated successfully!",
@@ -2281,10 +2323,8 @@ exports.updateStoryPost = async (req, res, next) => {
     } catch (error) {
         console.error('Update story error:', error);
         
-        // Handle specific validation errors
         if (error.name === 'ValidationError') {
             const errorMessages = Object.values(error.errors).map(err => err.message);
-            console.log('Validation error, sending response...');
             return res.status(400).json({
                 status: 400,
                 message: "Validation failed",
@@ -2292,7 +2332,6 @@ exports.updateStoryPost = async (req, res, next) => {
             });
         }
 
-        console.log('General error, sending 500 response...');
         return res.status(500).json({
             status: 500,
             message: "Something went wrong updating the story. Please try again."
