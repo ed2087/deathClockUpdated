@@ -586,3 +586,120 @@
         margin: 0 auto;
     } */
 }
+
+
+
+/* Enhanced Search Form Styles */
+#search_stories {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--global-darkred);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+/* Search Type Wrapper */
+#searchTypeWrap {
+    width: 100%;
+    max-width: 200px;
+}
+
+#searchTypeWrap select {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--global-darkred);
+    color: var(--global-yellow);
+}
+
+#searchTypeWrap select:hover {
+    border-color: var(--global-yellow);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Ranking/Sort Wrapper */
+#rankingWrap {
+    width: 100%;
+    max-width: 200px;
+}
+
+#rankingWrap select {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--global-darkred);
+    color: var(--global-yellow);
+}
+
+#rankingWrap select:hover {
+    border-color: var(--global-yellow);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Enhanced Language Wrapper */
+#languageWrap select {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: var(--global-darkred);
+    color: var(--global-yellow);
+}
+
+#languageWrap select:hover {
+    border-color: var(--global-yellow);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Main search input enhancement */
+#searchWrap input {
+    background: rgba(0, 0, 0, 0.7);
+    border-color: var(--global-red);
+    transition: all 0.3s ease;
+}
+
+#searchWrap input:focus {
+    border-color: var(--global-yellow);
+    box-shadow: 0 0 10px rgba(250, 197, 54, 0.3);
+    background: rgba(0, 0, 0, 0.9);
+}
+
+/* Select option styling */
+.inputWrap select option {
+    background: black;
+    color: white;
+    padding: 10px;
+}
+
+.inputWrap select option:hover {
+    background: var(--global-darkred);
+}
+
+/* Focus states for all new selects */
+#searchType:focus,
+#ranking:focus {
+    border-color: var(--global-yellow);
+    box-shadow: 0 0 10px rgba(250, 197, 54, 0.3);
+    outline: none;
+}
+
+/* Responsive adjustments for new inputs */
+@media only screen and (min-width: 800px) {
+    #searchTypeWrap,
+    #rankingWrap {
+        width: 25%;
+        max-width: 180px;
+    }
+    
+    #languageWrap {
+        width: 25%;
+        max-width: 180px;
+    }
+    
+    #searchWrap {
+        width: 40%;
+        max-width: 400px;
+    }
+}
+
+@media only screen and (min-width: 1300px) {
+    #search_stories {
+        width: 90%;
+        max-width: 1000px;
+    }
+}
+
+

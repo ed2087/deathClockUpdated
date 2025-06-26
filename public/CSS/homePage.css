@@ -385,3 +385,464 @@ flex-direction: column;
 }
 
 }
+
+
+
+/* Latest Stories - Grid Layout */
+#LatestStories {
+    padding: 40px 20px;
+}
+
+.stories-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.stories-header {
+    text-align: center;
+    margin-bottom: 3em;
+}
+
+.stories-header h2 {
+    font-family: 'Creepster', cursive;
+    font-size: 2.5rem;
+    color: var(--global-yellow);
+    margin-bottom: 0.8em;
+}
+
+.stories-header p {
+    font-size: 1.1rem;
+    color: #888;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Main Stories Grid */
+.stories-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2em;
+    margin-bottom: 3em;
+}
+
+/* Featured Story - Takes Left Column */
+.featured-story {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    padding: 2em;
+}
+
+.featured-badge {
+    background: var(--global-red);
+    color: white;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.story-title {
+    font-family: 'Creepster', cursive;
+    font-size: 1.8rem;
+    color: var(--global-yellow);
+    margin-bottom: 0.8em;
+    line-height: 1.3;
+}
+
+.story-meta {
+    display: flex;
+    gap: 1.5em;
+    margin-bottom: 1.2em;
+    font-size: 0.9rem;
+    color: #666;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+}
+
+.story-stats {
+    display: flex;
+    gap: 2em;
+    margin-bottom: 1.5em;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.stat-number {
+    color: white;
+    font-weight: 500;
+}
+
+.story-categorization {
+    margin-bottom: 1.5em;
+}
+
+.categories-row, .tags-row {
+    margin-bottom: 1em;
+}
+
+.section-label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.category-chips, .tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.category-chip {
+    background: #1a1a1a;
+    color: #ccc;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border: 1px solid #333;
+}
+
+.tag-chip {
+    background: transparent;
+    color: #888;
+    border: 1px solid #444;
+    padding: 3px 6px;
+    font-size: 0.75rem;
+}
+
+.story-summary {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 1.5em;
+}
+
+.author-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1em;
+    border-top: 1px solid #333;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.author-name {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Side Stories - Takes Right Column */
+.side-stories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+.side-story {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    padding: 1.2em;
+}
+
+.side-story .story-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.6em;
+}
+
+.side-story .story-meta {
+    gap: 1em;
+    margin-bottom: 0.8em;
+    font-size: 0.8rem;
+}
+
+.side-story .story-stats {
+    gap: 1.2em;
+    margin-bottom: 0.8em;
+    font-size: 0.8rem;
+}
+
+.side-story .story-summary {
+    font-size: 0.85rem;
+    margin-bottom: 1em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.side-story .story-categorization {
+    margin-bottom: 1em;
+}
+
+.side-story .author-info {
+    padding-top: 0.8em;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6em;
+}
+
+/* Additional Stories Grid - Below Main Grid */
+.additional-stories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5em;
+    margin-top: 2em;
+}
+
+.story-card {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    padding: 1.5em;
+}
+
+.story-card .story-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.8em;
+}
+
+.story-card .story-stats {
+    gap: 1.5em;
+    margin-bottom: 1em;
+    font-size: 0.8rem;
+}
+
+.story-card .story-summary {
+    font-size: 0.9rem;
+    margin-bottom: 1em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.story-card .story-categorization {
+    margin-bottom: 1em;
+}
+
+.story-card .author-info {
+    padding-top: 0.8em;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8em;
+}
+
+/* Call to Action */
+.explore-more {
+    text-align: center;
+    margin-top: 3em;
+    padding: 2em 0;
+}
+
+.explore-more h3 {
+    font-family: 'Creepster', cursive;
+    font-size: 1.5rem;
+    color: var(--global-yellow);
+    margin-bottom: 0.8em;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .stories-main-grid {
+        grid-template-columns: 1fr;
+        gap: 2em;
+    }
+    
+    .side-stories {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5em;
+    }
+}
+
+@media (max-width: 768px) {
+    .stories-header h2 {
+        font-size: 2rem;
+    }
+    
+    .story-title {
+        font-size: 1.5rem;
+    }
+    
+    .featured-story {
+        padding: 1.5em;
+    }
+    
+    .side-stories {
+        grid-template-columns: 1fr;
+    }
+    
+    .additional-stories {
+        grid-template-columns: 1fr;
+    }
+    
+    .story-stats {
+        gap: 1em;
+    }
+    
+    .story-meta {
+        gap: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    #LatestStories {
+        padding: 20px 15px;
+    }
+    
+    .stories-main-grid {
+        gap: 1.5em;
+    }
+}
+
+
+/* Main Stories Grid - 2 Featured + 3 Side */
+.stories-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 300px;
+    gap: 1.5em;
+    margin-bottom: 3em;
+}
+
+/* Featured Stories Container */
+.featured-stories {
+    display: contents; /* Makes children participate in parent grid */
+}
+
+/* Featured Story - Each takes equal width */
+.featured-story {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    padding: 1.8em;
+}
+
+/* Make featured stories slightly more compact */
+.featured-story .story-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.7em;
+}
+
+.featured-story .story-meta {
+    gap: 1.2em;
+    margin-bottom: 1em;
+    font-size: 0.85rem;
+}
+
+.featured-story .story-stats {
+    gap: 1.5em;
+    margin-bottom: 1.2em;
+    font-size: 0.85rem;
+}
+
+.featured-story .story-categorization {
+    margin-bottom: 1.2em;
+}
+
+.featured-story .story-summary {
+    font-size: 0.95rem;
+    margin-bottom: 1.2em;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Side Stories - More compact for 3 stories */
+.side-stories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+}
+
+.side-story {
+    background: #0a0a0a;
+    border: 1px solid #222;
+    padding: 1em;
+    flex: 1;
+}
+
+.side-story .story-title {
+    font-size: 1rem;
+    margin-bottom: 0.5em;
+}
+
+.side-story .story-meta {
+    gap: 0.8em;
+    margin-bottom: 0.6em;
+    font-size: 0.75rem;
+}
+
+.side-story .story-stats {
+    gap: 1em;
+    margin-bottom: 0.6em;
+    font-size: 0.75rem;
+}
+
+.side-story .story-summary {
+    font-size: 0.8rem;
+    margin-bottom: 0.8em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.side-story .story-categorization {
+    margin-bottom: 0.8em;
+}
+
+.side-story .category-chips .category-chip,
+.side-story .tag-chips .tag-chip {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+}
+
+.side-story .author-info {
+    padding-top: 0.6em;
+    gap: 0.5em;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .stories-main-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5em;
+    }
+    
+    .side-stories {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5em;
+        margin-top: 1em;
+    }
+    
+    .side-story {
+        flex: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .stories-main-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+    }
+    
+    .side-stories {
+        grid-column: 1;
+        margin-top: 0;
+    }
+}

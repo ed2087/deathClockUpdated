@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addTag(inputFake, container, input);
         }
     };
-
+    
     tagsInputFake.addEventListener('keyup', (event) => handleKeyPress(event, tagsInputFake, tagsContainer, tagsInput));
     tagsInputFake.addEventListener('blur', () => addTag(tagsInputFake, tagsContainer, tagsInput));
 

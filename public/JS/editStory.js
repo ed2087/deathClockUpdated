@@ -1,10 +1,9 @@
-console.log('Enhanced submission.js loaded - TerrorHub v2.0');
+console.log('Enhanced edit story.js loaded');
 
-// Enhanced submission system with smart categorization
-class EnhancedSubmissionForm {
+// Enhanced edit story system
+class EnhancedEditForm {
     constructor() {
         this.selectedTags = [];
-        this.tagSuggestions = [];
         this.isLoading = false;
         this.debounceTimer = null;
         
@@ -12,18 +11,39 @@ class EnhancedSubmissionForm {
     }
 
     init() {
+        this.loadExistingTags();
         this.setupEventListeners();
         this.setupCollapsibleSections();
         this.setupCharacterCounters();
         this.setupSmartTagSystem();
         this.setupFormValidation();
         this.setupUrlValidation();
-        console.log('Enhanced submission form initialized successfully');
+        console.log('Enhanced edit form initialized successfully');
+    }
+
+    loadExistingTags() {
+        try {
+            // Load existing tags from hidden input (more reliable)
+            const tagsInput = document.querySelector('input[name="existingTags"]');
+            if (tagsInput && tagsInput.value) {
+                const tagString = tagsInput.value.trim();
+                if (tagString) {
+                    this.selectedTags = tagString.split(',')
+                        .map(tag => tag.trim().toLowerCase())
+                        .filter(tag => tag);
+                    this.renderSelectedTags();
+                    console.log('Loaded existing tags:', this.selectedTags);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading existing tags:', error);
+            this.selectedTags = [];
+        }
     }
 
     setupEventListeners() {
         // Form submission
-        const form = id_('submission_form');
+        const form = id_('edit_form');
         if (form) {
             form.addEventListener('submit', (e) => this.handleSubmission(e));
         }
@@ -31,7 +51,6 @@ class EnhancedSubmissionForm {
         // Real-time validation and character counting
         const storyTitle = id_('storyTitle');
         if (storyTitle) {
-            storyTitle.addEventListener('blur', () => this.validateTitle());
             storyTitle.addEventListener('input', () => this.updateCharCount('storyTitle', 100));
         }
 
@@ -45,7 +64,7 @@ class EnhancedSubmissionForm {
             storyText.addEventListener('input', () => this.updateCharCount('storyText', 40000));
         }
 
-        // Enhanced category validation
+        // Category validation
         const primaryGenre = id_('primaryGenre');
         if (primaryGenre) {
             primaryGenre.addEventListener('change', () => this.validateForm());
@@ -60,118 +79,6 @@ class EnhancedSubmissionForm {
         if (theme) {
             theme.addEventListener('change', () => this.validateForm());
         }
-
-        // Terms checkbox
-        const terms = id_('termsAndConditions');
-        if (terms) {
-            terms.addEventListener('change', () => this.validateForm());
-        }
-    }
-
-    setupUrlValidation() {
-        // Background URL validation
-        const backgroundUrl = id_('backgroundUrl');
-        if (backgroundUrl) {
-            backgroundUrl.addEventListener('blur', () => this.validateBackgroundUrl());
-            backgroundUrl.addEventListener('input', () => this.validateBackgroundUrl());
-        }
-
-        // Social media URL validation
-        const socialMediaFields = ['facebook', 'twitter', 'instagram', 'youtube'];
-        socialMediaFields.forEach(platform => {
-            const field = document.querySelector(`[name="${platform}"]`);
-            if (field) {
-                field.addEventListener('blur', () => this.validateSocialMediaUrl(field));
-                field.addEventListener('input', () => this.validateSocialMediaUrl(field));
-            }
-        });
-
-        // YouTube video URL validation
-        const youtubeVideo = id_('youtubeVideo');
-        if (youtubeVideo) {
-            youtubeVideo.addEventListener('blur', () => this.validateYouTubeUrl());
-            youtubeVideo.addEventListener('input', () => this.validateYouTubeUrl());
-        }
-    }
-
-    validateBackgroundUrl() {
-        const field = id_('backgroundUrl');
-        if (!field) return true;
-
-        const url = field.value.trim();
-        if (!url) {
-            field.style.borderColor = '';
-            return true; // Optional field
-        }
-
-        const allowedDomains = ['imgur.com', 'tumblr.com', 'flickr.com', 'pinterest.com', 'photobucket.com'];
-        const allowedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-
-        const isValidDomain = allowedDomains.some(domain => url.toLowerCase().includes(domain));
-        const isValidFormat = allowedFormats.some(format => url.toLowerCase().endsWith(format));
-
-        if (!this.isValidUrl(url)) {
-            field.style.borderColor = '#ff6b6b';
-            return false;
-        }
-
-        if (!isValidDomain || !isValidFormat) {
-            field.style.borderColor = '#ffc107';
-            return false;
-        }
-
-        field.style.borderColor = '#4CAF50';
-        return true;
-    }
-
-    validateSocialMediaUrl(field) {
-        if (!field) return true;
-
-        const url = field.value.trim();
-        if (!url) {
-            field.style.borderColor = '';
-            return true; // Optional field
-        }
-
-        if (this.isValidUrl(url)) {
-            field.style.borderColor = '#4CAF50';
-            return true;
-        } else {
-            field.style.borderColor = '#ff6b6b';
-            return false;
-        }
-    }
-
-    validateYouTubeUrl() {
-        const field = id_('youtubeVideo');
-        if (!field) return true;
-
-        const url = field.value.trim();
-        if (!url) {
-            field.style.borderColor = '';
-            return true; // Optional field
-        }
-
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/)|youtu\.be\/)/i;
-        
-        if (youtubeRegex.test(url)) {
-            field.style.borderColor = '#4CAF50';
-            return true;
-        } else {
-            field.style.borderColor = '#ffc107';
-            return false;
-        }
-    }
-
-    isValidUrl(string) {
-        try {
-            // Add protocol if missing
-            const url = string.startsWith('http') ? string : 'https://' + string;
-            new URL(url);
-            return true;
-        } catch {
-            return false;
-        }
     }
 
     setupCollapsibleSections() {
@@ -185,12 +92,12 @@ class EnhancedSubmissionForm {
                 toggleIcon?.classList.toggle('rotated');
                 
                 // Save preference
-                localStorage.setItem('optionalSectionCollapsed', optionalContent.classList.contains('collapsed'));
+                localStorage.setItem('editOptionalSectionCollapsed', optionalContent.classList.contains('collapsed'));
             });
 
-            // Restore previous state or collapse on mobile
-            const wasCollapsed = localStorage.getItem('optionalSectionCollapsed') === 'true';
-            if (wasCollapsed || window.innerWidth < 768) {
+            // Restore previous state or show expanded by default for editing
+            const wasCollapsed = localStorage.getItem('editOptionalSectionCollapsed') === 'true';
+            if (wasCollapsed) {
                 optionalContent.classList.add('collapsed');
                 toggleIcon?.classList.add('rotated');
             }
@@ -198,7 +105,6 @@ class EnhancedSubmissionForm {
     }
 
     setupCharacterCounters() {
-        // Initialize all character counters
         this.updateCharCount('storyTitle', 100);
         this.updateCharCount('storySummary', 800);
         this.updateCharCount('storyText', 40000);
@@ -248,19 +154,16 @@ class EnhancedSubmissionForm {
                 }
 
                 if (e.key === 'Backspace' && e.target.value === '' && this.selectedTags.length > 0) {
-                    // Remove last tag when backspacing on empty input
                     this.removeTag(this.selectedTags[this.selectedTags.length - 1]);
                 }
             });
 
-            // Hide suggestions when clicking outside
             document.addEventListener('click', (e) => {
                 if (!tagsInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     this.hideSuggestions();
                 }
             });
 
-            // Focus management
             tagsInput.addEventListener('focus', () => {
                 if (tagsInput.value.trim().length >= 2) {
                     this.handleTagInput(tagsInput.value.trim());
@@ -276,50 +179,45 @@ class EnhancedSubmissionForm {
         }
 
         try {
-            const suggestions = await this.fetchTagSuggestions(query);
-            this.showSuggestions(suggestions);
-        } catch (error) {
-            console.error('Error fetching tag suggestions:', error);
-            this.hideSuggestions();
-        }
-    }
-
-    async fetchTagSuggestions(query) {
-        try {
             const response = await fetch(`/terrorTales/api/tags/search?q=${encodeURIComponent(query)}&limit=6`);
             const data = await response.json();
             
             if (data.status === 'success' && Array.isArray(data.data)) {
-                return data.data
+                const suggestions = data.data
                     .filter(tag => !this.selectedTags.includes(tag.name.toLowerCase()))
                     .slice(0, 5);
+                this.showSuggestions(suggestions);
+            } else {
+                // Fallback to local suggestions
+                this.showFallbackSuggestions(query);
             }
-            
-            throw new Error('Invalid response format');
         } catch (error) {
-            console.warn('Using fallback tag suggestions:', error);
-            // Fallback to local suggestions
-            const fallbackTags = [
-                'atmospheric', 'suspense', 'psychological', 'supernatural', 'haunted',
-                'ghost', 'demon', 'witch', 'forest', 'cemetery', 'abandoned',
-                'nightmare', 'curse', 'ritual', 'possession', 'paranormal',
-                'creepy', 'eerie', 'disturbing', 'chilling', 'terrifying',
-                'monster', 'creature', 'entity', 'spirit', 'apparition'
-            ];
-
-            return fallbackTags
-                .filter(tag => tag.toLowerCase().includes(query.toLowerCase()))
-                .filter(tag => !this.selectedTags.includes(tag))
-                .slice(0, 5)
-                .map(tag => ({ name: tag, usageCount: Math.floor(Math.random() * 20) + 1 }));
+            console.error('Error fetching tag suggestions:', error);
+            this.showFallbackSuggestions(query);
         }
+    }
+
+    showFallbackSuggestions(query) {
+        const fallbackTags = [
+            'atmospheric', 'suspense', 'psychological', 'supernatural', 'haunted',
+            'ghost', 'demon', 'witch', 'forest', 'cemetery', 'abandoned',
+            'nightmare', 'curse', 'ritual', 'possession', 'paranormal',
+            'creepy', 'eerie', 'disturbing', 'chilling', 'terrifying',
+            'monster', 'creature', 'entity', 'spirit', 'apparition'
+        ];
+
+        const suggestions = fallbackTags
+            .filter(tag => tag.toLowerCase().includes(query.toLowerCase()))
+            .filter(tag => !this.selectedTags.includes(tag))
+            .slice(0, 5)
+            .map(tag => ({ name: tag, usageCount: Math.floor(Math.random() * 20) + 1 }));
+
+        this.showSuggestions(suggestions);
     }
 
     showSuggestions(suggestions) {
         const container = id_('tag_suggestions');
-        if (!container) return;
-
-        if (!suggestions || suggestions.length === 0) {
+        if (!container || !suggestions || suggestions.length === 0) {
             this.hideSuggestions();
             return;
         }
@@ -329,7 +227,7 @@ class EnhancedSubmissionForm {
             const usageCount = typeof tag === 'object' ? tag.usageCount : '';
             const usageText = usageCount ? ` (${usageCount})` : '';
             
-            return `<div class="suggestion_item" onclick="submissionForm.addTag('${displayName}')">
+            return `<div class="suggestion_item" onclick="editForm.addTag('${displayName}')">
                 ${displayName}<span class="usage_count">${usageText}</span>
             </div>`;
         }).join('');
@@ -378,56 +276,118 @@ class EnhancedSubmissionForm {
         container.innerHTML = this.selectedTags.map(tag => 
             `<div class="tag_pill">
                 ${tag}
-                <span class="tag_remove" onclick="submissionForm.removeTag('${tag}')" title="Remove tag">×</span>
+                <span class="tag_remove" onclick="editForm.removeTag('${tag}')" title="Remove tag">×</span>
             </div>`
         ).join('');
     }
 
-    async validateTitle() {
-        const titleField = id_('storyTitle');
-        if (!titleField || !titleField.value.trim()) {
-            titleField.style.borderColor = '';
-            return;
+    setupUrlValidation() {
+        const backgroundUrl = id_('backgroundUrl');
+        if (backgroundUrl) {
+            backgroundUrl.addEventListener('blur', () => this.validateBackgroundUrl());
+            backgroundUrl.addEventListener('input', () => this.validateBackgroundUrl());
         }
 
-        const title = titleField.value.trim();
-        
-        // Reset border color
-        titleField.style.borderColor = '';
-        
-        try {
-            const csrf = id_('csrf').value;
-            const response = await fetch(`/terrorTales/checkBookTitle/${encodeURIComponent(title)}`, {
-                method: 'GET',
-                headers: {
-                    'csrf-token': csrf
-                }
-            });
+        const youtubeVideo = id_('youtubeVideo');
+        if (youtubeVideo) {
+            youtubeVideo.addEventListener('blur', () => this.validateYouTubeUrl());
+            youtubeVideo.addEventListener('input', () => this.validateYouTubeUrl());
+        }
 
-            const data = await response.json();
-            
-            if (data.status === 400) {
-                titleField.style.borderColor = '#ffc107';
-                globalMessage("Title Already Exists", 
-                    `A story with this title already exists. ${data.suggestion ? `Try: "${data.suggestion}"` : 'Please choose a different title.'}`
-                );
-            } else if (data.status === 200) {
-                titleField.style.borderColor = '#4CAF50';
-                if (data.similarTitles && data.similarTitles.length > 0) {
-                    console.log('Similar titles found:', data.similarTitles);
-                }
+        // Social media URL validation
+        const socialMediaFields = ['facebook', 'twitter', 'instagram', 'youtube'];
+        socialMediaFields.forEach(platform => {
+            const field = document.querySelector(`[name="${platform}"]`);
+            if (field) {
+                field.addEventListener('blur', () => this.validateSocialMediaUrl(field));
+                field.addEventListener('input', () => this.validateSocialMediaUrl(field));
             }
-        } catch (error) {
-            console.error('Error checking title:', error);
-            // Don't show error to user for title validation
+        });
+    }
+
+    validateBackgroundUrl() {
+        const field = id_('backgroundUrl');
+        if (!field) return true;
+
+        const url = field.value.trim();
+        if (!url) {
+            field.style.borderColor = '';
+            return true;
+        }
+
+        const allowedDomains = ['imgur.com', 'tumblr.com', 'flickr.com', 'pinterest.com', 'photobucket.com'];
+        const allowedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+
+        const isValidDomain = allowedDomains.some(domain => url.toLowerCase().includes(domain));
+        const isValidFormat = allowedFormats.some(format => url.toLowerCase().endsWith(format));
+
+        if (!this.isValidUrl(url)) {
+            field.style.borderColor = '#ff6b6b';
+            return false;
+        }
+
+        if (!isValidDomain || !isValidFormat) {
+            field.style.borderColor = '#ffc107';
+            return false;
+        }
+
+        field.style.borderColor = '#4CAF50';
+        return true;
+    }
+
+    validateSocialMediaUrl(field) {
+        if (!field) return true;
+
+        const url = field.value.trim();
+        if (!url) {
+            field.style.borderColor = '';
+            return true;
+        }
+
+        if (this.isValidUrl(url)) {
+            field.style.borderColor = '#4CAF50';
+            return true;
+        } else {
+            field.style.borderColor = '#ff6b6b';
+            return false;
+        }
+    }
+
+    validateYouTubeUrl() {
+        const field = id_('youtubeVideo');
+        if (!field) return true;
+
+        const url = field.value.trim();
+        if (!url) {
+            field.style.borderColor = '';
+            return true;
+        }
+
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/)|youtu\.be\/)/i;
+        
+        if (youtubeRegex.test(url)) {
+            field.style.borderColor = '#4CAF50';
+            return true;
+        } else {
+            field.style.borderColor = '#ffc107';
+            return false;
+        }
+    }
+
+    isValidUrl(string) {
+        try {
+            const url = string.startsWith('http') ? string : 'https://' + string;
+            new URL(url);
+            return true;
+        } catch {
+            return false;
         }
     }
 
     setupFormValidation() {
-        const form = id_('submission_form');
+        const form = id_('edit_form');
         
         if (form) {
-            // Real-time validation for all inputs
             const allInputs = form.querySelectorAll('input, textarea, select');
             allInputs.forEach(input => {
                 input.addEventListener('input', () => this.validateForm());
@@ -435,15 +395,15 @@ class EnhancedSubmissionForm {
             });
         }
         
-        // Initial validation
         this.validateForm();
     }
 
     validateForm() {
-        const submitButton = id_('storySubmit_form');
+        const submitButton = id_('storyUpdate_form');
         if (!submitButton) return;
 
         const requiredFields = [
+            { id: 'legalName', min: 2, max: 100 },
             { id: 'storyTitle', min: 5, max: 100 },
             { id: 'storySummary', min: 20, max: 800 },
             { id: 'storyText', min: 100, max: 40000 },
@@ -453,7 +413,6 @@ class EnhancedSubmissionForm {
         let isValid = true;
         let errorMessage = '';
 
-        // Check required fields
         for (const field of requiredFields) {
             const element = id_(field.id);
             if (!element) continue;
@@ -479,20 +438,6 @@ class EnhancedSubmissionForm {
             }
         }
 
-        // Check terms acceptance
-        const terms = id_('termsAndConditions');
-        if (terms && !terms.checked) {
-            isValid = false;
-            errorMessage = 'You must accept the terms and conditions';
-        }
-
-        // Check legal name if required
-        const legalNameField = id_('legalName');
-        if (legalNameField && !legalNameField.value.trim()) {
-            isValid = false;
-            errorMessage = 'Legal name is required';
-        }
-
         // Update button state
         submitButton.disabled = !isValid;
         
@@ -503,7 +448,7 @@ class EnhancedSubmissionForm {
                 submitText.textContent = errorMessage;
                 submitButton.title = errorMessage;
             } else {
-                submitText.textContent = 'Share Your Story';
+                submitText.textContent = 'Update Your Story';
                 submitButton.title = '';
             }
         }
@@ -511,87 +456,95 @@ class EnhancedSubmissionForm {
         return isValid;
     }
 
-    async handleSubmission(e) {
-        e.preventDefault();
-        
-        if (this.isLoading) return;
-        
-        // Final validation
-        if (!this.validateForm()) {
-            globalMessage("Form Incomplete", "Please complete all required fields before submitting.");
+async handleSubmission(e) {
+    e.preventDefault();
+    
+    if (this.isLoading) return;
+    
+    if (!this.validateForm()) {
+        globalMessage("Form Incomplete", "Please complete all required fields before updating.");
+        return;
+    }
+    
+    this.isLoading = true;
+    this.showLoadingState();
+
+    try {
+        const formData = this.collectFormData();
+        console.log('Submitting update data:', formData);
+
+        const response = await fetch('/terrorTales/editStory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        console.log('Response received:', response.status, response.statusText);
+        console.log('Response headers:', response.headers);
+
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        console.log('Content-Type:', contentType);
+
+        if (!contentType || !contentType.includes('application/json')) {
+            console.error('Response is not JSON:', contentType);
+            const text = await response.text();
+            console.error('Response text:', text);
+            this.hideLoadingState();
+            globalMessage("Server Error", "Server returned an invalid response. Please try again.");
             return;
         }
+
+        const data = await response.json();
+        console.log('Response data:', data);
         
-        this.isLoading = true;
-        this.showLoadingState();
-
-        try {
-            const formData = this.collectFormData();
+        if (response.ok && data.status === 200) {
+            globalMessage("Success! 🎉", data.message || "Your story has been updated successfully!");
             
-            // Additional client-side validation
-            if (!this.validateSubmissionData(formData)) {
-                this.hideLoadingState();
-                return;
-            }
-
-            console.log('Submitting form data:', formData);
-
-            const response = await fetch('/terrorTales/submission', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json();
-            console.log('Submission response:', data);
-
-            if (data.status === 200) {
-                globalMessage("Success! 🎉", 
-                    "Your horror story has been submitted successfully and is now live! Redirecting to your story..."
-                );
-                
-                setTimeout(() => {
-                    if (data.slug) {
-                        window.location.href = `/terrorTales/horrorStory/${data.slug}`;
-                    } else {
-                        window.location.href = "/terrorTales";
-                    }
-                }, 2500);
-            } else {
-                this.hideLoadingState();
-                const errorMessage = Array.isArray(data.errors) 
-                    ? data.errors.join('\n') 
-                    : data.message || "There was a problem submitting your story. Please try again.";
-                    
-                globalMessage("Submission Issue", errorMessage);
-            }
-
-        } catch (error) {
-            console.error('Submission error:', error);
+            // Redirect after showing success message
+            setTimeout(() => {
+                window.location.href = data.redirectUrl || `/terrorTales/horrorStory/${data.slug}`;
+            }, 2000);
+        } else {
             this.hideLoadingState();
-            globalMessage("Connection Problem", 
-                "We couldn't connect to our servers. Please check your internet connection and try again."
-            );
+            globalMessage("Update Issue", data.message || "There was a problem updating your story.");
         }
+
+    } catch (error) {
+        console.error('Update error:', error);
+        this.hideLoadingState();
+        globalMessage("Connection Problem", "We couldn't connect to our servers. Please try again.");
     }
+}
 
 collectFormData() {
-    const form = id_('submission_form');
+    const form = id_('edit_form');
     const formData = {};
+
+    // Get CSRF token
+    const csrfInput = form.querySelector('input[name="_csrf"]');
+    if (csrfInput) {
+        formData._csrf = csrfInput.value;
+    }
+
+    // Get the story ID from hidden input
+    const storyIdInput = form.querySelector('input[name="storyId"]');
+    if (storyIdInput) {
+        formData.storyId = storyIdInput.value;
+    }
 
     // Collect basic form fields
     const fields = form.querySelectorAll('input, textarea, select');
     fields.forEach(field => {
-        if (field.name && field.type !== 'checkbox' && field.type !== 'radio') {
+        if (field.name && field.type !== 'checkbox' && field.type !== 'hidden') {
             formData[field.name] = field.value.trim();
-        } else if (field.type === 'checkbox') {
-            formData[field.name] = field.checked;
         }
     });
 
-    // Collect social media (maintain order, empty strings for blanks)
+    // Social media (maintain order, empty strings for blanks)
     const socialMedia = [];
     const socialFields = ['facebook', 'twitter', 'instagram', 'youtube'];
     socialFields.forEach(platform => {
@@ -600,7 +553,7 @@ collectFormData() {
     });
     formData.socialMedia = socialMedia;
 
-    // Enhanced categorization system (send as separate fields, not arrays)
+    // Enhanced categorization
     formData.primaryGenre = id_('primaryGenre')?.value || '';
     formData.format = id_('format')?.value || '';
     formData.theme = id_('theme')?.value || '';
@@ -611,11 +564,8 @@ collectFormData() {
     // YouTube video
     formData.youtubeVideo = id_('youtubeVideo')?.value.trim() || '';
 
-    // Enhanced tags
+    // Tags
     formData.tags = this.selectedTags.join(',');
-
-    // CSRF token
-    formData._csrf = id_('csrf')?.value || '';
 
     console.log('Collected form data:', formData);
     return formData;
@@ -624,6 +574,7 @@ collectFormData() {
    validateSubmissionData(formData) {
        // Check required fields
        const requiredFields = [
+           { field: 'legalName', name: 'Legal Name', min: 2, max: 100 },
            { field: 'storyTitle', name: 'Story Title', min: 5, max: 100 },
            { field: 'storySummary', name: 'Story Summary', min: 20, max: 800 },
            { field: 'storyText', name: 'Story Text', min: 100, max: 40000 },
@@ -647,19 +598,6 @@ collectFormData() {
                globalMessage("Input Too Long", `${name} must be ${max} characters or less.`);
                return false;
            }
-       }
-
-       // Check legal name if field exists
-       const legalNameField = id_('legalName');
-       if (legalNameField && (!formData.legalName || formData.legalName.trim() === '')) {
-           globalMessage("Legal Name Required", "Please enter your legal name.");
-           return false;
-       }
-
-       // Check terms acceptance
-       if (!formData.termsAndConditions) {
-           globalMessage("Terms Required", "Please accept the terms and conditions to continue.");
-           return false;
        }
 
        // Validate URLs (only if they're provided)
@@ -696,7 +634,6 @@ collectFormData() {
        if (!url || url.trim() === '') return true; // Optional field
        
        try {
-           // Add protocol if missing
            const testUrl = url.startsWith('http') ? url : 'https://' + url;
            new URL(testUrl);
            return true;
@@ -713,7 +650,7 @@ collectFormData() {
    }
 
    showLoadingState() {
-       const submitButton = id_('storySubmit_form');
+       const submitButton = id_('storyUpdate_form');
        const submitText = submitButton?.querySelector('.submit_text');
        const submitLoading = submitButton?.querySelector('.submit_loading');
 
@@ -727,7 +664,7 @@ collectFormData() {
    }
 
    hideLoadingState() {
-       const submitButton = id_('storySubmit_form');
+       const submitButton = id_('storyUpdate_form');
        const submitText = submitButton?.querySelector('.submit_text');
        const submitLoading = submitButton?.querySelector('.submit_loading');
 
@@ -740,31 +677,30 @@ collectFormData() {
            submitButton.style.cursor = 'pointer';
        }
        
-       // Re-validate form to update button state
        this.validateForm();
    }
 }
 
-// Initialize the enhanced submission form
-let submissionForm;
+// Initialize the edit form
+let editForm;
 document.addEventListener('DOMContentLoaded', () => {
-   submissionForm = new EnhancedSubmissionForm();
-   console.log('Submission form ready for enhanced categorization');
+   editForm = new EnhancedEditForm();
+   console.log('Edit form ready for enhanced editing');
 });
 
-// Legacy compatibility functions (for backward compatibility)
+// Legacy compatibility functions
 const handleCharacterCount = (fieldId, maxLength) => {
    const field = id_(fieldId);
-   if (field && submissionForm) {
+   if (field && editForm) {
        field.addEventListener('input', () => {
-           submissionForm.updateCharCount(fieldId, maxLength);
+           editForm.updateCharCount(fieldId, maxLength);
        });
    }
 };
 
 // Validation helper functions
 const validateUrl = (url) => {
-   if (!url || url.trim() === '') return true; // Optional field
+   if (!url || url.trim() === '') return true;
    
    try {
        new URL(url.startsWith('http') ? url : 'https://' + url);
@@ -775,7 +711,7 @@ const validateUrl = (url) => {
 };
 
 const validateImageUrl = (url) => {
-   if (!url || url.trim() === '') return true; // Optional field
+   if (!url || url.trim() === '') return true;
    
    const allowedDomains = ['imgur.com', 'tumblr.com', 'flickr.com', 'pinterest.com', 'photobucket.com'];
    const allowedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
@@ -788,12 +724,12 @@ const validateImageUrl = (url) => {
 
 // Global helper for tag system
 window.addTagFromSuggestion = (tagName) => {
-   if (submissionForm) {
-       submissionForm.addTag(tagName);
+   if (editForm) {
+       editForm.addTag(tagName);
    }
 };
 
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
-   module.exports = { EnhancedSubmissionForm };
+   module.exports = { EnhancedEditForm };
 }
