@@ -8,43 +8,72 @@ const {someUserInfo,calculateReadingTime,GetStories} = require("../utils/utils_f
 const { registerValidation, globalErrorHandler } = require("../utils/errorHandlers.js");
 
 
+// In your index controller, add data cleaning:
 exports.index = async function (req, res, next) {  
-
   try {
+    let { userName, userActive, userData } = await someUserInfo(req, res, next);
+    const userID = await User.findOne({ username: userName }).select("_id");
 
-    //check if user is logged in
-  let { userName, userActive, userData } = await someUserInfo(req, res, next);
- 
-  const userID = await User.findOne({ username: userName }).select("_id");
-
-  let xy_ = await new GetStories().getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(userID,4);
-  
-  let topStoryByUpvotes = xy_[0];
-  xy_.shift();
-
-  //get id of topStoryByUpvotes
-  const topStorys = xy_;
+    let xy_ = await new GetStories().getstoriesBYupvotesBYnumReadsBYcommentsBYlimit(userID, 4);
     
-  //const file = await readFileAPI("questions_api.json");
+    let topStoryByUpvotes = xy_[0];
+    xy_.shift();
 
-  res.status(200).render("index", {
-    path: "/",
-    title: `TerrorHub - Home To Death clock, Horror Stories Creepy Pasta & More`,
-    description: "TerrorHub is a community of horror enthusiasts who share their horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
-    csrfToken: res.locals.csrfToken,
-    userActive,
-    userName,
-    topStorys,
-    topStoryByUpvotes,
-    userData
-  });
+    // Clean data helper function
+    const cleanStoryData = (story) => {
+      if (!story) return story;
+      
+      // Clean categories
+      if (story.categories) {
+        story.cleanCategories = [...new Set(story.categories)]
+          .filter(cat => cat && cat.trim() !== '')
+          .slice(0, 4);
+      }
+      
+      // Clean and combine tags
+      let allTags = [];
+      if (story.tags) {
+        story.tags.forEach(tag => {
+          if (typeof tag === 'string' && tag.includes(',')) {
+            allTags.push(...tag.split(',').map(t => t.trim()));
+          } else if (tag && tag.trim() !== '') {
+            allTags.push(tag.trim());
+          }
+        });
+      }
+      if (story.extraTags) {
+        allTags.push(...story.extraTags.filter(tag => tag && tag.trim() !== ''));
+      }
+      story.cleanTags = [...new Set(allTags)]
+        .filter(tag => tag && tag.length > 1)
+        .slice(0, 6);
+      
+      return story;
+    };
+
+    // Clean the data
+    if (topStoryByUpvotes) {
+      topStoryByUpvotes = cleanStoryData(topStoryByUpvotes);
+    }
+    
+    const topStorys = xy_.map(story => cleanStoryData(story));
+
+    res.status(200).render("index", {
+      path: "/",
+      title: `TerrorHub - Home To Death clock, Horror Stories Creepy Pasta & More`,
+      description: "TerrorHub is a community of horror enthusiasts who share their horror stories, creepy pasta, and other horror-related content. We also have a death clock that estimates your day of death.",
+      csrfToken: res.locals.csrfToken,
+      userActive,
+      userName,
+      topStorys,
+      topStoryByUpvotes,
+      userData
+    });
     
   } catch (error) {
-      console.log(error);
-      globalErrorHandler(req, res, 500, "Something went wrong");
+    console.log(error);
+    globalErrorHandler(req, res, 500, "Something went wrong");
   } 
-  
-
 };
 
 

@@ -1,4 +1,4 @@
-// models/enhancedTag.js
+// model/enhancedTag.js
 const mongoose = require('mongoose');
 
 const enhancedTagSchema = new mongoose.Schema({
@@ -6,8 +6,8 @@ const enhancedTagSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   language: {
     type: String,
-    enum: ['en', 'es', 'universal'],
-    default: 'universal'
+    enum: ['en', 'es', 'pt', 'fr', 'de', 'it', 'ru', 'ja', 'ko', 'zh', 'ar', 'hi', 'universal'],
+    default: 'en'
   },
   usageCount: { type: Number, default: 0 },
   isApproved: { type: Boolean, default: false },
@@ -30,8 +30,13 @@ enhancedTagSchema.index({ name: 'text' });
 
 // Pre-save middleware to generate slug
 enhancedTagSchema.pre('save', function(next) {
-  if (this.isModified('name')) {
-    this.slug = this.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').trim('-');
+  if (this.isModified('name') || !this.slug) {
+    this.slug = this.name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-')         // Replace spaces with hyphens
+      .replace(/-+/g, '-')          // Replace multiple hyphens with single
+      .replace(/^-+|-+$/g, '');     // Remove leading/trailing hyphens
   }
   next();
 });

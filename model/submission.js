@@ -1,7 +1,9 @@
+// model/submission.js
 const mongoose = require('mongoose');
-const slugify = require('slugify'); // Make sure to install this package using `npm install slugify`
+const slugify = require('slugify');
 
 const storySchema = new mongoose.Schema({
+  // ... ALL your existing fields (keep everything) ...
   legalName: {
     type: String,
     required: true,
@@ -11,12 +13,11 @@ const storySchema = new mongoose.Schema({
     required: true,
   },
   socialMedia: Array,
-  website: String, // Optional, can be an array of links
+  website: String,
   storyTitle: {
     type: String,
     required: true,
   },
-  // create a slug for the story title
   slug: {
     type: String,
     required: true,
@@ -26,13 +27,13 @@ const storySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tags: [String], // You can choose from the provided genres/tags
+  tags: [String], // OLD SYSTEM - keep for backward compatibility
   storyText: {
     type: String,
     required: true,
   },
-  categories: [String], // You can choose from the provided categories
-  extraTags: [String], // Optional, can be an array of tags
+  categories: [String], // OLD SYSTEM - keep for backward compatibility
+  extraTags: [String], // OLD SYSTEM - keep for backward compatibility
   ageVerification: {
     type: Boolean,
     required: true,
@@ -45,13 +46,11 @@ const storySchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  //submission owner
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  // language
   language: {
     type: String,
     required: true,
@@ -79,9 +78,8 @@ const storySchema = new mongoose.Schema({
   upvotes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Reference to the user who upvoted
+      ref: 'User',
       required: true,
-      
     },
   ],
   upvoteCount: {
@@ -92,11 +90,10 @@ const storySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  // Comments get number of comments only
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Message', // Reference to the user who commented
+      ref: 'Message',
       required: true,
     },
   ],
@@ -104,42 +101,38 @@ const storySchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  // Reporting system
   reports: [
     {
       userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // You can create a User model for tracking who reported the story
+        ref: 'User',
         required: true,
       },
-      reason: String, // Optional: You can specify a reason for the report
+      reason: String,
       createdAt: {
         type: Date,
         default: Date.now,
       },
     },
   ],
-  // Moderation system
   isApproved: {
     type: Boolean,
     default: true
   },
-  //reason for rejection and user who rejected
   rejectionReason: [
     {
       userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // You can create a User model for tracking who rejected the story
+        ref: 'User',
         required: true,
       },
-      reason: String, // Optional: You can specify a reason for the rejection
+      reason: String,
       createdAt: {
         type: Date,
         default: Date.now,
       },
     },
   ],
-  // update get time and user who updated
   updateDetails: [
     {
       userId: {
@@ -152,29 +145,52 @@ const storySchema = new mongoose.Schema({
       },
     },
   ], 
-  // date of creation
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  // youtube video link
   youtubeLink: String,
-  //link for background image
   backgroundUrl: String,
   
+  // 🎉 NEW ENHANCED CATEGORIZATION SYSTEM (ADD THESE)
+  primaryCategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EnhancedCategory'
+    // Note: Not required for backward compatibility
+  },
+  secondaryCategories: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EnhancedCategory'
+  }],
+  enhancedTags: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EnhancedTag'
+  }],
+  customTags: [{ 
+    type: String, 
+    trim: true, 
+    maxlength: 30 
+  }],
+  
+  // Migration tracking
+  migrationStatus: {
+    type: String,
+    enum: ['pending', 'migrated', 'manual_review', 'completed'],
+    default: 'pending'
+  },
+  migrationNotes: String
 });
 
-// Middleware to create a slug before saving the story
+// Keep all your existing middleware and indexes
 storySchema.pre('save', function (next) {
   if (!this.isModified('storyTitle')) {
     return next();
   }
-
   this.slug = slugify(this.storyTitle, { lower: true });
   next();
 });
 
-// Create a text index
+// Keep existing text index but add new fields
 storySchema.index({
   legalName: 'text',
   creditingName: 'text',
@@ -184,15 +200,16 @@ storySchema.index({
   storyText: 'text',
   categories: 'text',
   extraTags: 'text',
+  customTags: 'text', // NEW
   slug: 'text',
 });
+
+// Add new indexes for enhanced system
+storySchema.index({ primaryCategory: 1, createdAt: -1 });
+storySchema.index({ secondaryCategories: 1 });
+storySchema.index({ enhancedTags: 1 });
+storySchema.index({ migrationStatus: 1 });
 
 const Story = mongoose.model('Story', storySchema);
 
 module.exports = Story;
-
-
-
-
-
-

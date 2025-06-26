@@ -28,7 +28,7 @@ const terrorTalesRoutes = require('./routes/terrortales_routes.js');
 const UserRoutes = require("./routes/user_routes.js");
 const StoryMessageRoutes = require("./routes/storyMessage_routes.js");
 const ProfileRoutes = require("./routes/profileRoutes.js");
-
+const runProjectMetaEngine = require('./utils/projectMetaEngine');
 // refresh user session
 const refreshUserSession = require('./middleware/session-data-refresh.js');
 
@@ -127,7 +127,7 @@ app.use("/deathClock", DethClockRoutes);
 app.use("/terrorTales", terrorTalesRoutes);
 app.use("/profile/",ProfileRoutes);
 app.use(MainRoute);
-
+//runProjectMetaEngine();
 //error handler
 app.use("*", (req,res,next)=>{
   console.log("404 page not found");

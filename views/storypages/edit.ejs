@@ -1,9 +1,9 @@
-    <!-- head include -->
-    <%- include('../includes/head.ejs') %>
-    <link rel="stylesheet" href="../../CSS/submissionPage.css">
+<!-- head include -->
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="../../CSS/submissionPage.css">  
+
 </head>
 <body>
-
 
     <!-- nav include -->
     <%- include('../includes/nav.ejs') %>
@@ -11,155 +11,228 @@
     <!-- header include -->
     <%- include('../includes/secHeader.ejs') %>
 
-    <div id="submisson_form_wrap">           
+    <div id="submisson_form_wrap">
 
-            <!-- action="/terrorTales/submission" method="POST" -->
-            <form id="submission_form" action="/terrorTales/editStory" method="POST">
-                
-                <div class="form_group" id="legalNameGroup">
-                    <label for="legalName">Legal Name (Will not be shared with the public)*</label>
-                    <input value="<%= story.legalName %>" type="text" id="legalName" name="legalName" required placeholder="Enter Full Legal Name">                    
+        <!-- Enhanced title section -->
+        <div id="subm_title_wrap">
+            <h2>EDIT YOUR STORY</h2>
+            <p>
+                Update your chilling tale and make it even more terrifying! Edit any aspect of your story while maintaining its core essence.
+            </p>
+        </div>
+
+        <!-- Content guidelines reminder -->
+        <div id="content_guidelines">
+            <h3>Editing Guidelines</h3>
+            <p>Remember to maintain our community standards:</p>
+            <ul>
+                <li>Keep content appropriate for 18+ audiences</li>
+                <li>Ensure your story is original content</li>
+                <li>Respect copyright and intellectual property</li>
+                <li>Follow our community guidelines</li>
+            </ul>
+        </div>
+
+        <form id="edit_form">
+            <input type="hidden" name="_csrf" id="csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="storyId" value="<%= story._id %>">
+            
+            <!-- Fallback for tags -->
+            <input type="hidden" name="existingTags" value="<%= (story.tags || []).join(',') %>">
+            <input type="hidden" name="existingCategories" value="<%= (story.categories || []).join(',') %>">
+            
+            <!-- REQUIRED SECTION -->
+            <div class="form_section" id="required_section">
+                <h3 class="section_title">Story Basics <span class="required_indicator">*Required</span></h3>
+
+                <!-- Legal Name -->
+                <div class="form_group">
+                    <label for="legalName">Your Legal Name *</label>
+                    <input type="text" id="legalName" name="legalName" required 
+                           value="<%= story.legalName || '' %>" 
+                           placeholder="Enter your full name">
+                    <p class="input_info">This helps us know who created the story. It won't be shared publicly.</p>
                 </div>
 
-                <!-- choose language story will be written -->
-                <div class="form_group" id="languageGroup">
-                    <label for="language">Language*</label>
-                    <select id="language" name="language">
+                <!-- Story Title -->
+                <div class="form_group">
+                    <label for="storyTitle">Story Title *</label>
+                    <input type="text" id="storyTitle" name="storyTitle" required 
+                           value="<%= story.storyTitle %>" 
+                           placeholder="What's your story called?">
+                    <div class="char_counter">
+                        <span id="storyTitle_count">0</span>/100 characters
+                    </div>
+                </div>
+
+                <!-- Story Summary -->
+                <div class="form_group">
+                    <label for="storySummary">Story Summary *</label>
+                    <textarea id="storySummary" name="storySummary" required 
+                              placeholder="Give readers a taste of what your story is about..."><%= story.storySummary %></textarea>
+                    <div class="char_counter">
+                        <span id="storySummary_count">0</span>/800 characters
+                    </div>
+                    <p class="input_info">A brief teaser to get readers interested.</p>
+                </div>
+
+                <!-- Story Text -->
+                <div class="form_group">
+                    <label for="storyText">Your Story *</label>
+                    <textarea id="storyText" name="storyText" required 
+                              placeholder="Share your scary story here..."><%= story.storyText %></textarea>
+                    <div class="char_counter">
+                        <span id="storyText_count">0</span>/40,000 characters
+                    </div>
+                    <p class="input_info">Let your creativity flow! You keep ownership of your story.</p>
+                </div>
+
+                <!-- Language Selection -->
+                <div class="form_group">
+                    <label for="language">Language *</label>
+                    <select id="language" name="language" required>
                         <option value="English" <%= story.language === 'English' ? 'selected' : '' %>>English</option>
                         <option value="Spanish" <%= story.language === 'Spanish' ? 'selected' : '' %>>Spanish</option>
+                        <option value="Portuguese" <%= story.language === 'Portuguese' ? 'selected' : '' %>>Portuguese</option>
                         <option value="French" <%= story.language === 'French' ? 'selected' : '' %>>French</option>
                         <option value="German" <%= story.language === 'German' ? 'selected' : '' %>>German</option>
-                        <option value="Italian" <%= story.language === 'Italian' ? 'selected' : '' %>>Italian</option>
-                        <option value="Portuguese" <%= story.language === 'Portuguese' ? 'selected' : '' %>>Portuguese</option>
-                        <option value="Russian" <%= story.language === 'Russian' ? 'selected' : '' %>>Russian</option>
-                        <option value="Japanese" <%= story.language === 'Japanese' ? 'selected' : '' %>>Japanese</option>
-                        <option value="Chinese" <%= story.language === 'Chinese' ? 'selected' : '' %>>Chinese</option>
-                        <option value="Korean" <%= story.language === 'Korean' ? 'selected' : '' %>>Korean</option>
-                        <option value="Arabic" <%= story.language === 'Arabic' ? 'selected' : '' %>>Arabic</option> 
-                        <option value="Hindi" <%= story.language === 'Hindi' ? 'selected' : '' %>>Hindi</option>
-                        <option value="Bengali" <%= story.language === 'Bengali' ? 'selected' : '' %>>Bengali</option>
-                        <option value="Punjabi" <%= story.language === 'Punjabi' ? 'selected' : '' %>>Punjabi</option>
-                        <option value="Telugu" <%= story.language === 'Telugu' ? 'selected' : '' %>>Telugu</option>
-                        <option value="Marathi" <%= story.language === 'Marathi' ? 'selected' : '' %>>Marathi</option>
-                        <option value="Tamil" <%= story.language === 'Tamil' ? 'selected' : '' %>>Tamil</option>
-                        <option value="Turkish" <%= story.language === 'Turkish' ? 'selected' : '' %>>Turkish</option>
-                        <option value="Vietnamese" <%= story.language === 'Vietnamese' ? 'selected' : '' %>>Vietnamese</option>
-                        <option value="Urdu" <%= story.language === 'Urdu' ? 'selected' : '' %>>Urdu</option>
-                        <option value="Javanese" <%= story.language === 'Javanese' ? 'selected' : '' %>>Javanese</option>
+                        <option value="Other" <%= story.language === 'Other' ? 'selected' : '' %>>Other</option>
                     </select>
-                </div>
-                
-                <div class="form_group" id="socialMediaGroup">
-                    <label for="socialMedia">Social Media Links</label>
-                    <div class="inner_formGroup">                        
-                        <% const socialMediaInputs = [
-                            'Facebook', 'Twitter', 'Instagram', 'LinkedIn', 'Pinterest', 'YouTube', 'TikTok', 'Reddit'
-                        ]; %>
-
-                        <% socialMediaInputs.forEach((platform, index) => { %>
-                            <% const matchingMedia = story.socialMedia.find(media => media.name.toLowerCase() === platform.toLowerCase()); %>
-                            <input type="text" id="socialMedia<%= index + 1 %>" name="socialMedia" value="<%= matchingMedia ? matchingMedia.link : '' %>" placeholder="<%= platform %>">
-                        <% }); %>
-                    </div>
-                </div>
-                
-
-                <div class="form_group" id="websiteGroup">
-                    <label for="website">Website</label>
-                    <input type="text" id="website" name="website" value="<%= story.website ? story.website : '' %>" placeholder="Enter your Secure website URL">
+                    <p class="input_info">The language your story is written in.</p>
                 </div>
 
-                <!-- add a youtube video link to this story -->
-                <div class="form_group" id="youtubeGroup">
-                    <label for="youtube">Youtube Story Link</label>
-                    <input type="text" id="youtube" name="youtube" value="<%= story.youtubeLink ? story.youtubeLink : '' %>" placeholder="Enter your Youtube Story Link">
-                </div>
-
-                <!-- Add link for story background (must be from Imgur) -->
-                <div class="form_group" id="backgroundLink">
-                    <label for="backgroundUrl">Background Image Link (Imgur):</label>
-                    <input type="text" id="backgroundUrl" name="backgroundUrl" placeholder="Enter Imgur image link" value="<%= story.backgroundUrl ? story.backgroundUrl : '' %>">
-                </div>
-                
-
-                <div class="form_group" id="storyTitleGroup">
-                    <label for="storyTitle">Story Title*</label>
-                    <input type="text" id="storyTitle" name="storyTitle" value="<%= story.storyTitle ? story.storyTitle : '' %>" required placeholder="Enter your story title">
-                </div>
-                
-
-                <div class="form_group" id="storySummaryGroup">
-                    <label for="storySummary">Story Summary*</label>
-                    <textarea id="storySummary" name="storySummary" required placeholder="Enter a summary of your story"><%- story.storySummary ? story.storySummary : '' %></textarea>
-                </div>
-                
-
-                <!-- Tags Input -->
+                <!-- Primary Genre (Required) -->
                 <div class="form_group">
-                    <label for="tagsInput_fake">Tags:</label>
-                    <input type="text" id="tagsInput_fake" placeholder="Enter tags and press Enter" />
-                    <div id="tagsContainer" class="tags_catagories_continer">
-                    <!-- Existing tags will be appended here -->
-                    </div>
-                    <input type="hidden" id="tagsInput" name="tags" value="<%= story.tags.join(',') %>" />
+                    <label for="primaryGenre">Primary Genre *</label>
+                    <select id="primaryGenre" name="primaryGenre" required>
+                        <option value="">Select the main genre...</option>
+                        <option value="psychological-horror" <%= story.categories && story.categories.includes('psychological-horror') ? 'selected' : '' %>>Psychological Horror</option>
+                        <option value="supernatural-horror" <%= story.categories && story.categories.includes('supernatural-horror') ? 'selected' : '' %>>Supernatural Horror</option>
+                        <option value="body-horror" <%= story.categories && story.categories.includes('body-horror') ? 'selected' : '' %>>Body Horror</option>
+                        <option value="folk-horror" <%= story.categories && story.categories.includes('folk-horror') ? 'selected' : '' %>>Folk Horror</option>
+                        <option value="sci-fi-horror" <%= story.categories && story.categories.includes('sci-fi-horror') ? 'selected' : '' %>>Sci-Fi Horror</option>
+                        <option value="slasher" <%= story.categories && story.categories.includes('slasher') ? 'selected' : '' %>>Slasher</option>
+                        <option value="cosmic-horror" <%= story.categories && story.categories.includes('cosmic-horror') ? 'selected' : '' %>>Cosmic Horror</option>
+                        <option value="gothic-horror" <%= story.categories && story.categories.includes('gothic-horror') ? 'selected' : '' %>>Gothic Horror</option>
+                    </select>
+                    <p class="input_info">Choose the main horror genre that best describes your story.</p>
                 </div>
+            </div>
+
+            <!-- OPTIONAL SECTION (Collapsible) -->
+            <div class="form_section" id="optional_section">
+                <h3 class="section_title collapsible" id="optional_toggle">
+                    Additional Details (Optional) 
+                    <span class="toggle_icon">▼</span>
+                </h3>
                 
-
-                <div class="form_group" id="storyTextGroup">
-                    <label for="storyText">Write Your Story*</label>
-                    <textarea id="storyText" name="storyText" required placeholder="Enter the text of your story"><%- story.storyText ? story.storyText : '' %></textarea>
-                </div>
-
-                <!-- Categories Input -->
-                <div class="form_group" id="categoriesGroup">
-                    <label id="categories_label" for="categories">Select Scary Categories:</label>
-                    <div id="radio_wrap">
-                        <% if (popularCategories && popularCategories.length > 0) { %>
-                            <h3>Popular Categories:</h3>
-                            <% popularCategories.forEach(category => { %>
-                                <div class="checkbox-group">
-                                    <input type="checkbox" id="<%= category.replace(/\s+/g, '') %>" name="categories" value="<%= category %>" <%= story.categories.includes(category) ? 'checked' : '' %>>
-                                    <label for="<%= category.replace(/\s+/g, '') %>"><%= category %></label>
-                                </div>
-                            <% }); %>
-                        <% } %>
-
-                        <h3>Other Categories:</h3>
-                        <% defaultCategories.forEach(category => { %>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="<%= category.replace(/\s+/g, '') %>" name="categories" value="<%= category %>" <%= story.categories.includes(category) ? 'checked' : '' %>>
-                                <label for="<%= category.replace(/\s+/g, '') %>"><%= category %></label>
-                            </div>
-                        <% }); %>
+                <div class="collapsible_content" id="optional_content">
+                    
+                    <!-- Secondary Categories -->
+                    <div class="form_group">
+                        <label for="format">Format (Optional)</label>
+                        <select id="format" name="format">
+                            <option value="">Choose format...</option>
+                            <option value="creepypasta" <%= story.categories && story.categories.includes('creepypasta') ? 'selected' : '' %>>Creepypasta</option>
+                            <option value="short-story" <%= story.categories && story.categories.includes('short-story') ? 'selected' : '' %>>Short Story</option>
+                            <option value="flash-fiction" <%= story.categories && story.categories.includes('flash-fiction') ? 'selected' : '' %>>Flash Fiction</option>
+                            <option value="two-sentence" <%= story.categories && story.categories.includes('two-sentence') ? 'selected' : '' %>>2 Sentence Horror</option>
+                            <option value="true-story" <%= story.categories && story.categories.includes('true-story') ? 'selected' : '' %>>True Story</option>
+                            <option value="found-footage" <%= story.categories && story.categories.includes('found-footage') ? 'selected' : '' %>>Found Footage</option>
+                        </select>
                     </div>
-                </div>
 
-                <!-- Extra Tags Input -->
-                <div class="form_group">
-                    <label for="extraTagsInput_fake">Extra Categories (Optional):</label>
-                    <input type="text" id="extraTagsInput_fake" placeholder="Enter extra Categories and press Enter" />
-                    <div id="extraTagsContainer" class="tags_catagories_continer">
-                    <!-- Existing extra tags will be appended here -->
+                    <div class="form_group">
+                        <label for="theme">Theme (Optional)</label>
+                        <select id="theme" name="theme">
+                            <option value="">Choose theme...</option>
+                            <option value="urban-legends" <%= story.categories && story.categories.includes('urban-legends') ? 'selected' : '' %>>Urban Legends</option>
+                            <option value="myths-legends" <%= story.categories && story.categories.includes('myths-legends') ? 'selected' : '' %>>Myths and Legends</option>
+                            <option value="ghosts" <%= story.categories && story.categories.includes('ghosts') ? 'selected' : '' %>>Ghosts</option>
+                            <option value="monsters" <%= story.categories && story.categories.includes('monsters') ? 'selected' : '' %>>Monsters</option>
+                            <option value="witchcraft" <%= story.categories && story.categories.includes('witchcraft') ? 'selected' : '' %>>Witchcraft</option>
+                            <option value="technology-horror" <%= story.categories && story.categories.includes('technology-horror') ? 'selected' : '' %>>Technology Horror</option>
+                            <option value="cursed-objects" <%= story.categories && story.categories.includes('cursed-objects') ? 'selected' : '' %>>Cursed Objects</option>
+                            <option value="conspiracies" <%= story.categories && story.categories.includes('conspiracies') ? 'selected' : '' %>>Conspiracies</option>
+                        </select>
                     </div>
-                    <input type="hidden" id="extraTagsInput" name="extraTags" value="<%= story.extraTags.join(',') %>" />
+
+                    <!-- Smart Tags Input -->
+                    <div class="form_group">
+                        <label for="tagsInput">Tags (Optional)</label>
+                        <div class="smart_tags_container">
+                            <input type="text" id="tagsInput" placeholder="Type to search for tags: ghost, haunted, atmospheric...">
+                            <div id="tag_suggestions" class="tag_suggestions"></div>
+                            <div id="selected_tags" class="selected_tags"></div>
+                        </div>
+                        <p class="input_info">Add keywords to help readers find your story. Start typing for suggestions.</p>
+                    </div>
+
+                    <!-- Background Image (Optional) -->
+                    <div class="form_group">
+                        <label for="backgroundUrl">Background Image (Optional)</label>
+                        <input type="url" id="backgroundUrl" name="backgroundUrl" 
+                               value="<%= story.backgroundUrl || '' %>"
+                               placeholder="Image URL from Imgur, Tumblr, Flickr, Pinterest, or Photobucket">
+                        <p class="input_info">Add an atmospheric image for your story. Must end with .jpg, .png, .gif, or .webp</p>
+                    </div>
+
+                    <!-- Social Media (Simplified to 4) -->
+                    <div class="form_group">
+                        <label>Social Media (Optional)</label>
+                        <p class="input_info">Share your profiles if you'd like readers to connect with you.</p>
+                        <div class="social_media_grid">
+                            <%
+                                // Helper function to get social media link
+                                function getSocialMediaLink(socialMediaArray, index) {
+                                    if (!socialMediaArray || !Array.isArray(socialMediaArray) || !socialMediaArray[index]) {
+                                        return '';
+                                    }
+                                    return socialMediaArray[index].link || socialMediaArray[index] || '';
+                                }
+                            %>
+                            <input type="url" name="facebook" 
+                                   value="<%= getSocialMediaLink(story.socialMedia, 0) %>"
+                                   placeholder="Facebook profile (optional)">
+                            <input type="url" name="twitter" 
+                                   value="<%= getSocialMediaLink(story.socialMedia, 1) %>"
+                                   placeholder="Twitter profile (optional)">
+                            <input type="url" name="instagram" 
+                                   value="<%= getSocialMediaLink(story.socialMedia, 2) %>"
+                                   placeholder="Instagram profile (optional)">
+                            <input type="url" name="youtube" 
+                                   value="<%= getSocialMediaLink(story.socialMedia, 3) %>"
+                                   placeholder="YouTube channel (optional)">
+                        </div>
+                    </div>
+
+                    <!-- YouTube Video Link -->
+                    <div class="form_group">
+                        <label for="youtubeVideo">YouTube Video (Optional)</label>
+                        <input type="url" id="youtubeVideo" name="youtubeVideo" 
+                               value="<%= story.youtubeLink || '' %>"
+                               placeholder="YouTube video URL (optional)">
+                        <p class="input_info">If you have a reading or related video, add the link here.</p>
+                    </div>
+
                 </div>
-                
+            </div>
 
-                <!-- You can add more fields for rating and reporting here --->
-                <input type="hidden" id="csrf" name="_csrf" value="<%= csrfToken %>">
-                <!-- book id -->
-                <input type="hidden" id="storyId" name="storyId" value="<%= story._id %>">
-                <input id="storySubmit_form" class="call_to_action_yellow" type="submit" value="Submit">
-            </form>
+            <!-- Submit Button -->
+            <button type="submit" id="storyUpdate_form" class="submit_button">
+                <span class="submit_text">Update Your Story</span>
+                <span class="submit_loading" style="display: none;">
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                </span>
+            </button>
 
+        </form>
     </div>
 
     <!-- footer include -->
     <%- include('../includes/footer.ejs') %>
     
-    <script src="../../JS/master.js"></script>       
-    <script src="../../JS/submission.js"></script>
-    <script src="../../JS/edit.js"></script>
-
+    <script src="../../JS/master.js"></script>  
+    <script src="../../JS/editStory.js"></script>
 </body>
 </html>

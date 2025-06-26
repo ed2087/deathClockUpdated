@@ -1,110 +1,390 @@
+<!-- Latest Stories Section - 2 Featured + 3 Side -->
 <section id="LatestStories" class="sections">
-
-    <!-- title -->
-    <h2 class="about_title">
-        TRENDING <span class="special_yellow_text" style="display: inline;">STORIES</span>
-    </h2>
-    
-
-    <!-- content -->
-    <div id="latestStories_inner_wrap">
-
-        <div id="topStory_wrap">
-
-            <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes.slug  %>" style="display: contents;">
-                <div class="title_wrap">
-                    <h2>
-                        <%- topStoryByUpvotes.storyTitle  %>
-                    </h2>
-                </div>
-            </a>
-
-            <div class="storyInfo_wrap">
-                <div class="storyInfo_item">
-
-                    <div class="sotoryItem_wrap">
-                        <img src="../../../IMAGES/Icons/clock.webp" alt="clock">
-                        <p>                            
-                                <span class="importanINfo"><%= topStoryByUpvotes.readingTime  %></span> 
-                                minutes read
-                        </p> 
-                    </div>
-
-                    <div class="sotoryItem_wrap">
-                        <img src="../../../IMAGES/Icons/signature.webp" alt="clock">
-                        <p>    
-                                Written By                        
-                                <span class="importanINfo">
-                                    <%= topStoryByUpvotes.creditingName  %>
-                                </span>                                  
-                        </p> 
-                    </div>
-
-                </div>
-                <p class="storyInfo_summary">
-                    <%- topStoryByUpvotes.storySummary  %>
-
-                    <!-- reamore link -->
-                    <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes.slug  %>" class="readMoreLink">Read More....</a>
-                </p>
-            </div>
-
+    <div class="stories-container">
+        <div class="stories-header">
+            <h2>Latest Horror Tales</h2>
+            <p>Recent stories from our community</p>
         </div>
 
-        <ul id="listWrap_small">
+        <!-- Main Stories Grid: 2 Featured + 3 Side Stories -->
+        <div class="stories-main-grid">
+            <!-- Featured Stories (First 2 stories) -->
+            <% if (topStoryByUpvotes) { %>
+            <article class="featured-story">
+                <div class="featured-badge">Featured</div>
+                
+                <h3 class="story-title"><%= topStoryByUpvotes.storyTitle %></h3>
+                
+                <div class="story-meta">
+                    <div class="meta-item">
+                        <span>@<%= topStoryByUpvotes.creditingName %></span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= new Date(topStoryByUpvotes.createdAt).toLocaleDateString() %></span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= topStoryByUpvotes.readingTime %> min</span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= topStoryByUpvotes.language.toUpperCase() %></span>
+                    </div>
+                </div>
 
-            <% for(let i = 0; i < topStorys.length; i++){ %>
+                <div class="story-stats">
+                    <div class="stat-item">
+                        <span>👁</span>
+                        <span class="stat-number"><%= topStoryByUpvotes.readCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>⬆</span>
+                        <span class="stat-number"><%= topStoryByUpvotes.upvoteCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>💬</span>
+                        <span class="stat-number"><%= topStoryByUpvotes.comments ? topStoryByUpvotes.comments.length : 0 %></span>
+                    </div>
+                </div>
 
-                <li class="listItem">
-
-                    <a href="/terrorTales/horrorStory/<%= topStorys[i].slug  %>" class="listItem_link_wrap">
-
-                        <div class="title_wrap">
-                            <h2>
-                                <%- topStorys[i].storyTitle  %>
-                            </h2>
+                <!-- Compact Categories & Tags -->
+                <div class="story-categorization">
+                    <% if (topStoryByUpvotes.categories && topStoryByUpvotes.categories.length > 0) { %>
+                    <div class="categories-row">
+                        <div class="section-label">Categories</div>
+                        <div class="category-chips">
+                            <% 
+                            const cleanCategories = [...new Set(topStoryByUpvotes.categories)]
+                                .slice(0, 2)
+                                .filter(cat => cat && cat.trim() !== '');
+                            %>
+                            <% cleanCategories.forEach(category => { %>
+                                <span class="category-chip"><%= category.trim() %></span>
+                            <% }) %>
                         </div>
-                        
-                        <div class="content_wrap_">
+                    </div>
+                    <% } %>
 
-                            <div class="storyInfo_item">
-        
-                                <div class="sotoryItem_wrap">
-                                    <img src="../../../IMAGES/Icons/clock.webp" alt="clock">
-                                    <p>                            
-                                            <span class="importanINfo"><%= topStorys[i].readingTime  %></span> 
-                                            minutes read
-                                    </p> 
-                                </div>
-        
-                                <div class="sotoryItem_wrap">
-                                    <img src="../../../IMAGES/Icons/signature.webp" alt="clock">
-                                    <p>    
-                                            Written By                        
-                                            <span class="importanINfo">
-                                                @<%= topStorys[i].creditingName  %>
-                                            </span>                                  
-                                    </p> 
-                                </div>                            
-        
-                            </div>  
-                            
-                            <p class="storyInfo_summary">
-                                <%- topStorys[i].storySummary  %>
-                                <!-- read more -->
-                                <span class="readMoreLink">Read More ....</span>
-                            </p>
-
+                    <% 
+                    let allTags = [];
+                    if (topStoryByUpvotes.tags) {
+                        topStoryByUpvotes.tags.forEach(tag => {
+                            if (typeof tag === 'string' && tag.includes(',')) {
+                                allTags.push(...tag.split(',').map(t => t.trim()));
+                            } else if (tag && tag.trim() !== '') {
+                                allTags.push(tag.trim());
+                            }
+                        });
+                    }
+                    if (topStoryByUpvotes.extraTags) {
+                        allTags.push(...topStoryByUpvotes.extraTags.filter(tag => tag && tag.trim() !== ''));
+                    }
+                    const cleanTags = [...new Set(allTags)]
+                        .slice(0, 3)
+                        .filter(tag => tag && tag.length > 1);
+                    %>
+                    
+                    <% if (cleanTags.length > 0) { %>
+                    <div class="tags-row">
+                        <div class="section-label">Tags</div>
+                        <div class="tag-chips">
+                            <% cleanTags.forEach(tag => { %>
+                                <span class="tag-chip"><%= tag.toLowerCase() %></span>
+                            <% }) %>
                         </div>
+                    </div>
+                    <% } %>
+                </div>
 
+                <p class="story-summary"><%= topStoryByUpvotes.storySummary %></p>
+
+                <div class="author-info">
+                    <div class="author-name">@<%= topStoryByUpvotes.creditingName %></div>
+                    <a href="/terrorTales/horrorStory/<%= topStoryByUpvotes.slug %>" class="call_to_action_yellow">
+                        Read Story
                     </a>
-
-                </li>
-
+                </div>
+            </article>
             <% } %>
 
-        </ul>
+            <!-- Second Featured Story -->
+            <% if (topStorys && topStorys.length > 0) { %>
+            <article class="featured-story">
+                <div class="featured-badge">Popular</div>
+                
+                <h3 class="story-title"><%= topStorys[0].storyTitle %></h3>
+                
+                <div class="story-meta">
+                    <div class="meta-item">
+                        <span>@<%= topStorys[0].creditingName %></span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= new Date(topStorys[0].createdAt).toLocaleDateString() %></span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= topStorys[0].readingTime %> min</span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= topStorys[0].language.toUpperCase() %></span>
+                    </div>
+                </div>
 
-    </div>    
+                <div class="story-stats">
+                    <div class="stat-item">
+                        <span>👁</span>
+                        <span class="stat-number"><%= topStorys[0].readCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>⬆</span>
+                        <span class="stat-number"><%= topStorys[0].upvoteCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>💬</span>
+                        <span class="stat-number"><%= topStorys[0].comments ? topStorys[0].comments.length : 0 %></span>
+                    </div>
+                </div>
 
+                <!-- Compact Categories & Tags -->
+                <div class="story-categorization">
+                    <% if (topStorys[0].categories && topStorys[0].categories.length > 0) { %>
+                    <div class="categories-row">
+                        <div class="section-label">Categories</div>
+                        <div class="category-chips">
+                            <% 
+                            const cleanCategories2 = [...new Set(topStorys[0].categories)]
+                                .slice(0, 2)
+                                .filter(cat => cat && cat.trim() !== '');
+                            %>
+                            <% cleanCategories2.forEach(category => { %>
+                                <span class="category-chip"><%= category.trim() %></span>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <% } %>
+
+                    <% 
+                    let allTags2 = [];
+                    if (topStorys[0].tags) {
+                        topStorys[0].tags.forEach(tag => {
+                            if (typeof tag === 'string' && tag.includes(',')) {
+                                allTags2.push(...tag.split(',').map(t => t.trim()));
+                            } else if (tag && tag.trim() !== '') {
+                                allTags2.push(tag.trim());
+                            }
+                        });
+                    }
+                    if (topStorys[0].extraTags) {
+                        allTags2.push(...topStorys[0].extraTags.filter(tag => tag && tag.trim() !== ''));
+                    }
+                    const cleanTags2 = [...new Set(allTags2)]
+                        .slice(0, 3)
+                        .filter(tag => tag && tag.length > 1);
+                    %>
+                    
+                    <% if (cleanTags2.length > 0) { %>
+                    <div class="tags-row">
+                        <div class="section-label">Tags</div>
+                        <div class="tag-chips">
+                            <% cleanTags2.forEach(tag => { %>
+                                <span class="tag-chip"><%= tag.toLowerCase() %></span>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+
+                <p class="story-summary"><%= topStorys[0].storySummary %></p>
+
+                <div class="author-info">
+                    <div class="author-name">@<%= topStorys[0].creditingName %></div>
+                    <a href="/terrorTales/horrorStory/<%= topStorys[0].slug %>" class="call_to_action_yellow">
+                        Read Story
+                    </a>
+                </div>
+            </article>
+            <% } %>
+
+            <!-- Side Stories (Next 3 stories) -->
+            <% if (topStorys && topStorys.length > 1) { %>
+            <div class="side-stories">
+                <% topStorys.slice(1, 4).forEach(story => { %>
+                <article class="side-story">
+                    <h4 class="story-title"><%= story.storyTitle %></h4>
+                    
+                    <div class="story-meta">
+                        <div class="meta-item">
+                            <span>@<%= story.creditingName %></span>
+                        </div>
+                        <div class="meta-item">
+                            <span><%= story.readingTime %> min</span>
+                        </div>
+                    </div>
+
+                    <div class="story-stats">
+                        <div class="stat-item">
+                            <span>👁</span>
+                            <span class="stat-number"><%= story.readCount || 0 %></span>
+                        </div>
+                        <div class="stat-item">
+                            <span>⬆</span>
+                            <span class="stat-number"><%= story.upvoteCount || 0 %></span>
+                        </div>
+                        <div class="stat-item">
+                            <span>💬</span>
+                            <span class="stat-number"><%= story.comments ? story.comments.length : 0 %></span>
+                        </div>
+                    </div>
+
+                    <!-- Very compact categorization -->
+                    <div class="story-categorization">
+                        <% if (story.categories && story.categories.length > 0) { %>
+                        <div class="category-chips">
+                            <% 
+                            const cleanCategories3 = [...new Set(story.categories)]
+                                .slice(0, 1)
+                                .filter(cat => cat && cat.trim() !== '');
+                            %>
+                            <% cleanCategories3.forEach(category => { %>
+                                <span class="category-chip"><%= category.trim() %></span>
+                            <% }) %>
+                        </div>
+                        <% } %>
+
+                        <% 
+                        let allTags3 = [];
+                        if (story.tags) {
+                            story.tags.forEach(tag => {
+                                if (typeof tag === 'string' && tag.includes(',')) {
+                                    allTags3.push(...tag.split(',').map(t => t.trim()));
+                                } else if (tag && tag.trim() !== '') {
+                                    allTags3.push(tag.trim());
+                                }
+                            });
+                        }
+                        if (story.extraTags) {
+                            allTags3.push(...story.extraTags.filter(tag => tag && tag.trim() !== ''));
+                        }
+                        const cleanTags3 = [...new Set(allTags3)]
+                            .slice(0, 2)
+                            .filter(tag => tag && tag.length > 1);
+                        %>
+                        
+                        <% if (cleanTags3.length > 0) { %>
+                        <div class="tag-chips" style="margin-top: 0.3em;">
+                            <% cleanTags3.forEach(tag => { %>
+                                <span class="tag-chip"><%= tag.toLowerCase() %></span>
+                            <% }) %>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <p class="story-summary"><%= story.storySummary %></p>
+
+                    <div class="author-info">
+                        <div class="author-name">@<%= story.creditingName %></div>
+                        <a href="/terrorTales/horrorStory/<%= story.slug %>" class="call_to_action_red">
+                            Read
+                        </a>
+                    </div>
+                </article>
+                <% }) %>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Additional Stories Grid (If more than 4 stories total) -->
+        <% if (topStorys && topStorys.length > 4) { %>
+        <div class="additional-stories">
+            <% topStorys.slice(4).forEach(story => { %>
+            <article class="story-card">
+                <h4 class="story-title"><%= story.storyTitle %></h4>
+                
+                <div class="story-meta">
+                    <div class="meta-item">
+                        <span>@<%= story.creditingName %></span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= story.readingTime %> min</span>
+                    </div>
+                    <div class="meta-item">
+                        <span><%= story.language.toUpperCase() %></span>
+                    </div>
+                </div>
+
+                <div class="story-stats">
+                    <div class="stat-item">
+                        <span>👁</span>
+                        <span class="stat-number"><%= story.readCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>⬆</span>
+                        <span class="stat-number"><%= story.upvoteCount || 0 %></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>💬</span>
+                        <span class="stat-number"><%= story.comments ? story.comments.length : 0 %></span>
+                    </div>
+                </div>
+
+                <div class="story-categorization">
+                    <% if (story.categories && story.categories.length > 0) { %>
+                    <div class="category-chips">
+                        <% 
+                        const cleanCategories4 = [...new Set(story.categories)]
+                            .slice(0, 2)
+                            .filter(cat => cat && cat.trim() !== '');
+                        %>
+                        <% cleanCategories4.forEach(category => { %>
+                            <span class="category-chip"><%= category.trim() %></span>
+                        <% }) %>
+                    </div>
+                    <% } %>
+
+                    <% 
+                    let allTags4 = [];
+                    if (story.tags) {
+                        story.tags.forEach(tag => {
+                            if (typeof tag === 'string' && tag.includes(',')) {
+                                allTags4.push(...tag.split(',').map(t => t.trim()));
+                            } else if (tag && tag.trim() !== '') {
+                                allTags4.push(tag.trim());
+                            }
+                        });
+                    }
+                    if (story.extraTags) {
+                        allTags4.push(...story.extraTags.filter(tag => tag && tag.trim() !== ''));
+                    }
+                    const cleanTags4 = [...new Set(allTags4)]
+                        .slice(0, 3)
+                        .filter(tag => tag && tag.length > 1);
+                    %>
+                    
+                    <% if (cleanTags4.length > 0) { %>
+                    <div class="tag-chips" style="margin-top: 0.5em;">
+                        <% cleanTags4.forEach(tag => { %>
+                            <span class="tag-chip"><%= tag.toLowerCase() %></span>
+                        <% }) %>
+                    </div>
+                    <% } %>
+                </div>
+
+                <p class="story-summary"><%= story.storySummary %></p>
+
+                <div class="author-info">
+                    <div class="author-name">@<%= story.creditingName %></div>
+                    <a href="/terrorTales/horrorStory/<%= story.slug %>" class="call_to_action_red">
+                        Read
+                    </a>
+                </div>
+            </article>
+            <% }) %>
+        </div>
+        <% } %>
+
+        <!-- Simple CTA -->
+        <div class="explore-more">
+            <h3>More Stories</h3>
+            <a href="/terrorTales" class="call_to_action_yellow">
+                View All
+            </a>
+        </div>
+    </div>
 </section>

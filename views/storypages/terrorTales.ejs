@@ -1,4 +1,4 @@
-    <!-- head include -->
+<!-- head include -->
     <%- include('../includes/head.ejs') %>
     <link rel="stylesheet" href="../../../CSS/homePage.css">
     <link rel="stylesheet" href="../../CSS/landingStoryPage.css">
@@ -46,15 +46,33 @@
 
                     <!-- global search input -->
                     <div class="inputWrap" id="searchWrap">
-                        <!-- <label for="search">Search:</label><br> -->
                         <input class="queryData" type="text" id="search" name="search" placeholder="Search - Title, Author, Genre, etc."><br>
+                    </div>
+
+                    <!-- search type selector -->
+                    <div class="inputWrap" id="searchTypeWrap">
+                        <select class="selectQueryData" id="searchType" name="searchType">
+                            <option value="comprehensive">Smart Search</option>
+                            <option value="quick">Quick Search</option>
+                            <option value="author">Author Search</option>
+                            <option value="content">Content Search</option>
+                        </select><br>
                     </div>
             
                     <div class="inputWrap" id="languageWrap">
-                        <!-- <label for="language">Language:</label><br> -->
                         <select class="selectQueryData" id="language" name="language">
                             <option value="all">All - Language</option>
                             <!-- Add as many languages as you need -->
+                        </select><br>
+                    </div>
+
+                    <!-- ranking/sort selector -->
+                    <div class="inputWrap" id="rankingWrap">
+                        <select class="selectQueryData" id="ranking" name="ranking">
+                            <option value="relevance">Most Relevant</option>
+                            <option value="newest">Newest First</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="trending">Trending Now</option>
                         </select><br>
                     </div>
             
